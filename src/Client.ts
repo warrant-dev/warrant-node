@@ -29,7 +29,7 @@ export default class Client {
      * The id of the role (from the Warrant dashboard) that you would like to assign to this user. This parameter is optional and
      * no role will be assigned to this user if it is not provided. Note: the user will not have any permissions as a result.
      */
-    public async createUser(userId?: string, roleId?: string): Promise<void> {
+    public async createUser(userId?: string, roleId?: string): Promise<User> {
         try {
             const user: User = {};
 
@@ -43,7 +43,8 @@ export default class Client {
                 }
             }
 
-            await this.httpClient.post("/users", user);
+            const response = await this.httpClient.post("/users", user);
+            return response.data;
         } catch (e) {
             console.log("Error creating user in Warrant", e);
 
