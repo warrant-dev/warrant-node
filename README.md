@@ -19,34 +19,33 @@ const warrantClient = new Warrant.Client("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJ
 ```
 Or using ES modules:
 ```js
-import {Client as Warrant} from "@warrantdev/warrant-node";
+import { Client as Warrant } from "@warrantdev/warrant-node";
 
 const warrant = new Warrant("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 ```
 
-### `createUser(userId, roleId)`
-This method creates a user entity in Warrant with the specified `userId` and assigns the created user the role with the specified `roleId`.
+### `createUser(userId)`
+This method creates a user entity in Warrant with the specified `userId`.
 ```js
 const Warrant = require("@warrantdev/warrant-node");
 
 const warrantClient = new Warrant.Client("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 
-// Creates a user with user.id as the userId and
-// assigns the new user the "store_owner" role
+// Creates a user with user.id as the userId
 warrantClient
-    .createUser(user.id, "store_owner")
+    .createUser(user.id)
     .then((newUser) => console.log(newUser))
     .catch((error) => console.log(error));
 ```
 Or using ES modules and async/await:
 ```js
-import {Client as Warrant} from "@warrantdev/warrant-node";
+import { Client as Warrant } from "@warrantdev/warrant-node";
 
 const warrant = new Warrant("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 
 // Creates a user with user.id as the userId and
 // assigns the new user the "store_owner" role
-const newUser = await warrant.createUser(user.id, "store_owner");
+const newUser = await warrant.createUser(user.id);
 ```
 
 ### `createSession(userId)`
@@ -67,7 +66,7 @@ warrantClient
 ```
 Or using ES modules and async/await:
 ```js
-const {Client as Warrant} = require("@warrantdev/warrant-node");
+const { Client as Warrant } = require("@warrantdev/warrant-node");
 
 const warrant = new Warrant("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 
@@ -77,9 +76,9 @@ const warrant = new Warrant("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=
 const sessionToken = await warrant.createSession(user.id);
 ```
 
-### `isAuthorized(userId, permissionId)`
+### `isAuthorized(objectType, objectId, relation, userId)`
 
-This method returns a `Promise` that resolves with `true` if the user with the specified `userId` has been granted the permission with the specified `permissionId` and `false` otherwise.
+This method returns a `Promise` that resolves with `true` if the user with the specified `userId` has the specified `relation` to the object of type `objectType` with id `objectId` and `false` otherwise.
 
 ```js
 const Warrant = require("@warrantdev/warrant-node");
@@ -91,7 +90,7 @@ const warrantClient = new Warrant.Client("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJ
 // An e-commerce website where Store Owners can edit store info
 //
 warrantClient
-    .isAuthorized(user.id, "edit_stores")
+    .isAuthorized("store", storeId, "edit", user.id)
     .then((isAuthorized) => {
         if (isAuthorized) {
             // Carry out logic to allow user to edit a Store
@@ -101,7 +100,7 @@ warrantClient
 ```
 Or using ES modules and async/await:
 ```js
-import {Client as Warrant} from "@warrantdev/warrant-node";
+import { Client as Warrant } from "@warrantdev/warrant-node";
 
 const warrant = new Warrant("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 
@@ -109,7 +108,7 @@ const warrant = new Warrant("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=
 // Example Scenario:
 // An e-commerce website where Store Owners can edit store info
 //
-if (await warrant.isAuthorized(user.id, "edit_stores")) {
+if (await warrant.isAuthorized("store", storeId, "edit", user.id)) {
     // Carry out logic to allow user to edit a Store
 }
 ```
