@@ -14,21 +14,18 @@ npm install @warrantdev/warrant-node
 Import the Warrant client and pass your API key to the constructor to get started:
 ```js
 const Warrant = require("@warrantdev/warrant-node");
-
 const warrantClient = new Warrant.Client("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 ```
 Or using ES modules:
 ```js
-import { Client as Warrant } from "@warrantdev/warrant-node";
-
-const warrant = new Warrant("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
+import { Client as WarrantClient } from "@warrantdev/warrant-node";
+const warrantClient = new WarrantClient("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 ```
 
 ### `createUser(userId)`
 This method creates a user entity in Warrant with the specified `userId`.
 ```js
 const Warrant = require("@warrantdev/warrant-node");
-
 const warrantClient = new Warrant.Client("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 
 // Creates a user with user.id as the userId
@@ -39,13 +36,34 @@ warrantClient
 ```
 Or using ES modules and async/await:
 ```js
-import { Client as Warrant } from "@warrantdev/warrant-node";
-
-const warrant = new Warrant("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
+import { Client as WarrantClient } from "@warrantdev/warrant-node";
+const warrantClient = new WarrantClient("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 
 // Creates a user with user.id as the userId and
 // assigns the new user the "store_owner" role
-const newUser = await warrant.createUser(user.id);
+const newUser = await warrantClient.createUser(user.id);
+```
+
+### `createWarrant(objectType, objectId, relation, user)`
+
+This method creates a warrant which specifies that the provided `user` (or userset) has `relation` on the object of type `objectType` with id `objectId`.
+```js
+const Warrant = require("@warrantdev/warrant-node");
+const warrantClient = new Warrant.Client("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
+
+// Create a warrant allowing user.id to "view" the store with id store.id
+warrantClient
+    .createWarrant("store", store.id, "view", { userId: user.id })
+    .then((newWarrant) => console.log(newWarrant))
+    .catch((error) => console.log(error));
+```
+Or using ES modules and async/await:
+```js
+import { Client as WarrantClient } from "@warrantdev/warrant-node";
+const warrantClient = new WarrantClient("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
+
+// Create a warrant allowing user.id to "view" the store with id store.id
+const newUser = await warrantClient.createWarrant("store", store.id, "view", user.id);
 ```
 
 ### `createSession(userId)`
@@ -53,7 +71,6 @@ This method creates a session in Warrant for the user with the specified `userId
 
 ```js
 const Warrant = require("@warrantdev/warrant-node");
-
 const warrantClient = new Warrant.Client("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 
 // Creates a session token scoped to the specified userId
@@ -66,14 +83,13 @@ warrantClient
 ```
 Or using ES modules and async/await:
 ```js
-const { Client as Warrant } = require("@warrantdev/warrant-node");
-
-const warrant = new Warrant("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
+const { Client as WarrantClient } = require("@warrantdev/warrant-node");
+const warrantClient = new WarrantClient("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 
 // Creates a session token scoped to the specified userId
 // Return this token to your client application to allow
 // it to make requests for the given user.
-const sessionToken = await warrant.createSession(user.id);
+const sessionToken = await warrantClient.createSession(user.id);
 ```
 
 ### `isAuthorized(objectType, objectId, relation, userId)`
@@ -100,30 +116,30 @@ warrantClient
 ```
 Or using ES modules and async/await:
 ```js
-import { Client as Warrant } from "@warrantdev/warrant-node";
+import { Client as WarrantClient } from "@warrantdev/warrant-node";
 
-const warrant = new Warrant("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
+const warrantClient = new WarrantClient("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 
 //
 // Example Scenario:
 // An e-commerce website where Store Owners can edit store info
 //
-if (await warrant.isAuthorized("store", storeId, "edit", user.id)) {
+if (await warrantClient.isAuthorized("store", storeId, "edit", user.id)) {
     // Carry out logic to allow user to edit a Store
 }
 ```
 
 **NOTE:** To ignore the `objectId` when performing authorization calls using `isAuthorized`, you can pass the constant `WARRANT_IGNORE_ID`. You must have a corresponding warrant that grants access to **ANY** user on the given `objectType` for this check to succeed.
 ```js
-import { Client as Warrant, WARRANT_IGNORE_ID } from "@warrantdev/warrant-node";
+import { Client as WarrantClient, WARRANT_IGNORE_ID } from "@warrantdev/warrant-node";
 
-const warrant = new Warrant("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
+const warrantClient = new WarrantClient("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 
 //
 // Example Scenario:
 // An e-commerce website where Store Owners can edit store info
 //
-if (await warrant.isAuthorized("store", WARRANT_IGNORE_ID, "edit", user.id)) {
+if (await warrantClient.isAuthorized("store", WARRANT_IGNORE_ID, "edit", user.id)) {
     // Carry out logic to allow user to edit a Store
 }
 ```
