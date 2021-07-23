@@ -1,6 +1,8 @@
 import Axios, { AxiosInstance } from "axios";
 import { API_URL_BASE, API_VERSION } from "./constants";
 import User from "./types/User";
+import Userset from "./types/Userset";
+import Warrant from "./types/Warrant";
 
 export default class Client {
     private readonly apiKey: string;
@@ -34,7 +36,34 @@ export default class Client {
 
             return response.data;
         } catch (e) {
-            console.log("Error creating user in Warrant", e);
+            console.log("Error creating user in Warrant", e.response.data);
+
+            throw e;
+        }
+    }
+
+    /**
+     * Creates a warrant (authorization rule) in Warrant which specifies that the user (or userset) provided as `user` has the
+     * given `relation` to the object of type `objectType` with id `objectId`.
+     *
+     * @param objectType The type of object this warrant is granting access to.
+     * @param objectId The id of the object this warrant is granting access to.
+     * @param relation The relation this warrant grants the user (or userset) on the object.
+     * @param user The user (userId) or userset (objectType + objectId + relation) this warrant will apply to.
+     * @returns The newly created warrant.
+     */
+     public async createWarrant(objectType: string, objectId: string, relation: string, user: User | Userset): Promise<Warrant> {
+        try {
+            const response = await this.httpClient.post("/warrants", {
+                objectType,
+                objectId,
+                relation,
+                user,
+            });
+
+            return response.data;
+        } catch (e) {
+            console.log("Error creating warrant in Warrant", e.response.data);
 
             throw e;
         }
@@ -54,7 +83,7 @@ export default class Client {
 
             return response.data.token;
         } catch (e) {
-            console.log("Error creating session for user in Warrant", e);
+            console.log("Error creating session for user in Warrant", e.response.data);
 
             throw e;
         }
@@ -63,10 +92,10 @@ export default class Client {
     /**
      * Checks against the warrants defined for your application to determine if the given `userId` has the given
      * `relation` to the given `objectId` of type `objectType`. Returns true if the the relation exists and false otherwise.
-     * @param objectType The type of the object for which access is being checked
-     * @param objectId The id of the object for which access is being checked
-     * @param relation The relation to the object for which access is being checked
-     * @param userId The userId for which access is being checked
+     * @param objectType The type of the object for which access is being checked.
+     * @param objectId The id of the object for which access is being checked.
+     * @param relation The relation to the object for which access is being checked.
+     * @param userId The userId for which access is being checked.
      * @returns True if the `userId` has the given `relation` to `objectId` of type `objectType`, and false otherwise.
      */
     public async isAuthorized(objectType: string, objectId: string, relation: string, userId: string): Promise<boolean> {
@@ -85,7 +114,7 @@ export default class Client {
             }
         } catch (e) {
             if (e.response.status !== 401) {
-                console.log("Error authorizing access through Warrant", e);
+                console.log("Error authorizing access through Warrant", e.response.data);
             }
 
             return false;
