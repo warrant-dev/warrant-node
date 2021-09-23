@@ -2,6 +2,9 @@
 
 Use [Warrant](https://warrant.dev/) in server-side Node.js projects.
 
+[![npm](https://img.shields.io/npm/v/@warrantdev/warrant-node)](https://www.npmjs.com/package/@warrantdev/warrant-node)
+[![Discord](https://img.shields.io/discord/865661082203193365?label=discord)](https://discord.gg/QNCMKWzqET)
+
 ## Installation
 
 Use `npm` to install the Warrant module:
