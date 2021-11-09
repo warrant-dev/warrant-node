@@ -25,15 +25,15 @@ import { Client as WarrantClient } from "@warrantdev/warrant-node";
 const warrantClient = new WarrantClient("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 ```
 
-### `createUser(userId)`
-This method creates a user entity in Warrant with the specified `userId`.
+### `createUser(userId, username)`
+This method creates a user entity in Warrant with the specified `userId`. Provide an optional `username` to make it easier to identify users in the Warrant dashboard.
 ```js
 const Warrant = require("@warrantdev/warrant-node");
 const warrantClient = new Warrant.Client("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
 
 // Creates a user with user.id as the userId
 warrantClient
-    .createUser(user.id)
+    .createUser(user.id, user.email)
     .then((newUser) => console.log(newUser))
     .catch((error) => console.log(error));
 ```
@@ -44,7 +44,7 @@ const warrantClient = new WarrantClient("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJB
 
 // Creates a user with user.id as the userId and
 // assigns the new user the "store_owner" role
-const newUser = await warrantClient.createUser(user.id);
+const newUser = await warrantClient.createUser(user.id, user.email);
 ```
 
 ### `createWarrant(objectType, objectId, relation, user)`
