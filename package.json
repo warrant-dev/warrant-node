@@ -1,6 +1,6 @@
 {
   "name": "@warrantdev/warrant-node",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Warrant API Wrapper for Node.js clients",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/warrant-dev/warrant-js#readme",
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.2"
   },
   "devDependencies": {
     "typescript": "^4.3.2"
