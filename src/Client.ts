@@ -1,8 +1,7 @@
 import Axios, { AxiosInstance } from "axios";
 import { API_URL_BASE, API_VERSION } from "./constants";
 import User from "./types/User";
-import Userset from "./types/Userset";
-import Warrant from "./types/Warrant";
+import Warrant, { WarrantUser } from "./types/Warrant";
 
 export default class Client {
     private readonly apiKey: string;
@@ -27,13 +26,22 @@ export default class Client {
      * The unique identifier to assign to this user in order to identify them in the future. This could be a unique identifier you
      * already use in your application (i.e. a database generated id). This parameter is optional and Warrant will generate a userId for
      * the user if it is not provided.
+     * @param username
+     * An optional, human-readable unique identifier (i.e. email) you can add to the user to help easily identify them in the dashboard.
      */
-    public async createUser(userId: string): Promise<User> {
+    public async createUser(userId?: string, username?: string): Promise<User> {
         try {
-            const response = await this.httpClient.post("/users", {
-                userId,
-            });
+            const requestBody: any = {};
 
+            if (userId) {
+                requestBody.userId = userId;
+            }
+
+            if (username) {
+                requestBody.username = username;
+            }
+
+            const response = await this.httpClient.post("/users", requestBody);
             return response.data;
         } catch (e) {
             console.log("Error creating user in Warrant", e.response.data);
@@ -52,7 +60,7 @@ export default class Client {
      * @param user The user (userId) or userset (objectType + objectId + relation) this warrant will apply to.
      * @returns The newly created warrant.
      */
-     public async createWarrant(objectType: string, objectId: string, relation: string, user: User | Userset): Promise<Warrant> {
+     public async createWarrant(objectType: string, objectId: string, relation: string, user: WarrantUser): Promise<Warrant> {
         try {
             const response = await this.httpClient.post("/warrants", {
                 objectType,
