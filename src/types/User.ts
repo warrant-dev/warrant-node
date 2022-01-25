@@ -1,4 +1,5 @@
 export default interface User {
     userId: string;
-    username?: string;
+    email: string;
+    tenantId: string;
 }

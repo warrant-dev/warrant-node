@@ -1,5 +1,8 @@
 import Axios, { AxiosInstance } from "axios";
 import { API_URL_BASE, API_VERSION } from "./constants";
+import Permission from "./types/Permission";
+import Role from "./types/Role";
+import Tenant from "./types/Tenant";
 import User from "./types/User";
 import Warrant, { WarrantUser } from "./types/Warrant";
 
@@ -17,34 +20,98 @@ export default class Client {
         });
     }
 
+    public async createTenant(tenantId?: string): Promise<Tenant> {
+        try {
+            const response = await this.httpClient.post("/tenants", {
+                tenantId,
+            });
+            return response.data;
+        } catch (e) {
+            console.log("Error creating tenant in Warrant", e.response.data);
+
+            throw e;
+        }
+    }
+
     /**
      * Creates a user entity in Warrant with the specified `userId`.
      * Call this method whenever a new user is created in your application. After using this method to create a user entity
      * in Warrant, you can then use the isAuthorized method to authorize subsequent actions the specified user takes in your application.
      *
+     * @param email
+     * The user's email in your system.
+     *
      * @param userId
      * The unique identifier to assign to this user in order to identify them in the future. This could be a unique identifier you
      * already use in your application (i.e. a database generated id). This parameter is optional and Warrant will generate a userId for
      * the user if it is not provided.
-     * @param username
-     * An optional, human-readable unique identifier (i.e. email) you can add to the user to help easily identify them in the dashboard.
      */
-    public async createUser(userId?: string, username?: string): Promise<User> {
+    public async createUser(email: string, userId?: string, tenantId?: string): Promise<User> {
         try {
-            const requestBody: any = {};
+            const requestBody: any = {
+                email,
+            };
 
             if (userId) {
                 requestBody.userId = userId;
             }
 
-            if (username) {
-                requestBody.username = username;
+            if (tenantId) {
+                requestBody.tenantId = tenantId;
             }
 
             const response = await this.httpClient.post("/users", requestBody);
             return response.data;
         } catch (e) {
             console.log("Error creating user in Warrant", e.response.data);
+
+            throw e;
+        }
+    }
+
+    public async createRole(roleId: string): Promise<Role> {
+        try {
+            const response = await this.httpClient.post("/roles", {
+                roleId,
+            });
+
+            return response.data;
+        } catch (e) {
+            console.log("Error creating role in Warrant", e.response.data);
+
+            throw e;
+        }
+    }
+
+    public async deleteRole(roleId: string): Promise<void> {
+        try {
+            await this.httpClient.delete(`/roles/${roleId}`);
+        } catch (e) {
+            console.log("Error deleting role in Warrant", e.response.data);
+
+            throw e;
+        }
+    }
+
+    public async createPermission(permissionId: string): Promise<Permission> {
+        try {
+            const response = await this.httpClient.post("/permissions", {
+                permissionId,
+            });
+
+            return response.data;
+        } catch (e) {
+            console.log("Error creating permission in Warrant", e.response.data);
+
+            throw e;
+        }
+    }
+
+    public async deletePermission(permissionId: string): Promise<void> {
+        try {
+            await this.httpClient.delete(`/permissions/${permissionId}`);
+        } catch (e) {
+            console.log("Error deleting permission in Warrant", e.response.data);
 
             throw e;
         }
@@ -60,7 +127,7 @@ export default class Client {
      * @param user The user (userId) or userset (objectType + objectId + relation) this warrant will apply to.
      * @returns The newly created warrant.
      */
-     public async createWarrant(objectType: string, objectId: string, relation: string, user: WarrantUser): Promise<Warrant> {
+    public async createWarrant(objectType: string, objectId: string, relation: string, user: WarrantUser): Promise<Warrant> {
         try {
             const response = await this.httpClient.post("/warrants", {
                 objectType,
@@ -72,6 +139,50 @@ export default class Client {
             return response.data;
         } catch (e) {
             console.log("Error creating warrant in Warrant", e.response.data);
+
+            throw e;
+        }
+    }
+
+    public async assignRoleToUser(userId: string, roleId: string): Promise<Role> {
+        try {
+            const response = await this.httpClient.post(`/users/${userId}/roles/${roleId}`);
+
+            return response.data;
+        } catch (e) {
+            console.log("Error assigning role to user in Warrant", e.response.data);
+
+            throw e;
+        }
+    }
+
+    public async removeRoleFromUser(userId: string, roleId: string): Promise<void> {
+        try {
+            await this.httpClient.delete(`/users/${userId}/roles/${roleId}`);
+        } catch (e) {
+            console.log("Error removing role from user in Warrant", e.response.data);
+
+            throw e;
+        }
+    }
+
+    public async assignPermissionToUser(userId: string, permissionId: string): Promise<Role> {
+        try {
+            const response = await this.httpClient.post(`/users/${userId}/roles/${permissionId}`);
+
+            return response.data;
+        } catch (e) {
+            console.log("Error assigning permission to user in Warrant", e.response.data);
+
+            throw e;
+        }
+    }
+
+    public async removePermissionFromUser(userId: string, permissionId: string): Promise<void> {
+        try {
+            await this.httpClient.delete(`/users/${userId}/roles/${permissionId}`);
+        } catch (e) {
+            console.log("Error removing permission from user in Warrant", e.response.data);
 
             throw e;
         }
@@ -92,6 +203,30 @@ export default class Client {
             return response.data.token;
         } catch (e) {
             console.log("Error creating session for user in Warrant", e.response.data);
+
+            throw e;
+        }
+    }
+
+    /**
+     * Creates a self-service session in Warrant for the user with the specified userId and returns a session token which can be used to
+     * make authorized requests to the Warrant API scoped to the specified tenantId.
+     *
+     * @param userId The unique identifier assigned in Warrant to identify the specified user.
+     * @param redirectUrl The url to redirect to once the user completes their session in the self-service dashboard.
+     * @returns A url pointing to the self-service dashboard that will allow the specified user to make changes to the roles and permissions of users in their tenant.
+     */
+    public async createSelfServiceSession(userId: string, redirectUrl: string): Promise<string> {
+        try {
+            const response = await this.httpClient.post(`/sessions`, {
+                type: "ssdash",
+                userId,
+                redirectUrl,
+            });
+
+            return response.data.url;
+        } catch (e) {
+            console.log("Error creating self-service session for user in Warrant", e.response.data);
 
             throw e;
         }
@@ -127,5 +262,9 @@ export default class Client {
 
             return false;
         }
+    }
+
+    public async hasPermission(permissionId: string, userId: string): Promise<boolean> {
+        return this.isAuthorized("permission", permissionId, "member", userId);
     }
 }
