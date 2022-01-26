@@ -168,7 +168,7 @@ export default class Client {
 
     public async assignPermissionToUser(userId: string, permissionId: string): Promise<Role> {
         try {
-            const response = await this.httpClient.post(`/users/${userId}/roles/${permissionId}`);
+            const response = await this.httpClient.post(`/users/${userId}/permissions/${permissionId}`);
 
             return response.data;
         } catch (e) {
@@ -180,7 +180,7 @@ export default class Client {
 
     public async removePermissionFromUser(userId: string, permissionId: string): Promise<void> {
         try {
-            await this.httpClient.delete(`/users/${userId}/roles/${permissionId}`);
+            await this.httpClient.delete(`/users/${userId}/permissions/${permissionId}`);
         } catch (e) {
             console.log("Error removing permission from user in Warrant", e.response.data);
 
