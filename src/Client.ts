@@ -2,6 +2,7 @@ import Axios, { AxiosInstance } from "axios";
 import { API_URL_BASE, API_VERSION } from "./constants";
 import Permission from "./types/Permission";
 import Role from "./types/Role";
+import Session from "./types/Session";
 import Tenant from "./types/Tenant";
 import User from "./types/User";
 import Warrant, { WarrantUser } from "./types/Warrant";
@@ -212,16 +213,14 @@ export default class Client {
      * Creates a self-service session in Warrant for the user with the specified userId and returns a session token which can be used to
      * make authorized requests to the Warrant API scoped to the specified tenantId.
      *
-     * @param userId The unique identifier assigned in Warrant to identify the specified user.
-     * @param redirectUrl The url to redirect to once the user completes their session in the self-service dashboard.
+     * @param session A session object containing the userId, redirectUrl, and optional tenantId for which the self service session should be created.
      * @returns A url pointing to the self-service dashboard that will allow the specified user to make changes to the roles and permissions of users in their tenant.
      */
-    public async createSelfServiceSession(userId: string, redirectUrl: string): Promise<string> {
+    public async createSelfServiceSession(session: Session): Promise<string> {
         try {
             const response = await this.httpClient.post(`/sessions`, {
+                ...session,
                 type: "ssdash",
-                userId,
-                redirectUrl,
             });
 
             return response.data.url;
