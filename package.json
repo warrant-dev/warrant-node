@@ -1,6 +1,6 @@
 {
   "name": "@warrantdev/warrant-node",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Warrant API Wrapper for Node.js clients",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/warrant-dev/warrant-js.git"
+    "url": "git+https://github.com/warrant-dev/warrant-node.git"
   },
   "keywords": [
     "warrant",
@@ -28,9 +28,9 @@
   "author": "Warrant <hello@warrant.dev> (https://warrant.dev)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/warrant-dev/warrant-js/issues"
+    "url": "https://github.com/warrant-dev/warrant-node/issues"
   },
-  "homepage": "https://github.com/warrant-dev/warrant-js#readme",
+  "homepage": "https://github.com/warrant-dev/warrant-node#readme",
   "dependencies": {
     "axios": "^0.21.2"
   },
