@@ -190,26 +190,6 @@ export default class Client {
     }
 
     /**
-     * Creates a session in Warrant for the user with the specified `userId` and returns a session token which can be used to
-     * make authorized requests to the Warrant API scoped to the specified user.
-     *
-     * @param userId The unique identifier assigned in Warrant to identify the specified user.
-     * @returns The session token representing the specified user's active session. Use this session token (i.e in a Client application)
-     * to make authorized requests to the Warrant API scoped only to the specified user.
-     */
-    public async createSession(userId: string): Promise<string> {
-        try {
-            const response = await this.httpClient.post(`/users/${userId}/sessions`);
-
-            return response.data.token;
-        } catch (e) {
-            console.log("Error creating session for user in Warrant", e.response.data);
-
-            throw e;
-        }
-    }
-
-    /**
      * Creates an authorization session in Warrant for the specified userId and returns a session token that can be used to
      * make authorization requests to the Warrant API scoped to the specified userId and tenantId.
      *
