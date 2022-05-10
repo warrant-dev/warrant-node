@@ -1,5 +1,6 @@
 import Axios, { AxiosInstance } from "axios";
 import { API_URL_BASE, API_VERSION, SELF_SERVICE_DASH_URL_BASE } from "./constants";
+import ListWarrantFilters from "./types/ListWarrantFilters";
 import Permission from "./types/Permission";
 import Role from "./types/Role";
 import Session from "./types/Session";
@@ -141,6 +142,20 @@ export default class Client {
         } catch (e) {
             console.log("Error creating warrant in Warrant", e.response.data);
 
+            throw e;
+        }
+    }
+
+    public async listWarrants(filters: ListWarrantFilters = {}): Promise<Warrant[]> {
+        try {
+            const response = await this.httpClient.get("/warrants", {
+                params: filters,
+            });
+
+            return response.data;
+        } catch (e) {
+            console.log("Error getting warrants in Warrant", e.response.data);
+            
             throw e;
         }
     }
