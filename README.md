@@ -132,21 +132,6 @@ if (await warrantClient.isAuthorized("store", storeId, "edit", user.id)) {
 }
 ```
 
-**NOTE:** To ignore the `objectId` when performing authorization calls using `isAuthorized`, you can pass the constant `WARRANT_IGNORE_ID`. You must have a corresponding warrant that grants access to **ANY** user on the given `objectType` for this check to succeed.
-```js
-import { Client as WarrantClient, WARRANT_IGNORE_ID } from "@warrantdev/warrant-node";
-
-const warrantClient = new WarrantClient("api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=");
-
-//
-// Example Scenario:
-// An e-commerce website where Store Owners can edit store info
-//
-if (await warrantClient.isAuthorized("store", WARRANT_IGNORE_ID, "edit", user.id)) {
-    // Carry out logic to allow user to edit a Store
-}
-```
-
 We’ve used a random API key in these code examples. Replace it with your
 [actual publishable API keys](https://app.warrant.dev) to
 test this code through your own Warrant account.
