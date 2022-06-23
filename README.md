@@ -3,7 +3,7 @@
 Use [Warrant](https://warrant.dev/) in server-side Node.js projects.
 
 [![npm](https://img.shields.io/npm/v/@warrantdev/warrant-node)](https://www.npmjs.com/package/@warrantdev/warrant-node)
-[![Discord](https://img.shields.io/discord/865661082203193365?label=discord)](https://discord.gg/QNCMKWzqET)
+[![Slack](https://img.shields.io/badge/slack-join-brightgreen)](https://join.slack.com/t/warrantcommunity/shared_invite/zt-12g84updv-5l1pktJf2bI5WIKN4_~f4w)
 
 ## Installation
 
