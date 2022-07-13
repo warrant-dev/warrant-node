@@ -1,26 +1,39 @@
 import { API_URL_BASE, SELF_SERVICE_DASH_URL_BASE } from "./constants";
-import ListWarrantFilters from "./types/ListWarrantFilters";
+import Config from "./types/Config";
 import ApiClient from "./HttpClient";
-import { SDKConfig } from "./types/Config";
-import Permission from "./types/Permission";
-import Role from "./types/Role";
+import Permission, { ListPermissionOptions } from "./types/Permission";
+import Role, { ListRoleOptions } from "./types/Role";
+import Tenant, { ListTenantOptions } from "./types/Tenant";
+import User, { ListUserOptions } from "./types/User";
+import Warrant, { ListWarrantOptions } from "./types/Warrant";
 import Session from "./types/Session";
-import Tenant from "./types/Tenant";
-import User from "./types/User";
-import Warrant from "./types/Warrant";
 import WarrantCheck from "./types/WarrantCheck";
 import PermissionCheck from "./types/PermissionCheck";
 
 export default class Client {
-    private readonly config: SDKConfig;
+    private readonly config: Config;
     private readonly httpClient: ApiClient;
 
-    constructor(config: SDKConfig) {
+    constructor(config: Config) {
         this.config = config;
         this.httpClient = new ApiClient({
             apiKey: this.config.apiKey,
             baseUrl: `${API_URL_BASE}`,
         });
+    }
+
+    //
+    // Tenant methods
+    //
+    public async getTenant(tenantId: string): Promise<Tenant> {
+        try {
+            return await this.httpClient.get({
+                url: `/v1/tenants/${tenantId}`,
+            });
+        } catch (e) {
+            console.log("Error getting tenant");
+            throw e;
+        }
     }
 
     public async createTenant(tenant: Tenant): Promise<Tenant> {
@@ -35,6 +48,55 @@ export default class Client {
         }
     }
 
+    public async updateTenant(tenantId: string, tenant: Tenant): Promise<Tenant> {
+        try {
+            return await this.httpClient.put({
+                url: `/v1/tenants/${tenantId}`,
+                data: tenant,
+            });
+        } catch (e) {
+            console.log("Error updating tenant");
+            throw e;
+        }
+    }
+
+    public async deleteTenant(tenantId: string): Promise<void> {
+        try {
+            return await this.httpClient.delete({
+                url: `/v1/tenants/${tenantId}`,
+            });
+        } catch (e) {
+            console.log("Error deleting tenant");
+            throw e;
+        }
+    }
+
+    public async listTenants(listOptions: ListTenantOptions): Promise<Tenant[]> {
+        try {
+            return await this.httpClient.get({
+                url: "/v1/tenants",
+                params: listOptions,
+            });
+        } catch (e) {
+            console.log("Error listing tenants");
+            throw e;
+        }
+    }
+
+    //
+    // User methods
+    //
+    public async getUser(userId: string): Promise<User> {
+        try {
+            return await this.httpClient.get({
+                url: `/v1/users/${userId}`,
+            });
+        } catch (e) {
+            console.log("Error getting user");
+            throw e;
+        }
+    }
+
     public async createUser(user: User): Promise<User> {
         try {
             return await this.httpClient.post({
@@ -43,6 +105,55 @@ export default class Client {
             });
         } catch (e) {
             console.log("Error creating user");
+            throw e;
+        }
+    }
+
+    public async updateUser(userId: string, user: User): Promise<User> {
+        try {
+            return await this.httpClient.put({
+                url: `/v1/users/${userId}`,
+                data: user,
+            });
+        } catch (e) {
+            console.log("Error updating user");
+            throw e;
+        }
+    }
+
+    public async deleteUser(userId: string): Promise<void> {
+        try {
+            return await this.httpClient.delete({
+                url: `/v1/users/${userId}`,
+            });
+        } catch (e) {
+            console.log("Error deleting user");
+            throw e;
+        }
+    }
+
+    public async listUsers(listOptions: ListUserOptions): Promise<User[]> {
+        try {
+            return await this.httpClient.get({
+                url: "/v1/users",
+                params: listOptions,
+            });
+        } catch (e) {
+            console.log("Error listing users");
+            throw e;
+        }
+    }
+
+    //
+    // Role methods
+    //
+    public async getRole(roleId: string): Promise<Role> {
+        try {
+            return await this.httpClient.get({
+                url: `/v1/roles/${roleId}`,
+            });
+        } catch (e) {
+            console.log("Error getting role");
             throw e;
         }
     }
@@ -70,6 +181,54 @@ export default class Client {
         }
     }
 
+    public async listRoles(listOptions: ListRoleOptions): Promise<Role[]> {
+        try {
+            return await this.httpClient.get({
+                url: "/v1/roles",
+                params: listOptions,
+            });
+        } catch (e) {
+            console.log("Error listing roles");
+            throw e;
+        }
+    }
+
+    public async assignRoleToUser(roleId: string, userId: string): Promise<Role> {
+        try {
+            return await this.httpClient.post({
+                url: `/v1/users/${userId}/roles/${roleId}`,
+            });
+        } catch (e) {
+            console.log("Error assigning role to user");
+            throw e;
+        }
+    }
+
+    public async removeRoleFromUser(roleId: string, userId: string): Promise<void> {
+        try {
+            await this.httpClient.delete({
+                url: `/users/${userId}/roles/${roleId}`,
+            });
+        } catch (e) {
+            console.log("Error removing role from user");
+            throw e;
+        }
+    }
+
+    //
+    // Permission methods
+    //
+    public async getPermission(permissionId: string): Promise<Permission> {
+        try {
+            return await this.httpClient.get({
+                url: `/v1/permissions/${permissionId}`,
+            });
+        } catch (e) {
+            console.log("Error getting permission");
+            throw e;
+        }
+    }
+
     public async createPermission(permission: Permission): Promise<Permission> {
         try {
             return await this.httpClient.post({
@@ -93,6 +252,65 @@ export default class Client {
         }
     }
 
+    public async listPermissions(listOptions: ListPermissionOptions): Promise<Permission[]> {
+        try {
+            return await this.httpClient.get({
+                url: "/v1/permissions",
+                params: listOptions,
+            });
+        } catch (e) {
+            console.log("Error listing permissions");
+            throw e;
+        }
+    }
+
+    public async assignPermissionToUser(permissionId: string, userId: string): Promise<Permission> {
+        try {
+            return await this.httpClient.post({
+                url: `/v1/users/${userId}/permissions/${permissionId}`,
+            });
+        } catch (e) {
+            console.log("Error assigning permission to user");
+            throw e;
+        }
+    }
+
+    public async removePermissionFromUser(permissionId: string, userId: string): Promise<void> {
+        try {
+            await this.httpClient.delete({
+                url: `/v1/users/${userId}/permissions/${permissionId}`,
+            });
+        } catch (e) {
+            console.log("Error removing permission from user");
+            throw e;
+        }
+    }
+
+    public async assignPermissionToRole(permissionId: string, roleId: string): Promise<Permission> {
+        try {
+            return await this.httpClient.post({
+                url: `/v1/roles/${roleId}/permissions/${permissionId}`,
+            });
+        } catch (e) {
+            console.log("Error assigning permission to role");
+            throw e;
+        }
+    }
+
+    public async removePermissionFromRole(permissionId: string, roleId: string): Promise<void> {
+        try {
+            await this.httpClient.delete({
+                url: `/v1/roles/${roleId}/permissions/${permissionId}`,
+            });
+        } catch (e) {
+            console.log("Error removing permission from role");
+            throw e;
+        }
+    }
+
+    //
+    // Warrant methods
+    //
     public async createWarrant(warrant: Warrant): Promise<Warrant> {
         try {
             return await this.httpClient.post({
@@ -105,83 +323,26 @@ export default class Client {
         }
     }
 
-    public async listWarrants(filters: ListWarrantFilters = {}): Promise<Warrant[]> {
+    public async deleteWarrant(warrant: Warrant): Promise<Warrant> {
         try {
-            const response = await this.httpClient.get({
+            return await this.httpClient.delete({
+                url: "/v1/warrants",
+                data: warrant,
+            });
+        } catch (e) {
+            console.log("Error deleting warrant");
+            throw e;
+        }
+    }
+
+    public async listWarrants(listOptions: ListWarrantOptions = {}): Promise<Warrant[]> {
+        try {
+            return await this.httpClient.get({
                 url: "/warrants",
-                params: filters,
-            });
-
-            return response.data;
-        } catch (e) {
-            console.log("Error getting warrants in Warrant", e.response.data);
-
-            throw e;
-        }
-    }
-
-    public async assignRoleToUser(userId: string, roleId: string): Promise<Role> {
-        try {
-            return await this.httpClient.post({
-                url: `/v1/users/${userId}/roles/${roleId}`,
+                params: listOptions,
             });
         } catch (e) {
-            console.log("Error assigning role to user");
-            throw e;
-        }
-    }
-
-    public async removeRoleFromUser(userId: string, roleId: string): Promise<void> {
-        try {
-            await this.httpClient.delete({
-                url: `/users/${userId}/roles/${roleId}`,
-            });
-        } catch (e) {
-            console.log("Error removing role from user");
-            throw e;
-        }
-    }
-
-    public async assignPermissionToUser(userId: string, permissionId: string): Promise<Permission> {
-        try {
-            return await this.httpClient.post({
-                url: `/v1/users/${userId}/permissions/${permissionId}`,
-            });
-        } catch (e) {
-            console.log("Error assigning permission to user");
-            throw e;
-        }
-    }
-
-    public async removePermissionFromUser(userId: string, permissionId: string): Promise<void> {
-        try {
-            await this.httpClient.delete({
-                url: `/v1/users/${userId}/permissions/${permissionId}`,
-            });
-        } catch (e) {
-            console.log("Error removing permission from user");
-            throw e;
-        }
-    }
-
-    public async assignPermissionToRole(roleId: string, permissionId: string): Promise<Permission> {
-        try {
-            return await this.httpClient.post({
-                url: `/v1/roles/${roleId}/permissions/${permissionId}`,
-            });
-        } catch (e) {
-            console.log("Error assigning permission to role");
-            throw e;
-        }
-    }
-
-    public async removePermissionFromRole(roleId: string, permissionId: string): Promise<void> {
-        try {
-            await this.httpClient.delete({
-                url: `/v1/roles/${roleId}/permissions/${permissionId}`,
-            });
-        } catch (e) {
-            console.log("Error removing permission from role");
+            console.log("Error listing warrants");
             throw e;
         }
     }
@@ -258,6 +419,10 @@ export default class Client {
         return this.authorize(warrantCheck);
     }
 
+
+    //
+    // Authorize methods
+    //
     private async authorize(warrantCheck: WarrantCheck): Promise<boolean> {
         try {
             const response = await this.httpClient.post({
