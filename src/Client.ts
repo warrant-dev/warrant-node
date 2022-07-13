@@ -164,6 +164,28 @@ export default class Client {
         }
     }
 
+    public async assignPermissionToRole(roleId: string, permissionId: string): Promise<Permission> {
+        try {
+            return await this.httpClient.post({
+                url: `/v1/roles/${roleId}/permissions/${permissionId}`,
+            });
+        } catch (e) {
+            console.log("Error assigning permission to role");
+            throw e;
+        }
+    }
+
+    public async removePermissionFromRole(roleId: string, permissionId: string): Promise<void> {
+        try {
+            await this.httpClient.delete({
+                url: `/v1/roles/${roleId}/permissions/${permissionId}`,
+            });
+        } catch (e) {
+            console.log("Error removing permission from role");
+            throw e;
+        }
+    }
+
     /**
      * Creates an authorization session in Warrant for the specified userId and returns a session token that can be used to
      * make authorization requests to the Warrant API scoped to the specified userId and tenantId.
