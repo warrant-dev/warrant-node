@@ -2,9 +2,9 @@ import Axios, { AxiosRequestConfig } from "axios";
 import ApiError from "./types/ApiError";
 
 interface HttpClient {
-    get(url: string, config?: HttpClientRequestConfig): Promise<any>;
-    delete(url: string, data?: any, config?: HttpClientRequestConfig): Promise<any>;
-    post(url: string, data?: any, config?: HttpClientRequestConfig): Promise<any>;
+    get(requestOptions: HttpClientRequestOptions): Promise<any>;
+    delete(requestOptions: HttpClientRequestOptions): Promise<any>;
+    post(requestOptions: HttpClientRequestOptions): Promise<any>;
 }
 
 export interface HttpClientConfig {
@@ -12,10 +12,12 @@ export interface HttpClientConfig {
     baseUrl: string;
 }
 
-export interface HttpClientRequestConfig {
+export interface HttpClientRequestOptions {
     apiKey?: string;
     baseUrl?: string;
+    data?: any;
     params?: any;
+    url: string;
 }
 
 export default class ApiClient implements HttpClient {
@@ -25,66 +27,69 @@ export default class ApiClient implements HttpClient {
         this.config = config;
     }
 
-    public async get(url: string, config?: HttpClientRequestConfig): Promise<any> {
+    public async get(requestOptions: HttpClientRequestOptions): Promise<any> {
         try {
             const response = await Axios({
                 method: "GET",
-                url,
-                ...this.buildRequestConfig(config),
+                ...this.buildRequestConfig(requestOptions),
             });
             return response.data;
         } catch (e) {
-            throw new ApiError(e.response.data.code, e.response.data.message);
+            throw this.buildError(e);
         }
     }
 
-    public async delete(url: string, data?: any, config?: HttpClientRequestConfig): Promise<any> {
+    public async delete(requestOptions: HttpClientRequestOptions): Promise<any> {
         try {
             const response = await Axios({
                 method: "DELETE",
-                url,
-                data,
-                ...this.buildRequestConfig(config),
+                ...this.buildRequestConfig(requestOptions),
             });
             return response.data;
         } catch (e) {
-            throw new ApiError(e.response.data.code, e.response.data.message);
+            throw this.buildError(e);
         }
     }
 
-    public async post(url: string, data?: any, config?: HttpClientRequestConfig): Promise<any> {
+    public async post(requestOptions: HttpClientRequestOptions): Promise<any> {
         try {
             const response = await Axios({
                 method: "POST",
-                url,
-                data,
-                ...this.buildRequestConfig(config),
+                ...this.buildRequestConfig(requestOptions),
             });
             return response.data;
         } catch (e) {
-            throw new ApiError(e.response.data.code, e.response.data.message);
+            throw this.buildError(e);
         }
     }
 
-    private buildRequestConfig(requestConfig?: HttpClientRequestConfig): AxiosRequestConfig {
+    private buildRequestConfig(requestOptions?: HttpClientRequestOptions): AxiosRequestConfig {
         const config: AxiosRequestConfig = {
             baseURL: this.config.baseUrl,
             headers: {
                 Authorization: `ApiKey ${this.config.apiKey}`,
             },
-            ...requestConfig,
+            ...requestOptions,
         };
 
-        if (requestConfig?.apiKey) {
+        if (requestOptions?.apiKey) {
             config.headers = {
-                Authorization: `ApiKey ${requestConfig.apiKey}`,
+                Authorization: `ApiKey ${requestOptions.apiKey}`,
             };
         }
 
-        if (requestConfig?.baseUrl) {
-            config.baseURL = requestConfig.baseUrl;
+        if (requestOptions?.baseUrl) {
+            config.baseURL = requestOptions.baseUrl;
         }
 
         return config;
+    }
+
+    private buildError(e: any): Error {
+        if (e.response) {
+            return new ApiError(e.response.data.code, e.response.data.message);
+        }
+
+        return e;
     }
 }
