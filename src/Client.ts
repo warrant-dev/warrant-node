@@ -1,6 +1,7 @@
-import Axios, { AxiosInstance } from "axios";
 import { API_URL_BASE, API_VERSION, SELF_SERVICE_DASH_URL_BASE } from "./constants";
 import ListWarrantFilters from "./types/ListWarrantFilters";
+import ApiClient from "./HttpClient";
+import { SDKConfig } from "./types/Config";
 import Permission from "./types/Permission";
 import Role from "./types/Role";
 import Session from "./types/Session";
@@ -9,16 +10,14 @@ import User from "./types/User";
 import Warrant, { WarrantUser } from "./types/Warrant";
 
 export default class Client {
-    private readonly apiKey: string;
-    private httpClient: AxiosInstance;
+    private readonly config: SDKConfig;
+    private readonly httpClient: ApiClient;
 
-    constructor(apiKey: string) {
-        this.apiKey = apiKey;
-        this.httpClient = Axios.create({
-            baseURL: `${API_URL_BASE}/${API_VERSION}`,
-            headers: {
-                Authorization: `ApiKey ${this.apiKey}`,
-            },
+    constructor(config: SDKConfig) {
+        this.config = config;
+        this.httpClient = new ApiClient({
+            apiKey: this.config.apiKey,
+            baseUrl: `${API_URL_BASE}`,
         });
     }
 
@@ -29,8 +28,7 @@ export default class Client {
             });
             return response.data;
         } catch (e) {
-            console.log("Error creating tenant in Warrant", e.response.data);
-
+            console.log("Error creating tenant");
             throw e;
         }
     }
@@ -65,8 +63,7 @@ export default class Client {
             const response = await this.httpClient.post("/users", requestBody);
             return response.data;
         } catch (e) {
-            console.log("Error creating user in Warrant", e.response.data);
-
+            console.log("Error creating user");
             throw e;
         }
     }
@@ -79,8 +76,7 @@ export default class Client {
 
             return response.data;
         } catch (e) {
-            console.log("Error creating role in Warrant", e.response.data);
-
+            console.log("Error creating role in Warrant");
             throw e;
         }
     }
@@ -89,8 +85,7 @@ export default class Client {
         try {
             await this.httpClient.delete(`/roles/${roleId}`);
         } catch (e) {
-            console.log("Error deleting role in Warrant", e.response.data);
-
+            console.log("Error deleting role");
             throw e;
         }
     }
@@ -103,8 +98,7 @@ export default class Client {
 
             return response.data;
         } catch (e) {
-            console.log("Error creating permission in Warrant", e.response.data);
-
+            console.log("Error creating permission");
             throw e;
         }
     }
@@ -113,8 +107,7 @@ export default class Client {
         try {
             await this.httpClient.delete(`/permissions/${permissionId}`);
         } catch (e) {
-            console.log("Error deleting permission in Warrant", e.response.data);
-
+            console.log("Error deleting permission");
             throw e;
         }
     }
@@ -140,8 +133,7 @@ export default class Client {
 
             return response.data;
         } catch (e) {
-            console.log("Error creating warrant in Warrant", e.response.data);
-
+            console.log("Error creating warrant");
             throw e;
         }
     }
@@ -155,7 +147,7 @@ export default class Client {
             return response.data;
         } catch (e) {
             console.log("Error getting warrants in Warrant", e.response.data);
-            
+
             throw e;
         }
     }
@@ -166,8 +158,7 @@ export default class Client {
 
             return response.data;
         } catch (e) {
-            console.log("Error assigning role to user in Warrant", e.response.data);
-
+            console.log("Error assigning role to user");
             throw e;
         }
     }
@@ -176,8 +167,7 @@ export default class Client {
         try {
             await this.httpClient.delete(`/users/${userId}/roles/${roleId}`);
         } catch (e) {
-            console.log("Error removing role from user in Warrant", e.response.data);
-
+            console.log("Error removing role from user");
             throw e;
         }
     }
@@ -188,8 +178,7 @@ export default class Client {
 
             return response.data;
         } catch (e) {
-            console.log("Error assigning permission to user in Warrant", e.response.data);
-
+            console.log("Error assigning permission to user");
             throw e;
         }
     }
@@ -198,8 +187,7 @@ export default class Client {
         try {
             await this.httpClient.delete(`/users/${userId}/permissions/${permissionId}`);
         } catch (e) {
-            console.log("Error removing permission from user in Warrant", e.response.data);
-
+            console.log("Error removing permission from user");
             throw e;
         }
     }
@@ -220,8 +208,7 @@ export default class Client {
 
             return response.data.token;
         } catch (e) {
-            console.log("Error creating authorization session for user in Warrant", e.response.data);
-
+            console.log("Error creating authorization session for user");
             throw e;
         }
     }
@@ -242,8 +229,7 @@ export default class Client {
 
             return `${SELF_SERVICE_DASH_URL_BASE}/${response.data.token}?redirectUrl=${redirectUrl}`;
         } catch (e) {
-            console.log("Error creating self-service session for user in Warrant", e.response.data);
-
+            console.log("Error creating self-service session for user");
             throw e;
         }
     }
