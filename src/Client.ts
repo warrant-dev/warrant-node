@@ -195,7 +195,7 @@ export default class Client {
      * @returns True if the `subject` has the given `relation` to `objectId` of type `objectType`, and false otherwise.
      */
     public async isAuthorized(warrantCheck: WarrantCheck): Promise<boolean> {
-        if (this.config.authorizationEndpoint) {
+        if (this.config.authorizeEndpoint) {
             return this.edgeAuthorize(warrantCheck);
         }
 
@@ -216,7 +216,7 @@ export default class Client {
     private async edgeAuthorize(warrantCheck: WarrantCheck): Promise<boolean> {
         try {
             const response = await this.httpClient.post("/v2/authorize", warrantCheck, {
-                baseUrl: this.config.authorizationEndpoint,
+                baseUrl: this.config.authorizeEndpoint,
             });
 
             return response.code === 200;

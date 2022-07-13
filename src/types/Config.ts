@@ -1,4 +1,4 @@
 export interface SDKConfig {
     apiKey: string;
-    authorizationEndpoint?: string;
+    authorizeEndpoint?: string;
 }
