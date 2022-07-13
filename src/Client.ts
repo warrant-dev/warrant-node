@@ -71,7 +71,7 @@ export default class Client {
         }
     }
 
-    public async listTenants(listOptions: ListTenantOptions): Promise<Tenant[]> {
+    public async listTenants(listOptions: ListTenantOptions = {}): Promise<Tenant[]> {
         try {
             return await this.httpClient.get({
                 url: "/v1/tenants",
@@ -132,7 +132,7 @@ export default class Client {
         }
     }
 
-    public async listUsers(listOptions: ListUserOptions): Promise<User[]> {
+    public async listUsers(listOptions: ListUserOptions = {}): Promise<User[]> {
         try {
             return await this.httpClient.get({
                 url: "/v1/users",
@@ -181,7 +181,7 @@ export default class Client {
         }
     }
 
-    public async listRoles(listOptions: ListRoleOptions): Promise<Role[]> {
+    public async listRoles(listOptions: ListRoleOptions = {}): Promise<Role[]> {
         try {
             return await this.httpClient.get({
                 url: "/v1/roles",
@@ -252,7 +252,7 @@ export default class Client {
         }
     }
 
-    public async listPermissions(listOptions: ListPermissionOptions): Promise<Permission[]> {
+    public async listPermissions(listOptions: ListPermissionOptions = {}): Promise<Permission[]> {
         try {
             return await this.httpClient.get({
                 url: "/v1/permissions",
