@@ -9,6 +9,7 @@ import Tenant from "./types/Tenant";
 import User from "./types/User";
 import Warrant from "./types/Warrant";
 import WarrantCheck from "./types/WarrantCheck";
+import PermissionCheck from "./types/PermissionCheck";
 
 export default class Client {
     private readonly config: SDKConfig;
@@ -230,17 +231,19 @@ export default class Client {
         }
     }
 
-    public async hasPermission(permissionId: string, userId: string): Promise<boolean> {
+    public async hasPermission(permissionCheck: PermissionCheck): Promise<boolean> {
         return this.isAuthorized({
             warrants: [{
                 objectType: "permission",
-                objectId: permissionId,
+                objectId: permissionCheck.permissionId,
                 relation: "member",
                 subject: {
                     objectType: "user",
-                    objectId: userId,
+                    objectId: permissionCheck.userId,
                 },
-            }]
+            }],
+            consistentRead: permissionCheck.consistentRead,
+            debug: permissionCheck.debug,
         });
     }
 }
