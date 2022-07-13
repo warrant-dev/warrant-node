@@ -27,16 +27,25 @@ export default class ApiClient implements HttpClient {
 
     public async get(url: string, config?: HttpClientRequestConfig): Promise<any> {
         try {
-            const response = await Axios.get(url, this.buildRequestConfig(config));
+            const response = await Axios({
+                method: "GET",
+                url,
+                ...this.buildRequestConfig(config),
+            });
             return response.data;
         } catch (e) {
             throw new ApiError(e.response.data.code, e.response.data.message);
         }
     }
 
-    public async delete(url: string, config?: HttpClientRequestConfig): Promise<any> {
+    public async delete(url: string, data?: any, config?: HttpClientRequestConfig): Promise<any> {
         try {
-            const response = await Axios.delete(url, this.buildRequestConfig(config));
+            const response = await Axios({
+                method: "DELETE",
+                url,
+                data,
+                ...this.buildRequestConfig(config),
+            });
             return response.data;
         } catch (e) {
             throw new ApiError(e.response.data.code, e.response.data.message);
@@ -45,7 +54,12 @@ export default class ApiClient implements HttpClient {
 
     public async post(url: string, data?: any, config?: HttpClientRequestConfig): Promise<any> {
         try {
-            const response = await Axios.post(url, data, this.buildRequestConfig(config));
+            const response = await Axios({
+                method: "POST",
+                url,
+                data,
+                ...this.buildRequestConfig(config),
+            });
             return response.data;
         } catch (e) {
             throw new ApiError(e.response.data.code, e.response.data.message);
