@@ -142,7 +142,7 @@ export default class Client {
         }
     }
 
-    public async assignPermissionToUser(userId: string, permissionId: string): Promise<Role> {
+    public async assignPermissionToUser(userId: string, permissionId: string): Promise<Permission> {
         try {
             return await this.httpClient.post({
                 url: `/v1/users/${userId}/permissions/${permissionId}`,
