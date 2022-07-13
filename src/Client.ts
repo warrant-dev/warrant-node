@@ -186,30 +186,61 @@ export default class Client {
      * @param userId The userId for which access is being checked.
      * @returns True if the `userId` has the given `relation` to `objectId` of type `objectType`, and false otherwise.
      */
-    public async isAuthorized(objectType: string, objectId: string, relation: string, userId: string): Promise<boolean> {
+    /**
+     * Checks against the warrants defined for your application to determine if the given `userId` has the given
+     * `relation` to the given `objectId` of type `objectType`. Returns true if the the relation exists and false otherwise.
+     * @param options access check options for this authorization request, including the objectType, objectId, relation, and subject
+     * for which access is being checked.
+     * @returns True if the `subject` has the given `relation` to `objectId` of type `objectType`, and false otherwise.
+     */
+    public async isAuthorized(warrantCheck: WarrantCheck): Promise<boolean> {
+        if (this.config.authorizationEndpoint) {
+            return this.edgeAuthorize(warrantCheck);
+        }
+
+        return this.authorize(warrantCheck);
+    }
+
+    private async authorize(warrantCheck: WarrantCheck): Promise<boolean> {
         try {
-            const response = await this.httpClient.post("/authorize", {
-                objectType,
-                objectId,
-                relation,
-                user: {
-                    userId,
-                },
+            const response = await this.httpClient.post("/v2/authorize", warrantCheck);
+
+            return response.code === 200;
+        } catch (e) {
+            console.log("Error performing access check");
+            throw e;
+        }
+    }
+
+    private async edgeAuthorize(warrantCheck: WarrantCheck): Promise<boolean> {
+        try {
+            const response = await this.httpClient.post("/v2/authorize", warrantCheck, {
+                baseUrl: this.config.authorizationEndpoint,
             });
 
-            if (response.status === 200) {
-                return true;
-            }
+            return response.code === 200;
         } catch (e) {
-            if (e.response.status !== 401) {
-                console.log("Error authorizing access through Warrant", e.response.data);
+            if (e.code === "cache_not_ready") {
+                console.log("Edge cache not ready. Re-routing access check to api.warrant.dev");
+                return this.authorize(warrantCheck);
             }
 
-            return false;
+            console.log("Error performing access check");
+            throw e;
         }
     }
 
     public async hasPermission(permissionId: string, userId: string): Promise<boolean> {
-        return this.isAuthorized("permission", permissionId, "member", userId);
+        return this.isAuthorized({
+            warrants: [{
+                objectType: "permission",
+                objectId: permissionId,
+                relation: "member",
+                subject: {
+                    objectType: "user",
+                    objectId: userId,
+                },
+            }]
+        });
     }
 }
