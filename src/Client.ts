@@ -25,7 +25,10 @@ export default class Client {
 
     public async createTenant(tenant: Tenant): Promise<Tenant> {
         try {
-            return await this.httpClient.post("/v1/tenants", tenant);
+            return await this.httpClient.post({
+                url: "/v1/tenants",
+                data: tenant,
+            });
         } catch (e) {
             console.log("Error creating tenant");
             throw e;
@@ -34,7 +37,10 @@ export default class Client {
 
     public async createUser(user: User): Promise<User> {
         try {
-            return await this.httpClient.post("/v1/users", user);
+            return await this.httpClient.post({
+                url: "/v1/users",
+                data: user,
+            });
         } catch (e) {
             console.log("Error creating user");
             throw e;
@@ -43,7 +49,10 @@ export default class Client {
 
     public async createRole(role: Role): Promise<Role> {
         try {
-            return await this.httpClient.post("/v1/roles", role);
+            return await this.httpClient.post({
+                url: "/v1/roles",
+                data: role,
+            });
         } catch (e) {
             console.log("Error creating role in Warrant");
             throw e;
@@ -52,7 +61,9 @@ export default class Client {
 
     public async deleteRole(roleId: string): Promise<void> {
         try {
-            await this.httpClient.delete(`/v1/roles/${roleId}`);
+            await this.httpClient.delete({
+                url: `/v1/roles/${roleId}`,
+            });
         } catch (e) {
             console.log("Error deleting role");
             throw e;
@@ -61,7 +72,10 @@ export default class Client {
 
     public async createPermission(permission: Permission): Promise<Permission> {
         try {
-            return await this.httpClient.post("/v1/permissions", permission);
+            return await this.httpClient.post({
+                url: "/v1/permissions",
+                data: permission,
+            });
         } catch (e) {
             console.log("Error creating permission");
             throw e;
@@ -70,7 +84,9 @@ export default class Client {
 
     public async deletePermission(permissionId: string): Promise<void> {
         try {
-            await this.httpClient.delete(`/v1/permissions/${permissionId}`);
+            await this.httpClient.delete({
+                url: `/v1/permissions/${permissionId}`,
+            });
         } catch (e) {
             console.log("Error deleting permission");
             throw e;
@@ -79,7 +95,10 @@ export default class Client {
 
     public async createWarrant(warrant: Warrant): Promise<Warrant> {
         try {
-            return await this.httpClient.post("/v1/warrants", warrant);
+            return await this.httpClient.post({
+                url: "/v1/warrants",
+                data: warrant,
+            });
         } catch (e) {
             console.log("Error creating warrant");
             throw e;
@@ -88,8 +107,11 @@ export default class Client {
 
     public async listWarrants(filters: ListWarrantFilters = {}): Promise<Warrant[]> {
         try {
-            const response = await this.httpClient.get("/warrants", {
-                params: filters,
+            const response = await this.httpClient.get({
+                url: "/warrants",
+                data: {
+                    params: filters,
+                },
             });
 
             return response.data;
@@ -102,7 +124,9 @@ export default class Client {
 
     public async assignRoleToUser(userId: string, roleId: string): Promise<Role> {
         try {
-            return await this.httpClient.post(`/v1/users/${userId}/roles/${roleId}`);
+            return await this.httpClient.post({
+                url: `/v1/users/${userId}/roles/${roleId}`,
+            });
         } catch (e) {
             console.log("Error assigning role to user");
             throw e;
@@ -111,7 +135,9 @@ export default class Client {
 
     public async removeRoleFromUser(userId: string, roleId: string): Promise<void> {
         try {
-            await this.httpClient.delete(`/users/${userId}/roles/${roleId}`);
+            await this.httpClient.delete({
+                url: `/users/${userId}/roles/${roleId}`,
+            });
         } catch (e) {
             console.log("Error removing role from user");
             throw e;
@@ -120,7 +146,9 @@ export default class Client {
 
     public async assignPermissionToUser(userId: string, permissionId: string): Promise<Role> {
         try {
-            return await this.httpClient.post(`/v1/users/${userId}/permissions/${permissionId}`);
+            return await this.httpClient.post({
+                url: `/v1/users/${userId}/permissions/${permissionId}`,
+            });
         } catch (e) {
             console.log("Error assigning permission to user");
             throw e;
@@ -129,7 +157,9 @@ export default class Client {
 
     public async removePermissionFromUser(userId: string, permissionId: string): Promise<void> {
         try {
-            await this.httpClient.delete(`/v1/users/${userId}/permissions/${permissionId}`);
+            await this.httpClient.delete({
+                url: `/v1/users/${userId}/permissions/${permissionId}`,
+            });
         } catch (e) {
             console.log("Error removing permission from user");
             throw e;
@@ -145,9 +175,12 @@ export default class Client {
      */
     public async createAuthorizationSession(session: Session): Promise<string> {
         try {
-            const sess = await this.httpClient.post("/v1/sessions", {
-                ...session,
-                type: "sess",
+            const sess = await this.httpClient.post({
+                url: "/v1/sessions",
+                data: {
+                    ...session,
+                    type: "sess",
+                },
             });
 
             return sess.token;
@@ -166,9 +199,12 @@ export default class Client {
      */
     public async createSelfServiceSession(session: Session, redirectUrl: string): Promise<string> {
         try {
-            const sess = await this.httpClient.post("/v1/sessions", {
-                ...session,
-                type: "ssdash",
+            const sess = await this.httpClient.post({
+                url: "/v1/sessions",
+                data: {
+                    ...session,
+                    type: "ssdash",
+                },
             });
 
             return `${SELF_SERVICE_DASH_URL_BASE}/${sess.token}?redirectUrl=${redirectUrl}`;
@@ -204,7 +240,10 @@ export default class Client {
 
     private async authorize(warrantCheck: WarrantCheck): Promise<boolean> {
         try {
-            const response = await this.httpClient.post("/v2/authorize", warrantCheck);
+            const response = await this.httpClient.post({
+                url: "/v2/authorize",
+                data: warrantCheck,
+            });
 
             return response.code === 200;
         } catch (e) {
@@ -215,8 +254,10 @@ export default class Client {
 
     private async edgeAuthorize(warrantCheck: WarrantCheck): Promise<boolean> {
         try {
-            const response = await this.httpClient.post("/v2/authorize", warrantCheck, {
+            const response = await this.httpClient.post({
                 baseUrl: this.config.authorizeEndpoint,
+                url: "/v2/authorize",
+                data: warrantCheck,
             });
 
             return response.code === 200;
