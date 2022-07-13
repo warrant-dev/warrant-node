@@ -5,6 +5,7 @@ interface HttpClient {
     get(requestOptions: HttpClientRequestOptions): Promise<any>;
     delete(requestOptions: HttpClientRequestOptions): Promise<any>;
     post(requestOptions: HttpClientRequestOptions): Promise<any>;
+    put(requestOptions: HttpClientRequestOptions): Promise<any>;
 }
 
 export interface HttpClientConfig {
@@ -55,6 +56,18 @@ export default class ApiClient implements HttpClient {
         try {
             const response = await Axios({
                 method: "POST",
+                ...this.buildRequestConfig(requestOptions),
+            });
+            return response.data;
+        } catch (e) {
+            throw this.buildError(e);
+        }
+    }
+
+    public async put(requestOptions: HttpClientRequestOptions): Promise<any> {
+        try {
+            const response = await Axios({
+                method: "PUT",
                 ...this.buildRequestConfig(requestOptions),
             });
             return response.data;
