@@ -142,7 +142,7 @@ export default class Client {
         }
     }
 
-    public async assignPermissionToUser(userId: string, permissionId: string): Promise<Role> {
+    public async assignPermissionToUser(userId: string, permissionId: string): Promise<Permission> {
         try {
             return await this.httpClient.post({
                 url: `/v1/users/${userId}/permissions/${permissionId}`,
@@ -160,6 +160,28 @@ export default class Client {
             });
         } catch (e) {
             console.log("Error removing permission from user");
+            throw e;
+        }
+    }
+
+    public async assignPermissionToRole(roleId: string, permissionId: string): Promise<Permission> {
+        try {
+            return await this.httpClient.post({
+                url: `/v1/roles/${roleId}/permissions/${permissionId}`,
+            });
+        } catch (e) {
+            console.log("Error assigning permission to role");
+            throw e;
+        }
+    }
+
+    public async removePermissionFromRole(roleId: string, permissionId: string): Promise<void> {
+        try {
+            await this.httpClient.delete({
+                url: `/v1/roles/${roleId}/permissions/${permissionId}`,
+            });
+        } catch (e) {
+            console.log("Error removing permission from role");
             throw e;
         }
     }
