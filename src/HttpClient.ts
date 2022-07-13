@@ -2,9 +2,9 @@ import Axios, { AxiosRequestConfig } from "axios";
 import ApiError from "./types/ApiError";
 
 interface HttpClient {
-    get(url: string, config: HttpClientRequestConfig): Promise<any>;
-    delete(url: string, config: HttpClientRequestConfig): Promise<any>;
-    post(url: string, data: any, config: HttpClientRequestConfig): Promise<any>;
+    get(url: string, config?: HttpClientRequestConfig): Promise<any>;
+    delete(url: string, data?: any, config?: HttpClientRequestConfig): Promise<any>;
+    post(url: string, data?: any, config?: HttpClientRequestConfig): Promise<any>;
 }
 
 export interface HttpClientConfig {
