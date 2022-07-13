@@ -193,7 +193,7 @@ export default class Client {
         }
     }
 
-    public async assignRoleToUser(roleId: string, userId: string): Promise<Role> {
+    public async assignRoleToUser(userId: string, roleId: string): Promise<Role> {
         try {
             return await this.httpClient.post({
                 url: `/v1/users/${userId}/roles/${roleId}`,
@@ -204,7 +204,7 @@ export default class Client {
         }
     }
 
-    public async removeRoleFromUser(roleId: string, userId: string): Promise<void> {
+    public async removeRoleFromUser(userId: string, roleId: string): Promise<void> {
         try {
             await this.httpClient.delete({
                 url: `/users/${userId}/roles/${roleId}`,
@@ -264,7 +264,7 @@ export default class Client {
         }
     }
 
-    public async assignPermissionToUser(permissionId: string, userId: string): Promise<Permission> {
+    public async assignPermissionToUser(userId: string, permissionId: string): Promise<Permission> {
         try {
             return await this.httpClient.post({
                 url: `/v1/users/${userId}/permissions/${permissionId}`,
@@ -275,7 +275,7 @@ export default class Client {
         }
     }
 
-    public async removePermissionFromUser(permissionId: string, userId: string): Promise<void> {
+    public async removePermissionFromUser(userId: string, permissionId: string): Promise<void> {
         try {
             await this.httpClient.delete({
                 url: `/v1/users/${userId}/permissions/${permissionId}`,
@@ -286,7 +286,7 @@ export default class Client {
         }
     }
 
-    public async assignPermissionToRole(permissionId: string, roleId: string): Promise<Permission> {
+    public async assignPermissionToRole(roleId: string, permissionId: string): Promise<Permission> {
         try {
             return await this.httpClient.post({
                 url: `/v1/roles/${roleId}/permissions/${permissionId}`,
@@ -297,7 +297,7 @@ export default class Client {
         }
     }
 
-    public async removePermissionFromRole(permissionId: string, roleId: string): Promise<void> {
+    public async removePermissionFromRole(roleId: string, permissionId: string): Promise<void> {
         try {
             await this.httpClient.delete({
                 url: `/v1/roles/${roleId}/permissions/${permissionId}`,
