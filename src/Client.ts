@@ -109,9 +109,7 @@ export default class Client {
         try {
             const response = await this.httpClient.get({
                 url: "/warrants",
-                data: {
-                    params: filters,
-                },
+                params: filters,
             });
 
             return response.data;
