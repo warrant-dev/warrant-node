@@ -144,6 +144,28 @@ export default class Client {
         }
     }
 
+    public async addUserToTenant(tenantId: string, userId: string): Promise<User> {
+        try {
+            return await this.httpClient.post({
+                url: `/v1/tenants/${tenantId}/users/${userId}`,
+            });
+        } catch (e) {
+            console.log("Error adding user to tenant");
+            throw e;
+        }
+    }
+
+    public async removeUserFromTenant(tenantId: string, userId: string): Promise<void> {
+        try {
+            return await this.httpClient.delete({
+                url: `/v1/tenants/${tenantId}/users/${userId}`,
+            });
+        } catch (e) {
+            console.log("Error removing user from tenant");
+            throw e;
+        }
+    }
+
     //
     // Role methods
     //
