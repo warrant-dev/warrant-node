@@ -1,6 +1,6 @@
 {
   "name": "@warrantdev/warrant-node",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Warrant API Wrapper for Node.js clients",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
