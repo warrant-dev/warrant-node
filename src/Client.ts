@@ -239,6 +239,18 @@ export default class Client {
         }
     }
 
+    public async listRolesForUser(userId: string, listOptions: ListRoleOptions = {}): Promise<Role[]> {
+        try {
+            return await this.httpClient.get({
+                url: `/v1/users/${userId}/roles`,
+                params: listOptions,
+            });
+        } catch (e) {
+            console.log("Error listing roles for user");
+            throw e;
+        }
+    }
+
     public async assignRoleToUser(userId: string, roleId: string): Promise<Role> {
         try {
             return await this.httpClient.post({
