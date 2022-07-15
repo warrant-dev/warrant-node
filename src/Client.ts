@@ -36,7 +36,7 @@ export default class Client {
         }
     }
 
-    public async createTenant(tenant: Tenant): Promise<Tenant> {
+    public async createTenant(tenant: Tenant = {}): Promise<Tenant> {
         try {
             return await this.httpClient.post({
                 url: "/v1/tenants",
@@ -97,7 +97,7 @@ export default class Client {
         }
     }
 
-    public async createUser(user: User): Promise<User> {
+    public async createUser(user: User = {}): Promise<User> {
         try {
             return await this.httpClient.post({
                 url: "/v1/users",
