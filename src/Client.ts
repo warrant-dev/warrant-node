@@ -322,6 +322,18 @@ export default class Client {
         }
     }
 
+    public async listPermissionsForUser(userId: string, listOptions: ListPermissionOptions = {}): Promise<Permission[]> {
+        try {
+            return await this.httpClient.get({
+                url: `/v1/users/${userId}/permissions`,
+                params: listOptions,
+            });
+        } catch (e) {
+            console.log("Error listing permissions for user");
+            throw e;
+        }
+    }
+
     public async assignPermissionToUser(userId: string, permissionId: string): Promise<Permission> {
         try {
             return await this.httpClient.post({
