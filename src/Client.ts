@@ -83,6 +83,18 @@ export default class Client {
         }
     }
 
+    public async listTenantsForUser(userId: string, listOptions: ListTenantOptions = {}): Promise<Tenant[]> {
+        try {
+            return await this.httpClient.get({
+                url: `/v1/users/${userId}/tenants`,
+                params: listOptions,
+            });
+        } catch (e) {
+            console.log("Error listing tenants for user");
+            throw e;
+        }
+    }
+
     //
     // User methods
     //
@@ -144,7 +156,19 @@ export default class Client {
         }
     }
 
-    public async addUserToTenant(tenantId: string, userId: string): Promise<User> {
+    public async listUsersForTenant(tenantId: string, listOptions: ListUserOptions = {}): Promise<User[]> {
+        try {
+            return await this.httpClient.get({
+                url: `/v1/tenants/${tenantId}/users`,
+                params: listOptions,
+            });
+        } catch (e) {
+            console.log("Error listing users for tenant");
+            throw e;
+        }
+    }
+
+    public async addUserToTenant(tenantId: string, userId: string): Promise<Warrant> {
         try {
             return await this.httpClient.post({
                 url: `/v1/tenants/${tenantId}/users/${userId}`,
@@ -345,7 +369,7 @@ export default class Client {
         }
     }
 
-    public async deleteWarrant(warrant: Warrant): Promise<Warrant> {
+    public async deleteWarrant(warrant: Warrant): Promise<void> {
         try {
             return await this.httpClient.delete({
                 url: "/v1/warrants",
