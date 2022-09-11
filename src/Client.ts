@@ -420,7 +420,7 @@ export default class Client {
     public async listWarrants(listOptions: ListWarrantOptions = {}): Promise<Warrant[]> {
         try {
             return await this.httpClient.get({
-                url: "/warrants",
+                url: "/v1/warrants",
                 params: listOptions,
             });
         } catch (e) {
