@@ -1,3 +1,15 @@
+export enum ErrorCode {
+    GenericError = "generic_error",
+    InternalError = "internal_error",
+    InvalidArgument = "invalid_argument",
+    InvalidParameter = "invalid_parameter",
+    InvalidRequest = "invalid_request",
+    MissingParameter = "missing_parameter",
+    NotFound = "not_found",
+    DuplicateRecord = "duplicate_record",
+    Unauthorized = "unauthorized",
+}
+
 export default class ApiError extends Error {
     public code: string;
     public message: string;
@@ -16,22 +28,20 @@ export default class ApiError extends Error {
 
     private static codeToName(code: string): string {
         switch (code) {
-            case "duplicate_record":
+            case ErrorCode.DuplicateRecord:
                 return "DuplicateRecordError";
-            case "internal_error":
+            case ErrorCode.InternalError:
                 return "InternalError";
-            case "invalid_request":
+            case ErrorCode.InvalidRequest:
                 return "InvalidRequestError";
-            case "invalid_parameter":
+            case ErrorCode.InvalidParameter:
                 return "InvalidParameterError";
-            case "missing_required_parameter":
+            case ErrorCode.MissingParameter:
                 return "MissingRequiredParameterError";
-            case "not_found":
+            case ErrorCode.NotFound:
                 return "NotFoundError";
-            case "unauthorized":
+            case ErrorCode.Unauthorized:
                 return "UnauthorizedError";
-            case "unknown_origin":
-                return "UnknownOriginError";
             default:
                 return "ApiError";
         }
