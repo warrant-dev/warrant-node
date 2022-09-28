@@ -18,7 +18,7 @@ export default class Client {
         this.config = config;
         this.httpClient = new ApiClient({
             apiKey: this.config.apiKey,
-            baseUrl: `${API_URL_BASE}`,
+            baseUrl: this.config.endpoint || API_URL_BASE,
         });
     }
 
