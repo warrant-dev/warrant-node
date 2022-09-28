@@ -1,40 +1,40 @@
 {
-  "name": "@warrantdev/warrant-node",
-  "version": "2.1.1",
-  "description": "Warrant API Wrapper for Node.js clients",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "/dist/**/*",
-    "README.md"
-  ],
-  "scripts": {
-    "build": "tsc",
-    "build-local": "npm run build && npm pack",
-    "prepare": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/warrant-dev/warrant-node.git"
-  },
-  "keywords": [
-    "warrant",
-    "authorization",
-    "rbac",
-    "role based access control",
-    "access control"
-  ],
-  "author": "Warrant <hello@warrant.dev> (https://warrant.dev)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/warrant-dev/warrant-node/issues"
-  },
-  "homepage": "https://github.com/warrant-dev/warrant-node#readme",
-  "dependencies": {
-    "axios": "^0.21.2"
-  },
-  "devDependencies": {
-    "typescript": "^4.3.2"
-  }
+    "name": "@warrantdev/warrant-node",
+    "version": "2.1.2",
+    "description": "Warrant API Wrapper for Node.js clients",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "/dist/**/*",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "build-local": "npm run build && npm pack",
+        "prepare": "npm run build",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/warrant-dev/warrant-node.git"
+    },
+    "keywords": [
+        "warrant",
+        "authorization",
+        "rbac",
+        "role based access control",
+        "access control"
+    ],
+    "author": "Warrant <hello@warrant.dev> (https://warrant.dev)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/warrant-dev/warrant-node/issues"
+    },
+    "homepage": "https://github.com/warrant-dev/warrant-node#readme",
+    "dependencies": {
+        "axios": "^0.21.2"
+    },
+    "devDependencies": {
+        "typescript": "^4.3.2"
+    }
 }
