@@ -265,7 +265,7 @@ export default class Client {
     public async removeRoleFromUser(userId: string, roleId: string): Promise<void> {
         try {
             await this.httpClient.delete({
-                url: `/users/${userId}/roles/${roleId}`,
+                url: `/v1/users/${userId}/roles/${roleId}`,
             });
         } catch (e) {
             console.log("Error removing role from user");
