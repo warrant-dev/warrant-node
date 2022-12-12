@@ -7,6 +7,10 @@ export interface ListWarrantOptions extends ListOptions {
     userId?: string;
 }
 
+export interface Context {
+    [key: string]: string;
+}
+
 export interface Subject {
     objectType: string;
     objectId: string;
@@ -18,4 +22,5 @@ export default interface Warrant {
     objectId: string;
     relation: string;
     subject: Subject;
+    context?: Context;
 }
