@@ -34,3 +34,10 @@ export interface WarrantObject {
     getObjectType(): string;
     getObjectId(): string;
 }
+
+export interface WarrantParams {
+    object: WarrantObject;
+    relation: string;
+    subject: WarrantObject | Subject;
+    context?: Context;
+}
