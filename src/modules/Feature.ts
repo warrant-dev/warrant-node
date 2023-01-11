@@ -1,10 +1,18 @@
 import WarrantClient from "../WarrantClient";
 import { CreateFeatureParams, ListFeatureOptions } from "../types/Feature";
+import { ObjectType } from "../types/ObjectType";
+import { WarrantObject } from "../types/Warrant";
 
-export default class Feature {
+export default class Feature implements WarrantObject {
+    // WarrantObject properties
+    objectType: string = ObjectType.Feature;
+    objectId: string;
+
+    // Feature properties
     featureId: string;
 
     constructor(featureId: string) {
+        this.objectId = featureId;
         this.featureId = featureId;
     }
 

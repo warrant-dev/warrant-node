@@ -9,13 +9,19 @@ import { ObjectType } from "../types/ObjectType";
 import { ListPricingTierOptions } from "../types/PricingTier";
 import { CreateTenantParams, ListTenantOptions, UpdateTenantParams } from "../types/Tenant";
 import { ListUserOptions } from "../types/User";
-import { Context } from "../types/Warrant";
+import { Context, WarrantObject } from "../types/Warrant";
 
 export default class Tenant {
+    // WarrantObject properties
+    objectType: string = ObjectType.Tenant;
+    objectId: string;
+
+    // Tenant properties
     tenantId: string;
     name?: string;
 
     constructor(tenantId: string, name?: string) {
+        this.objectId = tenantId;
         this.tenantId = tenantId;
         this.name = name;
     }

@@ -1,12 +1,20 @@
 import WarrantClient from "../WarrantClient";
 import { CreatePermissionParams, ListPermissionOptions, UpdatePermissionParams } from "../types/Permission";
+import { ObjectType } from "../types/ObjectType";
+import { WarrantObject } from "../types/Warrant";
 
-export default class Permission {
+export default class Permission implements WarrantObject {
+    // WarrantObject properties
+    objectType: string = ObjectType.Permission;
+    objectId: string;
+
+    // Permission properties
     permissionId: string;
     name?: string;
     description?: string;
 
     constructor(permissionId: string, name?: string, description?: string) {
+        this.objectId = permissionId;
         this.permissionId = permissionId;
         this.name = name;
         this.description = description;

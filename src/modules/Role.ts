@@ -4,14 +4,20 @@ import WarrantClient from "../WarrantClient";
 import { ObjectType } from "../types/ObjectType";
 import { ListPermissionOptions } from "../types/Permission";
 import { CreateRoleParams, ListRoleOptions, UpdateRoleParams } from "../types/Role";
-import { Context } from "../types/Warrant";
+import { Context, WarrantObject } from "../types/Warrant";
 
-export default class Role {
+export default class Role implements WarrantObject {
+    // WarrantObject properties
+    objectType: string = ObjectType.Role;
+    objectId: string;
+
+    // Role properties
     roleId: string;
     name?: string;
     description?: string;
 
     constructor(roleId: string, name?: string, description?: string) {
+        this.objectId = roleId;
         this.roleId = roleId;
         this.name = name;
         this.description = description;

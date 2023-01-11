@@ -4,12 +4,18 @@ import WarrantClient from "../WarrantClient";
 import { ListFeatureOptions } from "../types/Feature";
 import { ObjectType } from "../types/ObjectType";
 import { CreatePricingTierParams, ListPricingTierOptions } from "../types/PricingTier";
-import { Context } from "../types/Warrant";
+import { Context, WarrantObject } from "../types/Warrant";
 
-export default class PricingTier {
+export default class PricingTier implements WarrantObject {
+    // WarrantObject properties
+    objectType: string = ObjectType.PricingTier;
+    objectId: string;
+
+    // PricingTier properties
     pricingTierId: string;
 
     constructor(pricingTierId: string) {
+        this.objectId = pricingTierId;
         this.pricingTierId = pricingTierId;
     }
 

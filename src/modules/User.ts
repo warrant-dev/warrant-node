@@ -13,13 +13,19 @@ import { ListPricingTierOptions } from "../types/PricingTier";
 import { ListRoleOptions } from "../types/Role";
 import { CreateUserParams, ListUserOptions, UpdateUserParams } from "../types/User";
 import { ListTenantOptions } from "../types/Tenant";
-import { Context } from "../types/Warrant";
+import { Context, WarrantObject } from "../types/Warrant";
 
-export default class User {
+export default class User implements WarrantObject {
+    // WarrantObject properties
+    objectType: string = ObjectType.User;
+    objectId: string;
+
+    // User properties
     userId: string;
     email?: string;
 
     constructor(userId: string, email?: string) {
+        this.objectId = userId;
         this.userId = userId;
         this.email = email;
     }
