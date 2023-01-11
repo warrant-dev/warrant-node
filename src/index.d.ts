@@ -4,6 +4,7 @@ import Feature from "./modules/Feature";
 import Permission from "./modules/Permission";
 import PricingTier from "./modules/PricingTier";
 import Role from "./modules/Role";
+import Session from "./modules/Session";
 import Tenant from "./modules/Tenant";
 import User from "./modules/User";
 
@@ -18,6 +19,7 @@ declare module 'warrant' {
         Permission: typeof Permission;
         PricingTier: typeof PricingTier;
         Role: typeof Role;
+        Session: typeof Session;
         Tenant: typeof Tenant;
         User: typeof User;
     }
