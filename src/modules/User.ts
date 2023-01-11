@@ -38,6 +38,17 @@ export default class User implements WarrantObject {
         }
     }
 
+    public static async batchCreate(users: CreateUserParams[]): Promise<User[]> {
+        try {
+            return await WarrantClient.httpClient.post({
+                url: "/v1/users",
+                data: users,
+            });
+        } catch (e) {
+            throw e;
+        }
+    }
+
     public static async get(userId: string): Promise<User> {
         try {
             return await WarrantClient.httpClient.get({

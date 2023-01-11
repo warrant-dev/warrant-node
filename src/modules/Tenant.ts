@@ -40,6 +40,17 @@ export default class Tenant {
         }
     }
 
+    public static async batchCreate(tenants: CreateTenantParams[]): Promise<Tenant[]> {
+        try {
+            return await WarrantClient.httpClient.post({
+                url: "/v1/tenants",
+                data: tenants,
+            });
+        } catch (e) {
+            throw e;
+        }
+    }
+
     public static async get(tenantId: string): Promise<Tenant> {
         try {
             return await WarrantClient.httpClient.get({
