@@ -29,7 +29,7 @@ export default class Tenant {
     //
     // Static methods
     //
-    public static async create(tenant: CreateTenantParams): Promise<Tenant> {
+    public static async create(tenant: CreateTenantParams = {}): Promise<Tenant> {
         try {
             return await WarrantClient.httpClient.post({
                 url: "/v1/tenants",

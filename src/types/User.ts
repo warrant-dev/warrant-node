@@ -3,7 +3,7 @@ import ListOptions from "./ListOptions";
 export interface ListUserOptions extends ListOptions { }
 
 export interface CreateUserParams {
-    userId: string;
+    userId?: string;
     email?: string;
 }
 

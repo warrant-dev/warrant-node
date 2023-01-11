@@ -27,7 +27,7 @@ export default class User implements WarrantObject {
     //
     // Static methods
     //
-    public static async create(user: CreateUserParams): Promise<User> {
+    public static async create(user: CreateUserParams = {}): Promise<User> {
         try {
             return await WarrantClient.httpClient.post({
                 url: "/v1/users",
