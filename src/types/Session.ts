@@ -1,4 +1,4 @@
-export default interface Session {
+export interface SessionParams {
     userId: string;
     tenantId?: string;
 }

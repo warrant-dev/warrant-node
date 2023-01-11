@@ -12,7 +12,7 @@
         "build": "tsc",
         "build-local": "npm run build && npm pack",
         "prepare": "npm run build",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "npm run build && mocha"
     },
     "repository": {
         "type": "git",
@@ -35,6 +35,8 @@
         "axios": "^0.21.2"
     },
     "devDependencies": {
+        "@types/node": "^18.11.18",
+        "mocha": "^10.2.0",
         "typescript": "^4.3.2"
     }
 }
