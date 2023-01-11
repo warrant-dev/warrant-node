@@ -1,6 +1,7 @@
-import WarrantClient from "../WarrantClient";
+import Feature from "./Feature";
+import Permission from "./Permission";
 import Check, { CheckMany, FeatureCheck, PermissionCheck } from "../types/Check";
-import { ObjectType } from "../types/ObjectType";
+import WarrantClient from "../WarrantClient";
 
 export default class Authorization {
     public static async check(check: Check): Promise<boolean> {
@@ -30,47 +31,25 @@ export default class Authorization {
     }
 
     public static async hasFeature(featureCheck: FeatureCheck): Promise<boolean> {
-        const warrantCheck: CheckMany = {
-            warrants: [{
-                object: {
-                    objectType: ObjectType.Feature,
-                    objectId: featureCheck.featureId
-                },
-                relation: "member",
-                subject: featureCheck.subject,
-                context: featureCheck.context
-            }],
+        return this.check({
+            object: new Feature(featureCheck.featureId),
+            relation: "member",
+            subject: featureCheck.subject,
+            context: featureCheck.context,
             consistentRead: featureCheck.consistentRead,
             debug: featureCheck.debug
-        };
-
-        if (WarrantClient.config.authorizeEndpoint) {
-            return this.edgeAuthorize(warrantCheck);
-        }
-
-        return this.authorize(warrantCheck);
+        })
     }
 
     public static async hasPermission(permissionCheck: PermissionCheck): Promise<boolean> {
-        const warrantCheck: CheckMany = {
-            warrants: [{
-                object: {
-                    objectType: ObjectType.Permission,
-                    objectId: permissionCheck.permissionId,
-                },
-                relation: "member",
-                subject: permissionCheck.subject,
-                context: permissionCheck.context
-            }],
+        return this.check({
+            object: new Permission(permissionCheck.permissionId),
+            relation: "member",
+            subject: permissionCheck.subject,
+            context: permissionCheck.context,
             consistentRead: permissionCheck.consistentRead,
             debug: permissionCheck.debug
-        };
-
-        if (WarrantClient.config.authorizeEndpoint) {
-            return this.edgeAuthorize(warrantCheck);
-        }
-
-        return this.authorize(warrantCheck);
+        })
     }
 
     // Private methods
