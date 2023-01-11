@@ -2,7 +2,9 @@ import { API_URL_BASE } from "./constants";
 import ApiClient from "./HttpClient";
 import Authorization from "./modules/Authorization";
 import Feature from "./modules/Feature";
+import Permission from "./modules/Permission";
 import PricingTier from "./modules/PricingTier";
+import Role from "./modules/Role";
 import Config from "./types/Config";
 
 export default class WarrantClient {
@@ -11,7 +13,9 @@ export default class WarrantClient {
 
     public Authorization: typeof Authorization;
     public Feature: typeof Feature;
+    public Permission: typeof Permission;
     public PricingTier: typeof PricingTier;
+    public Role: typeof Role;
 
     constructor(config: Config) {
         WarrantClient.config = config;
