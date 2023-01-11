@@ -18,35 +18,38 @@ export default class Permission implements WarrantObject {
     // Static methods
     //
     public static async create(permission: CreatePermissionParams): Promise<Permission> {
-        try {
-            return await WarrantClient.httpClient.post({
+        return WarrantClient.httpClient
+            .post({
                 url: "/v1/permissions",
                 data: permission,
+            })
+            .then((res) => new Permission(res.permissionId, res.name, res.description))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async get(permissionId: string): Promise<Permission> {
-        try {
-            return await WarrantClient.httpClient.get({
+        return WarrantClient.httpClient
+            .get({
                 url: `/v1/permissions/${permissionId}`,
+            })
+            .then((res) => new Permission(res.permissionId, res.name, res.description))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async update(permissionId: string, permission: UpdatePermissionParams): Promise<Permission> {
-        try {
-            return await WarrantClient.httpClient.put({
+        return WarrantClient.httpClient
+            .put({
                 url: `/v1/permissions/${permissionId}`,
                 data: permission,
+            })
+            .then((res) => new Permission(res.permissionId, res.name, res.description))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async delete(permissionId: string): Promise<void> {
@@ -60,35 +63,38 @@ export default class Permission implements WarrantObject {
     }
 
     public static async listPermissions(listOptions: ListPermissionOptions = {}): Promise<Permission[]> {
-        try {
-            return await WarrantClient.httpClient.get({
+        return WarrantClient.httpClient
+            .get({
                 url: "/v1/permissions",
                 params: listOptions,
+            })
+            .then((res) => res.map((permission: Permission) => new Permission(permission.permissionId, permission.name, permission.description)))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async listPermissionsForUser(userId: string, listOptions: ListPermissionOptions = {}): Promise<Permission[]> {
-        try {
-            return await WarrantClient.httpClient.get({
+        return WarrantClient.httpClient
+            .get({
                 url: `/v1/users/${userId}/permissions`,
                 params: listOptions,
+            })
+            .then((res) => res.map((permission: Permission) => new Permission(permission.permissionId, permission.name, permission.description)))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async assignPermissionToUser(userId: string, permissionId: string): Promise<Permission> {
-        try {
-            return await WarrantClient.httpClient.post({
+        return WarrantClient.httpClient
+            .post({
                 url: `/v1/users/${userId}/permissions/${permissionId}`,
+            })
+            .then((res) => new Permission(res.permissionId, res.name, res.description))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async removePermissionFromUser(userId: string, permissionId: string): Promise<void> {
@@ -102,24 +108,26 @@ export default class Permission implements WarrantObject {
     }
 
     public static async listPermissionsForRole(roleId: string, listOptions: ListPermissionOptions = {}): Promise<Permission[]> {
-        try {
-            return await WarrantClient.httpClient.get({
+        return WarrantClient.httpClient
+            .get({
                 url: `/v1/roles/${roleId}/permissions`,
                 params: listOptions,
+            })
+            .then((res) => res.map((permission: Permission) => new Permission(permission.permissionId, permission.name, permission.description)))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async assignPermissionToRole(roleId: string, permissionId: string): Promise<Permission> {
-        try {
-            return await WarrantClient.httpClient.post({
+        return WarrantClient.httpClient
+            .post({
                 url: `/v1/roles/${roleId}/permissions/${permissionId}`,
+            })
+            .then((res) => new Permission(res.permissionId, res.name, res.description))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async removePermissionFromRole(roleId: string, permissionId: string): Promise<void> {

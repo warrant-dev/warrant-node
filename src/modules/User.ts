@@ -28,46 +28,50 @@ export default class User implements WarrantObject {
     // Static methods
     //
     public static async create(user: CreateUserParams = {}): Promise<User> {
-        try {
-            return await WarrantClient.httpClient.post({
+        return WarrantClient.httpClient
+            .post({
                 url: "/v1/users",
                 data: user,
+            })
+            .then((res) => new User(res.userId, res.email))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async batchCreate(users: CreateUserParams[]): Promise<User[]> {
-        try {
-            return await WarrantClient.httpClient.post({
+        return WarrantClient.httpClient
+            .post({
                 url: "/v1/users",
                 data: users,
+            })
+            .then((res) => res.map((user: User) => new User(user.userId, user.email)))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async get(userId: string): Promise<User> {
-        try {
-            return await WarrantClient.httpClient.get({
+        return WarrantClient.httpClient
+            .get({
                 url: `/v1/users/${userId}`,
+            })
+            .then((res) => new User(res.userId, res.email))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async update(userId: string, user: UpdateUserParams): Promise<User> {
-        try {
-            return await WarrantClient.httpClient.put({
+        return WarrantClient.httpClient
+            .put({
                 url: `/v1/users/${userId}`,
                 data: user,
+            })
+            .then((res) => new User(res.userId, res.email))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async delete(userId: string): Promise<void> {
@@ -81,25 +85,27 @@ export default class User implements WarrantObject {
     }
 
     public static async listUsers(listOptions: ListUserOptions = {}): Promise<User[]> {
-        try {
-            return await WarrantClient.httpClient.get({
+        return WarrantClient.httpClient
+            .get({
                 url: "/v1/users",
                 params: listOptions,
+            })
+            .then((res) => res.map((user: User) => new User(user.userId, user.email)))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async listUsersForTenant(tenantId: string, listOptions: ListUserOptions = {}): Promise<User[]> {
-        try {
-            return await WarrantClient.httpClient.get({
+        return WarrantClient.httpClient
+            .get({
                 url: `/v1/tenants/${tenantId}/users`,
                 params: listOptions,
+            })
+            .then((res) => res.map((user: User) => new User(user.userId, user.email)))
+            .catch((e) => {
+                throw e;
             });
-        } catch (e) {
-            throw e;
-        }
     }
 
     public static async assignUserToTenant(tenantId: string, userId: string): Promise<Warrant> {
@@ -126,76 +132,31 @@ export default class User implements WarrantObject {
     // Instance methods
     //
     public async listTenants(listOptions: ListTenantOptions = {}): Promise<Tenant[]> {
-        try {
-            return await WarrantClient.httpClient.get({
-                url: `/v1/users/${this.userId}/tenants`,
-                params: listOptions,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Tenant.listTenantsForUser(this.userId, listOptions);
     }
 
     public async listRoles(listOptions: ListRoleOptions = {}): Promise<Role[]> {
-        try {
-            return await WarrantClient.httpClient.get({
-                url: `/v1/users/${this.userId}/roles`,
-                params: listOptions,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Role.listRolesForUser(this.userId, listOptions);
     }
 
     public async assignRole(roleId: string): Promise<Role> {
-        try {
-            return await WarrantClient.httpClient.post({
-                url: `/v1/users/${this.userId}/roles/${roleId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Role.assignRoleToUser(this.userId, roleId);
     }
 
     public async removeRole(roleId: string): Promise<void> {
-        try {
-            await WarrantClient.httpClient.delete({
-                url: `/v1/users/${this.userId}/roles/${roleId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Role.removeRoleFromUser(this.userId, roleId);
     }
 
     public async listPermissions(listOptions: ListPermissionOptions = {}): Promise<Permission[]> {
-        try {
-            return await WarrantClient.httpClient.get({
-                url: `/v1/users/${this.userId}/permissions`,
-                params: listOptions,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Permission.listPermissionsForUser(this.userId, listOptions);
     }
 
     public async assignPermission(permissionId: string): Promise<Permission> {
-        try {
-            return await WarrantClient.httpClient.post({
-                url: `/v1/users/${this.userId}/permissions/${permissionId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Permission.assignPermissionToUser(this.userId, permissionId);
     }
 
     public async removePermission(permissionId: string): Promise<void> {
-        try {
-            await WarrantClient.httpClient.delete({
-                url: `/v1/users/${this.userId}/permissions/${permissionId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Permission.removePermissionFromUser(this.userId, permissionId);
     }
 
     public async hasPermission(permissionId: string, context: Context = {}): Promise<boolean> {
@@ -203,65 +164,27 @@ export default class User implements WarrantObject {
     }
 
     public async listPricingTiers(listOptions: ListPricingTierOptions = {}): Promise<PricingTier[]> {
-        try {
-            return await WarrantClient.httpClient.get({
-                url: `/v1/users/${this.userId}/pricing-tiers`,
-                params: listOptions,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return PricingTier.listPricingTiersForUser(this.userId, listOptions);
     }
 
     public async assignPricingTier(pricingTierId: string): Promise<PricingTier> {
-        try {
-            return await WarrantClient.httpClient.post({
-                url: `/v1/users/${this.userId}/pricing-tiers/${pricingTierId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return PricingTier.assignPricingTierToUser(this.userId, pricingTierId);
     }
 
     public async removePricingTier(pricingTierId: string): Promise<void> {
-        try {
-            await WarrantClient.httpClient.delete({
-                url: `/v1/users/${this.userId}/pricing-tiers/${pricingTierId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return PricingTier.removePricingTierFromUser(this.userId, pricingTierId);
     }
 
     public async listFeatures(listOptions: ListFeatureOptions = {}): Promise<Feature[]> {
-        try {
-            return await WarrantClient.httpClient.get({
-                url: `/v1/users/${this.userId}/features`,
-                params: listOptions,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Feature.listFeaturesForUser(this.userId, listOptions);
     }
 
     public async assignFeature(featureId: string): Promise<Feature> {
-        try {
-            return await WarrantClient.httpClient.post({
-                url: `/v1/users/${this.userId}/features/${featureId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Feature.assignFeatureToUser(this.userId, featureId);
     }
 
     public async removeFeature(featureId: string): Promise<void> {
-        try {
-            return await WarrantClient.httpClient.delete({
-                url: `/v1/users/${this.userId}/features/${featureId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Feature.removeFeatureFromUser(this.userId, featureId);
     }
 
     public async hasFeature(featureId: string, context: Context = {}): Promise<boolean> {
