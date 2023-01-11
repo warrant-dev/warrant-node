@@ -3,7 +3,7 @@ import Query from "../types/Query";
 import Warrant, { ListWarrantOptions } from "../types/Warrant";
 
 export default class WarrantModule {
-    public async create(warrant: Warrant): Promise<Warrant> {
+    public static async create(warrant: Warrant): Promise<Warrant> {
         try {
             return await WarrantClient.httpClient.post({
                 url: "/v1/warrants",
@@ -15,7 +15,7 @@ export default class WarrantModule {
         }
     }
 
-    public async delete(warrant: Warrant): Promise<void> {
+    public static async delete(warrant: Warrant): Promise<void> {
         try {
             return await WarrantClient.httpClient.delete({
                 url: "/v1/warrants",
@@ -27,7 +27,7 @@ export default class WarrantModule {
         }
     }
 
-    public async queryWarrants(query: Query, listOptions: ListWarrantOptions = {}): Promise<Warrant[]> {
+    public static async queryWarrants(query: Query, listOptions: ListWarrantOptions = {}): Promise<Warrant[]> {
         try {
             return await WarrantClient.httpClient.get({
                 url: "/v1/query",
