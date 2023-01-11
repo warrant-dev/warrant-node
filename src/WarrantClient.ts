@@ -8,6 +8,7 @@ import Role from "./modules/Role";
 import Session from "./modules/Session";
 import Tenant from "./modules/Tenant";
 import User from "./modules/User";
+import Warrant from "./modules/WarrantModule";
 import Config from "./types/Config";
 
 export default class WarrantClient {
@@ -22,6 +23,7 @@ export default class WarrantClient {
     public Session: typeof Session;
     public Tenant: typeof Tenant;
     public User: typeof User;
+    public Warrant: typeof Warrant;
 
     constructor(config: Config) {
         WarrantClient.config = config;

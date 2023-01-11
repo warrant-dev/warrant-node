@@ -7,6 +7,7 @@ import Role from "./modules/Role";
 import Session from "./modules/Session";
 import Tenant from "./modules/Tenant";
 import User from "./modules/User";
+import Warrant from "./modules/WarrantModule";
 
 declare module 'warrant' {
     export class WarrantClient {
@@ -22,6 +23,7 @@ declare module 'warrant' {
         Session: typeof Session;
         Tenant: typeof Tenant;
         User: typeof User;
+        Warrant: typeof Warrant;
     }
 
     export default WarrantClient;
