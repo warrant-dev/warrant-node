@@ -22,10 +22,12 @@ export default class Role implements WarrantObject {
     //
     public static async create(role: CreateRoleParams): Promise<Role> {
         try {
-            return await WarrantClient.httpClient.post({
+            const response = await WarrantClient.httpClient.post({
                 url: "/v1/roles",
                 data: role,
             });
+
+            return new Role(response.roleId, response.name, response.description);
         } catch (e) {
             throw e;
         }
@@ -33,9 +35,11 @@ export default class Role implements WarrantObject {
 
     public static async get(roleId: string): Promise<Role> {
         try {
-            return await WarrantClient.httpClient.get({
+            const response = await WarrantClient.httpClient.get({
                 url: `/v1/roles/${roleId}`,
             });
+
+            return new Role(response.roleId, response.name, response.description);
         } catch (e) {
             throw e;
         }
@@ -43,10 +47,12 @@ export default class Role implements WarrantObject {
 
     public static async update(roleId: string, role: UpdateRoleParams): Promise<Role> {
         try {
-            return await WarrantClient.httpClient.put({
+            const response = await WarrantClient.httpClient.put({
                 url: `/v1/roles/${roleId}`,
                 data: role,
             });
+
+            return new Role(response.roleId, response.name, response.description);
         } catch (e) {
             throw e;
         }
@@ -64,10 +70,12 @@ export default class Role implements WarrantObject {
 
     public static async listRoles(listOptions: ListRoleOptions = {}): Promise<Role[]> {
         try {
-            return await WarrantClient.httpClient.get({
+            const response = await WarrantClient.httpClient.get({
                 url: "/v1/roles",
                 params: listOptions,
             });
+
+            return response.map((role: Role) => new Role(role.roleId, role.name, role.description));
         } catch (e) {
             throw e;
         }
@@ -75,10 +83,12 @@ export default class Role implements WarrantObject {
 
     public static async listRolesForUser(userId: string, listOptions: ListRoleOptions = {}): Promise<Role[]> {
         try {
-            return await WarrantClient.httpClient.get({
+            const response = await WarrantClient.httpClient.get({
                 url: `/v1/users/${userId}/roles`,
                 params: listOptions,
             });
+
+            return response.map((role: Role) => new Role(role.roleId, role.name, role.description));
         } catch (e) {
             throw e;
         }
@@ -86,9 +96,11 @@ export default class Role implements WarrantObject {
 
     public static async assignRoleToUser(userId: string, roleId: string): Promise<Role> {
         try {
-            return await WarrantClient.httpClient.post({
+            const response = await WarrantClient.httpClient.post({
                 url: `/v1/users/${userId}/roles/${roleId}`,
             });
+
+            return new Role(response.roleId, response.name, response.description);
         } catch (e) {
             throw e;
         }
@@ -96,7 +108,7 @@ export default class Role implements WarrantObject {
 
     public static async removeRoleFromUser(userId: string, roleId: string): Promise<void> {
         try {
-            await WarrantClient.httpClient.delete({
+            return await WarrantClient.httpClient.delete({
                 url: `/v1/users/${userId}/roles/${roleId}`,
             });
         } catch (e) {
@@ -106,34 +118,15 @@ export default class Role implements WarrantObject {
 
     // Instance methods
     public async listPermissions(listOptions: ListPermissionOptions = {}): Promise<Permission[]> {
-        try {
-            return await WarrantClient.httpClient.get({
-                url: `/v1/roles/${this.roleId}/permissions`,
-                params: listOptions,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Permission.listPermissionsForRole(this.roleId, listOptions);
     }
 
     public async assignPermission(permissionId: string): Promise<Permission> {
-        try {
-            return await WarrantClient.httpClient.post({
-                url: `/v1/roles/${this.roleId}/permissions/${permissionId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Permission.assignPermissionToRole(this.roleId, permissionId);
     }
 
     public async removePermission(permissionId: string): Promise<void> {
-        try {
-            await WarrantClient.httpClient.delete({
-                url: `/v1/roles/${this.roleId}/permissions/${permissionId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Permission.removePermissionFromRole(this.roleId, permissionId);
     }
 
     public async hasPermission(permissionId: string, context: Context = {}): Promise<boolean> {

@@ -18,10 +18,12 @@ export default class PricingTier implements WarrantObject {
     //
     public static async create(pricingTier: CreatePricingTierParams): Promise<PricingTier> {
         try {
-            return await WarrantClient.httpClient.post({
+            const response = await WarrantClient.httpClient.post({
                 url: "/v1/pricing-tiers",
                 data: pricingTier,
             });
+
+            return new PricingTier(response.pricingTierId);
         } catch (e) {
             throw e;
         }
@@ -29,9 +31,11 @@ export default class PricingTier implements WarrantObject {
 
     public static async get(pricingTierId: string): Promise<PricingTier> {
         try {
-            return await WarrantClient.httpClient.get({
+            const response = await WarrantClient.httpClient.get({
                 url: `/v1/pricing-tiers/${pricingTierId}`,
             });
+
+            return new PricingTier(response.pricingTierId);
         } catch (e) {
             throw e;
         }
@@ -49,10 +53,12 @@ export default class PricingTier implements WarrantObject {
 
     public static async listPricingTiers(listOptions: ListPricingTierOptions = {}): Promise<PricingTier[]> {
         try {
-            return await WarrantClient.httpClient.get({
+            const response = await WarrantClient.httpClient.get({
                 url: "/v1/pricing-tiers",
                 params: listOptions,
             });
+
+            return response.map((pricingTier: PricingTier) => new PricingTier(pricingTier.pricingTierId));
         } catch (e) {
             throw e;
         }
@@ -60,10 +66,12 @@ export default class PricingTier implements WarrantObject {
 
     public static async listPricingTiersForTenant(tenantId: string, listOptions: ListPricingTierOptions = {}): Promise<PricingTier[]> {
         try {
-            return await WarrantClient.httpClient.get({
+            const response = await WarrantClient.httpClient.get({
                 url: `/v1/tenants/${tenantId}/pricing-tiers`,
                 params: listOptions,
             });
+
+            return response.map((pricingTier: PricingTier) => new PricingTier(pricingTier.pricingTierId));
         } catch (e) {
             throw e;
         }
@@ -71,9 +79,11 @@ export default class PricingTier implements WarrantObject {
 
     public static async assignPricingTierToTenant(tenantId: string, pricingTierId: string): Promise<PricingTier> {
         try {
-            return await WarrantClient.httpClient.post({
+            const response = await WarrantClient.httpClient.post({
                 url: `/v1/tenants/${tenantId}/pricing-tiers/${pricingTierId}`,
             });
+
+            return new PricingTier(response.pricingTierId);
         } catch (e) {
             throw e;
         }
@@ -81,7 +91,7 @@ export default class PricingTier implements WarrantObject {
 
     public static async removePricingTierFromTenant(tenantId: string, pricingTierId: string): Promise<void> {
         try {
-            await WarrantClient.httpClient.delete({
+            return await WarrantClient.httpClient.delete({
                 url: `/v1/tenants/${tenantId}/pricing-tiers/${pricingTierId}`,
             });
         } catch (e) {
@@ -91,10 +101,12 @@ export default class PricingTier implements WarrantObject {
 
     public static async listPricingTiersForUser(userId: string, listOptions: ListPricingTierOptions = {}): Promise<PricingTier[]> {
         try {
-            return await WarrantClient.httpClient.get({
+            const response = await WarrantClient.httpClient.get({
                 url: `/v1/users/${userId}/pricing-tiers`,
                 params: listOptions,
             });
+
+            return response.map((pricingTier: PricingTier) => new PricingTier(pricingTier.pricingTierId));
         } catch (e) {
             throw e;
         }
@@ -102,9 +114,11 @@ export default class PricingTier implements WarrantObject {
 
     public static async assignPricingTierToUser(userId: string, pricingTierId: string): Promise<PricingTier> {
         try {
-            return await WarrantClient.httpClient.post({
+            const response = await WarrantClient.httpClient.post({
                 url: `/v1/users/${userId}/pricing-tiers/${pricingTierId}`,
             });
+
+            return new PricingTier(response.pricingTierId);
         } catch (e) {
             throw e;
         }
@@ -112,7 +126,7 @@ export default class PricingTier implements WarrantObject {
 
     public static async removePricingTierFromUser(userId: string, pricingTierId: string): Promise<void> {
         try {
-            await WarrantClient.httpClient.delete({
+            return await WarrantClient.httpClient.delete({
                 url: `/v1/users/${userId}/pricing-tiers/${pricingTierId}`,
             });
         } catch (e) {
@@ -122,34 +136,15 @@ export default class PricingTier implements WarrantObject {
 
     // Instance methods
     public async listFeatures(listOptions: ListFeatureOptions = {}): Promise<Feature[]> {
-        try {
-            return await WarrantClient.httpClient.get({
-                url: `/v1/pricing-tiers/${this.pricingTierId}/features`,
-                params: listOptions,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Feature.listFeaturesForPricingTier(this.pricingTierId, listOptions);
     }
 
     public async assignFeature(featureId: string): Promise<Feature> {
-        try {
-            return await WarrantClient.httpClient.post({
-                url: `/v1/pricing-tiers/${this.pricingTierId}/features/${featureId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Feature.assignFeatureToPricingTier(this.pricingTierId, featureId);
     }
 
     public async removeFeature(featureId: string): Promise<void> {
-        try {
-            return await WarrantClient.httpClient.delete({
-                url: `/v1/pricing-tiers/${this.pricingTierId}/features/${featureId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return Feature.removeFeatureFromPricingTier(this.pricingTierId, featureId);
     }
 
     public async hasFeature(featureId: string, context: Context = {}): Promise<boolean> {
