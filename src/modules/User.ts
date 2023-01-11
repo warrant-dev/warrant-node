@@ -103,13 +103,13 @@ export default class User implements WarrantObject {
         }
     }
 
-    public static async addUserToTenant(tenantId: string, userId: string): Promise<Warrant> {
+    public static async assignUserToTenant(tenantId: string, userId: string): Promise<Warrant> {
         try {
             return await WarrantClient.httpClient.post({
                 url: `/v1/tenants/${tenantId}/users/${userId}`,
             });
         } catch (e) {
-            console.log("Error adding user to tenant");
+            console.log("Error assigning user to tenant");
             throw e;
         }
     }
@@ -258,13 +258,13 @@ export default class User implements WarrantObject {
         }
     }
 
-    public async addFeature(featureId: string): Promise<Feature> {
+    public async assignFeature(featureId: string): Promise<Feature> {
         try {
             return await WarrantClient.httpClient.post({
                 url: `/v1/users/${this.userId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error adding feature to user");
+            console.log("Error assigning feature to user");
             throw e;
         }
     }

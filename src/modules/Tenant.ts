@@ -102,13 +102,13 @@ export default class Tenant {
     //
     // Instance methods
     //
-    public async addUser(userId: string): Promise<Warrant> {
+    public async assignUser(userId: string): Promise<Warrant> {
         try {
             return await WarrantClient.httpClient.post({
                 url: `/v1/tenants/${this.tenantId}/users/${userId}`,
             });
         } catch (e) {
-            console.log("Error adding user to tenant");
+            console.log("Error assigning user to tenant");
             throw e;
         }
     }
@@ -182,13 +182,13 @@ export default class Tenant {
         }
     }
 
-    public async addFeature(featureId: string): Promise<Feature> {
+    public async assignFeature(featureId: string): Promise<Feature> {
         try {
             return await WarrantClient.httpClient.post({
                 url: `/v1/tenants/${this.tenantId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error adding feature to tenant");
+            console.log("Error assigning feature to tenant");
             throw e;
         }
     }

@@ -149,13 +149,13 @@ export default class PricingTier implements WarrantObject {
         }
     }
 
-    public async addFeature(featureId: string): Promise<Feature> {
+    public async assignFeature(featureId: string): Promise<Feature> {
         try {
             return await WarrantClient.httpClient.post({
                 url: `/v1/pricing-tiers/${this.pricingTierId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error adding feature to pricing tier");
+            console.log("Error assigning feature to pricing tier");
             throw e;
         }
     }

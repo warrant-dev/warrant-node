@@ -77,13 +77,13 @@ export default class Feature implements WarrantObject {
         }
     }
 
-    public static async addFeatureToPricingTier(pricingTierId: string, featureId: string): Promise<Feature> {
+    public static async assignFeatureToPricingTier(pricingTierId: string, featureId: string): Promise<Feature> {
         try {
             return await WarrantClient.httpClient.post({
                 url: `/v1/pricing-tiers/${pricingTierId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error adding feature to pricing tier");
+            console.log("Error assigning feature to pricing tier");
             throw e;
         }
     }
@@ -111,13 +111,13 @@ export default class Feature implements WarrantObject {
         }
     }
 
-    public static async addFeatureToTenant(tenantId: string, featureId: string): Promise<Feature> {
+    public static async assignFeatureToTenant(tenantId: string, featureId: string): Promise<Feature> {
         try {
             return await WarrantClient.httpClient.post({
                 url: `/v1/tenants/${tenantId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error adding feature to tenant");
+            console.log("Error assigning feature to tenant");
             throw e;
         }
     }
@@ -145,13 +145,13 @@ export default class Feature implements WarrantObject {
         }
     }
 
-    public static async addFeatureToUser(userId: string, featureId: string): Promise<Feature> {
+    public static async assignFeatureToUser(userId: string, featureId: string): Promise<Feature> {
         try {
             return await WarrantClient.httpClient.post({
                 url: `/v1/users/${userId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error adding feature to user");
+            console.log("Error assigning feature to user");
             throw e;
         }
     }
