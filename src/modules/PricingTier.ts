@@ -1,8 +1,8 @@
 import Authorization from "./Authorization";
 import Feature from "./Feature";
 import WarrantClient from "../WarrantClient";
-import { PRICING_TIER_OBJECT_TYPE } from "../constants";
 import { ListFeatureOptions } from "../types/Feature";
+import { ObjectType } from "../types/ObjectType";
 import { CreatePricingTierParams, ListPricingTierOptions } from "../types/PricingTier";
 import { Context } from "../types/Warrant";
 
@@ -166,6 +166,6 @@ export default class PricingTier {
     }
 
     public async hasFeature(featureId: string, context: Context = {}): Promise<boolean> {
-        return Authorization.hasFeature({ featureId: featureId, subject: { objectType: PRICING_TIER_OBJECT_TYPE, objectId: this.pricingTierId }, context: context });
+        return Authorization.hasFeature({ featureId: featureId, subject: { objectType: ObjectType.PricingTier, objectId: this.pricingTierId }, context: context });
     }
 }

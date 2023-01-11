@@ -4,8 +4,8 @@ import PricingTier from "./PricingTier";
 import User from "./User";
 import WarrantClient from "../WarrantClient";
 import Warrant from "./WarrantModule";
-import { TENANT_OBJECT_TYPE } from "../constants";
 import { ListFeatureOptions } from "../types/Feature";
+import { ObjectType } from "../types/ObjectType";
 import { ListPricingTierOptions } from "../types/PricingTier";
 import { CreateTenantParams, ListTenantOptions, UpdateTenantParams } from "../types/Tenant";
 import { ListUserOptions } from "../types/User";
@@ -199,6 +199,6 @@ export default class Tenant {
     }
 
     public async hasFeature(featureId: string, context: Context = {}): Promise<boolean> {
-        return Authorization.hasFeature({ featureId: featureId, subject: { objectType: TENANT_OBJECT_TYPE, objectId: this.tenantId }, context: context });
+        return Authorization.hasFeature({ featureId: featureId, subject: { objectType: ObjectType.Tenant, objectId: this.tenantId }, context: context });
     }
 }

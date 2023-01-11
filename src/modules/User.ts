@@ -6,8 +6,8 @@ import Role from "./Role";
 import Tenant from "./Tenant";
 import WarrantClient from "../WarrantClient";
 import Warrant from "./WarrantModule";
-import { USER_OBJECT_TYPE } from "../constants";
 import { ListFeatureOptions } from "../types/Feature";
+import { ObjectType } from "../types/ObjectType";
 import { ListPermissionOptions } from "../types/Permission";
 import { ListPricingTierOptions } from "../types/PricingTier";
 import { ListRoleOptions } from "../types/Role";
@@ -203,7 +203,7 @@ export default class User {
     }
 
     public async hasPermission(permissionId: string, context: Context = {}): Promise<boolean> {
-        return Authorization.hasPermission({ permissionId: permissionId, subject: { objectType: USER_OBJECT_TYPE, objectId: this.userId }, context: context });
+        return Authorization.hasPermission({ permissionId: permissionId, subject: { objectType: ObjectType.User, objectId: this.userId }, context: context });
     }
 
     public async listPricingTiers(listOptions: ListPricingTierOptions = {}): Promise<PricingTier[]> {
@@ -275,6 +275,6 @@ export default class User {
     }
 
     public async hasFeature(featureId: string, context: Context = {}): Promise<boolean> {
-        return Authorization.hasFeature({ featureId: featureId, subject: { objectType: USER_OBJECT_TYPE, objectId: this.userId }, context: context });
+        return Authorization.hasFeature({ featureId: featureId, subject: { objectType: ObjectType.User, objectId: this.userId }, context: context });
     }
 }

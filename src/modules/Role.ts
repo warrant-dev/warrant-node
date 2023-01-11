@@ -1,7 +1,7 @@
 import Authorization from "./Authorization";
 import Permission from "./Permission";
 import WarrantClient from "../WarrantClient";
-import { ROLE_OBJECT_TYPE } from "../constants";
+import { ObjectType } from "../types/ObjectType";
 import { ListPermissionOptions } from "../types/Permission";
 import { CreateRoleParams, ListRoleOptions, UpdateRoleParams } from "../types/Role";
 import { Context } from "../types/Warrant";
@@ -148,6 +148,6 @@ export default class Role {
     }
 
     public async hasPermission(permissionId: string, context: Context = {}): Promise<boolean> {
-        return Authorization.hasPermission({ permissionId: permissionId, subject: { objectType: ROLE_OBJECT_TYPE, objectId: this.roleId }, context: context });
+        return Authorization.hasPermission({ permissionId: permissionId, subject: { objectType: ObjectType.Role, objectId: this.roleId }, context: context });
     }
 }

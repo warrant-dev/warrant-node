@@ -1,6 +1,6 @@
 import WarrantClient from "../WarrantClient";
-import { FEATURE_OBJECT_TYPE, PERMISSION_OBJECT_TYPE } from "../constants";
 import Check, { CheckMany, FeatureCheck, PermissionCheck } from "../types/Check";
+import { ObjectType } from "../types/ObjectType";
 
 export default class Authorization {
     public static async check(check: Check): Promise<boolean> {
@@ -33,7 +33,7 @@ export default class Authorization {
         const warrantCheck: CheckMany = {
             warrants: [{
                 object: {
-                    objectType: FEATURE_OBJECT_TYPE,
+                    objectType: ObjectType.Feature,
                     objectId: featureCheck.featureId
                 },
                 relation: "member",
@@ -55,7 +55,7 @@ export default class Authorization {
         const warrantCheck: CheckMany = {
             warrants: [{
                 object: {
-                    objectType: PERMISSION_OBJECT_TYPE,
+                    objectType: ObjectType.Permission,
                     objectId: permissionCheck.permissionId,
                 },
                 relation: "member",
