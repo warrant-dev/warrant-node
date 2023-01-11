@@ -36,7 +36,6 @@ export default class Tenant {
                 data: tenant,
             });
         } catch (e) {
-            console.log("Error creating tenant");
             throw e;
         }
     }
@@ -47,7 +46,6 @@ export default class Tenant {
                 url: `/v1/tenants/${tenantId}`,
             });
         } catch (e) {
-            console.log("Error getting tenant");
             throw e;
         }
     }
@@ -59,7 +57,6 @@ export default class Tenant {
                 data: tenant,
             });
         } catch (e) {
-            console.log("Error updating tenant");
             throw e;
         }
     }
@@ -70,7 +67,6 @@ export default class Tenant {
                 url: `/v1/tenants/${tenantId}`,
             });
         } catch (e) {
-            console.log("Error deleting tenant");
             throw e;
         }
     }
@@ -82,7 +78,6 @@ export default class Tenant {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing tenants");
             throw e;
         }
     }
@@ -94,7 +89,6 @@ export default class Tenant {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing tenants for user");
             throw e;
         }
     }
@@ -108,7 +102,6 @@ export default class Tenant {
                 url: `/v1/tenants/${this.tenantId}/users/${userId}`,
             });
         } catch (e) {
-            console.log("Error assigning user to tenant");
             throw e;
         }
     }
@@ -119,7 +112,6 @@ export default class Tenant {
                 url: `/v1/tenants/${this.tenantId}/users/${userId}`,
             });
         } catch (e) {
-            console.log("Error removing user from tenant");
             throw e;
         }
     }
@@ -131,7 +123,6 @@ export default class Tenant {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing users for tenant");
             throw e;
         }
     }
@@ -143,7 +134,6 @@ export default class Tenant {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing pricing tiers for tenant");
             throw e;
         }
     }
@@ -154,7 +144,6 @@ export default class Tenant {
                 url: `/v1/tenants/${this.tenantId}/pricing-tiers/${pricingTierId}`,
             });
         } catch (e) {
-            console.log("Error assigning pricing tier to tenant");
             throw e;
         }
     }
@@ -165,7 +154,6 @@ export default class Tenant {
                 url: `/v1/tenants/${this.tenantId}/pricing-tiers/${pricingTierId}`,
             });
         } catch (e) {
-            console.log("Error removing pricing tier from tenant");
             throw e;
         }
     }
@@ -177,7 +165,6 @@ export default class Tenant {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing features for tenant");
             throw e;
         }
     }
@@ -188,7 +175,6 @@ export default class Tenant {
                 url: `/v1/tenants/${this.tenantId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error assigning feature to tenant");
             throw e;
         }
     }
@@ -199,7 +185,6 @@ export default class Tenant {
                 url: `/v1/tenants/${this.tenantId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error removing feature from tenant");
             throw e;
         }
     }

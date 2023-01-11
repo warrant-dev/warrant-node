@@ -33,7 +33,6 @@ export default class Role implements WarrantObject {
                 data: role,
             });
         } catch (e) {
-            console.log("Error creating role");
             throw e;
         }
     }
@@ -44,7 +43,6 @@ export default class Role implements WarrantObject {
                 url: `/v1/roles/${roleId}`,
             });
         } catch (e) {
-            console.log("Error getting role");
             throw e;
         }
     }
@@ -56,7 +54,6 @@ export default class Role implements WarrantObject {
                 data: role,
             });
         } catch (e) {
-            console.log("Error updating role");
             throw e;
         }
     }
@@ -67,7 +64,6 @@ export default class Role implements WarrantObject {
                 url: `/v1/roles/${roleId}`,
             });
         } catch (e) {
-            console.log("Error deleting role");
             throw e;
         }
     }
@@ -79,7 +75,6 @@ export default class Role implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing roles");
             throw e;
         }
     }
@@ -91,7 +86,6 @@ export default class Role implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing roles for user");
             throw e;
         }
     }
@@ -102,7 +96,6 @@ export default class Role implements WarrantObject {
                 url: `/v1/users/${userId}/roles/${roleId}`,
             });
         } catch (e) {
-            console.log("Error assigning role to user");
             throw e;
         }
     }
@@ -113,7 +106,6 @@ export default class Role implements WarrantObject {
                 url: `/v1/users/${userId}/roles/${roleId}`,
             });
         } catch (e) {
-            console.log("Error removing role from user");
             throw e;
         }
     }
@@ -126,7 +118,6 @@ export default class Role implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing permissions for role");
             throw e;
         }
     }
@@ -137,7 +128,6 @@ export default class Role implements WarrantObject {
                 url: `/v1/roles/${this.roleId}/permissions/${permissionId}`,
             });
         } catch (e) {
-            console.log("Error assigning permission to role");
             throw e;
         }
     }
@@ -148,7 +138,6 @@ export default class Role implements WarrantObject {
                 url: `/v1/roles/${this.roleId}/permissions/${permissionId}`,
             });
         } catch (e) {
-            console.log("Error removing permission from role");
             throw e;
         }
     }

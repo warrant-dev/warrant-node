@@ -22,7 +22,6 @@ export default class Session {
 
             return sess.token;
         } catch (e) {
-            console.log("Error creating authorization session for user");
             throw e;
         }
     }
@@ -46,7 +45,6 @@ export default class Session {
 
             return `${SELF_SERVICE_DASH_URL_BASE}/${sess.token}?redirectUrl=${redirectUrl}`;
         } catch (e) {
-            console.log("Error creating self-service session for user");
             throw e;
         }
     }

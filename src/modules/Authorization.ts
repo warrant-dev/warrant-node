@@ -62,7 +62,6 @@ export default class Authorization {
 
             return response.code === 200;
         } catch (e) {
-            console.log("Error performing access check");
             throw e;
         }
     }
@@ -78,11 +77,9 @@ export default class Authorization {
             return response.code === 200;
         } catch (e) {
             if (e.code === "cache_not_ready") {
-                console.log("Edge cache not ready. Re-routing access check to api.warrant.dev");
                 return this.authorize(warrantCheck);
             }
 
-            console.log("Error performing access check");
             throw e;
         }
     }

@@ -40,7 +40,6 @@ export default class User implements WarrantObject {
                 data: user,
             });
         } catch (e) {
-            console.log("Error creating user");
             throw e;
         }
     }
@@ -51,7 +50,6 @@ export default class User implements WarrantObject {
                 url: `/v1/users/${userId}`,
             });
         } catch (e) {
-            console.log("Error getting user");
             throw e;
         }
     }
@@ -63,7 +61,6 @@ export default class User implements WarrantObject {
                 data: user,
             });
         } catch (e) {
-            console.log("Error updating user");
             throw e;
         }
     }
@@ -74,7 +71,6 @@ export default class User implements WarrantObject {
                 url: `/v1/users/${userId}`,
             });
         } catch (e) {
-            console.log("Error deleting user");
             throw e;
         }
     }
@@ -86,7 +82,6 @@ export default class User implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing users");
             throw e;
         }
     }
@@ -98,7 +93,6 @@ export default class User implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing users for tenant");
             throw e;
         }
     }
@@ -109,7 +103,6 @@ export default class User implements WarrantObject {
                 url: `/v1/tenants/${tenantId}/users/${userId}`,
             });
         } catch (e) {
-            console.log("Error assigning user to tenant");
             throw e;
         }
     }
@@ -120,7 +113,6 @@ export default class User implements WarrantObject {
                 url: `/v1/tenants/${tenantId}/users/${userId}`,
             });
         } catch (e) {
-            console.log("Error removing user from tenant");
             throw e;
         }
     }
@@ -135,7 +127,6 @@ export default class User implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing tenants for user");
             throw e;
         }
     }
@@ -147,7 +138,6 @@ export default class User implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing roles for user");
             throw e;
         }
     }
@@ -158,7 +148,6 @@ export default class User implements WarrantObject {
                 url: `/v1/users/${this.userId}/roles/${roleId}`,
             });
         } catch (e) {
-            console.log("Error assigning role to user");
             throw e;
         }
     }
@@ -169,7 +158,6 @@ export default class User implements WarrantObject {
                 url: `/v1/users/${this.userId}/roles/${roleId}`,
             });
         } catch (e) {
-            console.log("Error removing role from user");
             throw e;
         }
     }
@@ -181,7 +169,6 @@ export default class User implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing permissions for user");
             throw e;
         }
     }
@@ -192,7 +179,6 @@ export default class User implements WarrantObject {
                 url: `/v1/users/${this.userId}/permissions/${permissionId}`,
             });
         } catch (e) {
-            console.log("Error assigning permission to user");
             throw e;
         }
     }
@@ -203,7 +189,6 @@ export default class User implements WarrantObject {
                 url: `/v1/users/${this.userId}/permissions/${permissionId}`,
             });
         } catch (e) {
-            console.log("Error removing permission from user");
             throw e;
         }
     }
@@ -219,7 +204,6 @@ export default class User implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing pricing tiers for user");
             throw e;
         }
     }
@@ -230,7 +214,6 @@ export default class User implements WarrantObject {
                 url: `/v1/users/${this.userId}/pricing-tiers/${pricingTierId}`,
             });
         } catch (e) {
-            console.log("Error assigning pricing tier to user");
             throw e;
         }
     }
@@ -241,7 +224,6 @@ export default class User implements WarrantObject {
                 url: `/v1/users/${this.userId}/pricing-tiers/${pricingTierId}`,
             });
         } catch (e) {
-            console.log("Error removing pricing tier from user");
             throw e;
         }
     }
@@ -253,7 +235,6 @@ export default class User implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing features for user");
             throw e;
         }
     }
@@ -264,7 +245,6 @@ export default class User implements WarrantObject {
                 url: `/v1/users/${this.userId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error assigning feature to user");
             throw e;
         }
     }
@@ -275,7 +255,6 @@ export default class User implements WarrantObject {
                 url: `/v1/users/${this.userId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error removing feature from user");
             throw e;
         }
     }

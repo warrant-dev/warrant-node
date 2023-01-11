@@ -26,7 +26,6 @@ export default class Feature implements WarrantObject {
                 data: feature,
             });
         } catch (e) {
-            console.log("Error creating feature");
             throw e;
         }
     }
@@ -37,7 +36,6 @@ export default class Feature implements WarrantObject {
                 url: `/v1/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error getting feature");
             throw e;
         }
     }
@@ -48,7 +46,6 @@ export default class Feature implements WarrantObject {
                 url: `/v1/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error deleting feature");
             throw e;
         }
     }
@@ -60,7 +57,6 @@ export default class Feature implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing features");
             throw e;
         }
     }
@@ -72,7 +68,6 @@ export default class Feature implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing features for pricing tier");
             throw e;
         }
     }
@@ -83,7 +78,6 @@ export default class Feature implements WarrantObject {
                 url: `/v1/pricing-tiers/${pricingTierId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error assigning feature to pricing tier");
             throw e;
         }
     }
@@ -94,7 +88,6 @@ export default class Feature implements WarrantObject {
                 url: `/v1/pricing-tiers/${pricingTierId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error removing feature from pricing tier");
             throw e;
         }
     }
@@ -106,7 +99,6 @@ export default class Feature implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing features for tenant");
             throw e;
         }
     }
@@ -117,7 +109,6 @@ export default class Feature implements WarrantObject {
                 url: `/v1/tenants/${tenantId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error assigning feature to tenant");
             throw e;
         }
     }
@@ -128,7 +119,6 @@ export default class Feature implements WarrantObject {
                 url: `/v1/tenants/${tenantId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error removing feature from tenant");
             throw e;
         }
     }
@@ -140,7 +130,6 @@ export default class Feature implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing features for user");
             throw e;
         }
     }
@@ -151,7 +140,6 @@ export default class Feature implements WarrantObject {
                 url: `/v1/users/${userId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error assigning feature to user");
             throw e;
         }
     }
@@ -162,7 +150,6 @@ export default class Feature implements WarrantObject {
                 url: `/v1/users/${userId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error removing feature from user");
             throw e;
         }
     }

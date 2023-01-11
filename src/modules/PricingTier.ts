@@ -29,7 +29,6 @@ export default class PricingTier implements WarrantObject {
                 data: pricingTier,
             });
         } catch (e) {
-            console.log("Error creating pricing tier");
             throw e;
         }
     }
@@ -40,7 +39,6 @@ export default class PricingTier implements WarrantObject {
                 url: `/v1/pricing-tiers/${pricingTierId}`,
             });
         } catch (e) {
-            console.log("Error getting pricing tier");
             throw e;
         }
     }
@@ -51,7 +49,6 @@ export default class PricingTier implements WarrantObject {
                 url: `/v1/pricing-tiers/${pricingTierId}`,
             });
         } catch (e) {
-            console.log("Error deleting pricing tier");
             throw e;
         }
     }
@@ -63,7 +60,6 @@ export default class PricingTier implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing pricingTiers");
             throw e;
         }
     }
@@ -75,7 +71,6 @@ export default class PricingTier implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing pricing tiers for user");
             throw e;
         }
     }
@@ -86,7 +81,6 @@ export default class PricingTier implements WarrantObject {
                 url: `/v1/tenants/${tenantId}/pricing-tiers/${pricingTierId}`,
             });
         } catch (e) {
-            console.log("Error assigning pricing tier to user");
             throw e;
         }
     }
@@ -97,7 +91,6 @@ export default class PricingTier implements WarrantObject {
                 url: `/v1/tenants/${tenantId}/pricing-tiers/${pricingTierId}`,
             });
         } catch (e) {
-            console.log("Error removing pricing tier from user");
             throw e;
         }
     }
@@ -109,7 +102,6 @@ export default class PricingTier implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing pricing tiers for user");
             throw e;
         }
     }
@@ -120,7 +112,6 @@ export default class PricingTier implements WarrantObject {
                 url: `/v1/users/${userId}/pricing-tiers/${pricingTierId}`,
             });
         } catch (e) {
-            console.log("Error assigning pricing tier to user");
             throw e;
         }
     }
@@ -131,7 +122,6 @@ export default class PricingTier implements WarrantObject {
                 url: `/v1/users/${userId}/pricing-tiers/${pricingTierId}`,
             });
         } catch (e) {
-            console.log("Error removing pricing tier from user");
             throw e;
         }
     }
@@ -144,7 +134,6 @@ export default class PricingTier implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing features for pricing tier");
             throw e;
         }
     }
@@ -155,7 +144,6 @@ export default class PricingTier implements WarrantObject {
                 url: `/v1/pricing-tiers/${this.pricingTierId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error assigning feature to pricing tier");
             throw e;
         }
     }
@@ -166,7 +154,6 @@ export default class PricingTier implements WarrantObject {
                 url: `/v1/pricing-tiers/${this.pricingTierId}/features/${featureId}`,
             });
         } catch (e) {
-            console.log("Error removing feature from pricing tier");
             throw e;
         }
     }

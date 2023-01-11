@@ -10,7 +10,6 @@ export default class WarrantModule {
                 data: warrant,
             });
         } catch (e) {
-            console.log("Error creating warrant");
             throw e;
         }
     }
@@ -22,7 +21,6 @@ export default class WarrantModule {
                 data: warrant,
             });
         } catch (e) {
-            console.log("Error deleting warrant");
             throw e;
         }
     }
@@ -37,7 +35,6 @@ export default class WarrantModule {
                 },
             });
         } catch (e) {
-            console.log("Error querying warrants");
             throw e;
         }
     }

@@ -30,7 +30,6 @@ export default class Permission implements WarrantObject {
                 data: permission,
             });
         } catch (e) {
-            console.log("Error creating permission");
             throw e;
         }
     }
@@ -41,7 +40,6 @@ export default class Permission implements WarrantObject {
                 url: `/v1/permissions/${permissionId}`,
             });
         } catch (e) {
-            console.log("Error getting permission");
             throw e;
         }
     }
@@ -53,7 +51,6 @@ export default class Permission implements WarrantObject {
                 data: permission,
             });
         } catch (e) {
-            console.log("Error updating permission");
             throw e;
         }
     }
@@ -64,7 +61,6 @@ export default class Permission implements WarrantObject {
                 url: `/v1/permissions/${permissionId}`,
             });
         } catch (e) {
-            console.log("Error deleting permission");
             throw e;
         }
     }
@@ -76,7 +72,6 @@ export default class Permission implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing permissions");
             throw e;
         }
     }
@@ -88,7 +83,6 @@ export default class Permission implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing permissions for user");
             throw e;
         }
     }
@@ -99,7 +93,6 @@ export default class Permission implements WarrantObject {
                 url: `/v1/users/${userId}/permissions/${permissionId}`,
             });
         } catch (e) {
-            console.log("Error assigning permission to user");
             throw e;
         }
     }
@@ -110,7 +103,6 @@ export default class Permission implements WarrantObject {
                 url: `/v1/users/${userId}/permissions/${permissionId}`,
             });
         } catch (e) {
-            console.log("Error removing permission from user");
             throw e;
         }
     }
@@ -122,7 +114,6 @@ export default class Permission implements WarrantObject {
                 params: listOptions,
             });
         } catch (e) {
-            console.log("Error listing permissions for role");
             throw e;
         }
     }
@@ -133,7 +124,6 @@ export default class Permission implements WarrantObject {
                 url: `/v1/roles/${roleId}/permissions/${permissionId}`,
             });
         } catch (e) {
-            console.log("Error assigning permission to role");
             throw e;
         }
     }
@@ -144,7 +134,6 @@ export default class Permission implements WarrantObject {
                 url: `/v1/roles/${roleId}/permissions/${permissionId}`,
             });
         } catch (e) {
-            console.log("Error removing permission from role");
             throw e;
         }
     }
