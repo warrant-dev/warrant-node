@@ -17,26 +17,24 @@ export default class PricingTier implements WarrantObject {
     // Static methods
     //
     public static async create(pricingTier: CreatePricingTierParams): Promise<PricingTier> {
-        return WarrantClient.httpClient
-            .post({
+        try {
+            return await WarrantClient.httpClient.post({
                 url: "/v1/pricing-tiers",
                 data: pricingTier,
-            })
-            .then((res) => new PricingTier(res.pricingTierId))
-            .catch((e) => {
-                throw e;
             });
+        } catch (e) {
+            throw e;
+        }
     }
 
     public static async get(pricingTierId: string): Promise<PricingTier> {
-        return WarrantClient.httpClient
-            .get({
+        try {
+            return await WarrantClient.httpClient.get({
                 url: `/v1/pricing-tiers/${pricingTierId}`,
-            })
-            .then((res) => new PricingTier(res.pricingTierId))
-            .catch((e) => {
-                throw e;
             });
+        } catch (e) {
+            throw e;
+        }
     }
 
     public static async delete(pricingTierId: string): Promise<void> {
@@ -50,38 +48,35 @@ export default class PricingTier implements WarrantObject {
     }
 
     public static async listPricingTiers(listOptions: ListPricingTierOptions = {}): Promise<PricingTier[]> {
-        return WarrantClient.httpClient
-            .get({
+        try {
+            return await WarrantClient.httpClient.get({
                 url: "/v1/pricing-tiers",
                 params: listOptions,
-            })
-            .then((res) => res.map((pricingTier: PricingTier) => new PricingTier(pricingTier.pricingTierId)))
-            .catch((e) => {
-                throw e;
             });
+        } catch (e) {
+            throw e;
+        }
     }
 
     public static async listPricingTiersForTenant(tenantId: string, listOptions: ListPricingTierOptions = {}): Promise<PricingTier[]> {
-        return WarrantClient.httpClient
-            .get({
+        try {
+            return await WarrantClient.httpClient.get({
                 url: `/v1/tenants/${tenantId}/pricing-tiers`,
                 params: listOptions,
-            })
-            .then((res) => res.map((pricingTier: PricingTier) => new PricingTier(pricingTier.pricingTierId)))
-            .catch((e) => {
-                throw e;
             });
+        } catch (e) {
+            throw e;
+        }
     }
 
     public static async assignPricingTierToTenant(tenantId: string, pricingTierId: string): Promise<PricingTier> {
-        return WarrantClient.httpClient
-            .post({
+        try {
+            return await WarrantClient.httpClient.post({
                 url: `/v1/tenants/${tenantId}/pricing-tiers/${pricingTierId}`,
-            })
-            .then((res) => new PricingTier(res.pricingTierId))
-            .catch((e) => {
-                throw e;
             });
+        } catch (e) {
+            throw e;
+        }
     }
 
     public static async removePricingTierFromTenant(tenantId: string, pricingTierId: string): Promise<void> {
@@ -95,26 +90,24 @@ export default class PricingTier implements WarrantObject {
     }
 
     public static async listPricingTiersForUser(userId: string, listOptions: ListPricingTierOptions = {}): Promise<PricingTier[]> {
-        return WarrantClient.httpClient
-            .get({
+        try {
+            return await WarrantClient.httpClient.get({
                 url: `/v1/users/${userId}/pricing-tiers`,
                 params: listOptions,
-            })
-            .then((res) => res.map((pricingTier: PricingTier) => new PricingTier(pricingTier.pricingTierId)))
-            .catch((e) => {
-                throw e;
-            });;
+            });
+        } catch (e) {
+            throw e;
+        }
     }
 
     public static async assignPricingTierToUser(userId: string, pricingTierId: string): Promise<PricingTier> {
-        return WarrantClient.httpClient
-            .post({
+        try {
+            return await WarrantClient.httpClient.post({
                 url: `/v1/users/${userId}/pricing-tiers/${pricingTierId}`,
-            })
-            .then((res) => new PricingTier(res.pricingTierId))
-            .catch((e) => {
-                throw e;
             });
+        } catch (e) {
+            throw e;
+        }
     }
 
     public static async removePricingTierFromUser(userId: string, pricingTierId: string): Promise<void> {
@@ -129,15 +122,34 @@ export default class PricingTier implements WarrantObject {
 
     // Instance methods
     public async listFeatures(listOptions: ListFeatureOptions = {}): Promise<Feature[]> {
-        return Feature.listFeaturesForPricingTier(this.pricingTierId, listOptions);
+        try {
+            return await WarrantClient.httpClient.get({
+                url: `/v1/pricing-tiers/${this.pricingTierId}/features`,
+                params: listOptions,
+            });
+        } catch (e) {
+            throw e;
+        }
     }
 
     public async assignFeature(featureId: string): Promise<Feature> {
-        return Feature.assignFeatureToPricingTier(this.pricingTierId, featureId);
+        try {
+            return await WarrantClient.httpClient.post({
+                url: `/v1/pricing-tiers/${this.pricingTierId}/features/${featureId}`,
+            });
+        } catch (e) {
+            throw e;
+        }
     }
 
     public async removeFeature(featureId: string): Promise<void> {
-        return Feature.removeFeatureFromPricingTier(this.pricingTierId, featureId);
+        try {
+            return await WarrantClient.httpClient.delete({
+                url: `/v1/pricing-tiers/${this.pricingTierId}/features/${featureId}`,
+            });
+        } catch (e) {
+            throw e;
+        }
     }
 
     public async hasFeature(featureId: string, context: Context = {}): Promise<boolean> {
