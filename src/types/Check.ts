@@ -1,4 +1,4 @@
-import { Context, Subject, WarrantObject } from "./Warrant";
+import Warrant, { Context, Subject, WarrantObject } from "./Warrant";
 
 export enum CheckOp {
     AllOf = "allOf",
@@ -36,6 +36,13 @@ export interface PermissionCheck {
     permissionId: string;
     subject: WarrantObject | Subject;
     context?: Context;
+    consistentRead?: boolean;
+    debug?: boolean;
+}
+
+export interface AccessCheckRequest {
+    op?: CheckOp;
+    warrants: Warrant[];
     consistentRead?: boolean;
     debug?: boolean;
 }
