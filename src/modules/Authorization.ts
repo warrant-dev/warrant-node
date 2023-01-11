@@ -1,17 +1,17 @@
 import Feature from "./Feature";
 import Permission from "./Permission";
 import Check, { AccessCheckRequest, CheckMany, FeatureCheck, PermissionCheck } from "../types/Check";
-import Warrant from "../types/Warrant";
+import Warrant, { isSubject } from "../types/Warrant";
 import WarrantClient from "../WarrantClient";
 
 export default class Authorization {
     public static async check(check: Check): Promise<boolean> {
         const accessCheckRequest: AccessCheckRequest = {
             warrants: [{
-                objectType: check.object.objectType,
-                objectId: check.object.objectId,
+                objectType: check.object.getObjectType(),
+                objectId: check.object.getObjectId(),
                 relation: check.relation,
-                subject: check.subject,
+                subject: isSubject(check.subject) ? check.subject : { objectType: check.subject.getObjectType(), objectId: check.subject.getObjectId() },
                 context: check.context
             }],
             consistentRead: check.consistentRead,
@@ -27,10 +27,10 @@ export default class Authorization {
     public static async checkMany(check: CheckMany): Promise<boolean> {
         let warrants: Warrant[] = check.warrants.map((warrant) => {
             return {
-                objectType: warrant.object.objectType,
-                objectId: warrant.object.objectId,
+                objectType: warrant.object.getObjectType(),
+                objectId: warrant.object.getObjectId(),
                 relation: warrant.relation,
-                subject: warrant.subject,
+                subject: isSubject(warrant.subject) ? warrant.subject : { objectType: warrant.subject.getObjectType(), objectId: warrant.subject.getObjectId() },
                 context: warrant.context
             }
         })

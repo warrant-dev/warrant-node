@@ -16,16 +16,10 @@ import { ListTenantOptions } from "../types/Tenant";
 import { Context, WarrantObject } from "../types/Warrant";
 
 export default class User implements WarrantObject {
-    // WarrantObject properties
-    objectType: string = ObjectType.User;
-    objectId: string;
-
-    // User properties
     userId: string;
     email?: string;
 
     constructor(userId: string, email?: string) {
-        this.objectId = userId;
         this.userId = userId;
         this.email = email;
     }
@@ -261,5 +255,14 @@ export default class User implements WarrantObject {
 
     public async hasFeature(featureId: string, context: Context = {}): Promise<boolean> {
         return Authorization.hasFeature({ featureId: featureId, subject: { objectType: ObjectType.User, objectId: this.userId }, context: context });
+    }
+
+    // WarrantObject methods
+    public getObjectType(): string {
+        return ObjectType.User;
+    }
+
+    public getObjectId(): string {
+        return this.userId;
     }
 }

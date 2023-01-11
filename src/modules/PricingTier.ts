@@ -7,15 +7,9 @@ import { CreatePricingTierParams, ListPricingTierOptions } from "../types/Pricin
 import { Context, WarrantObject } from "../types/Warrant";
 
 export default class PricingTier implements WarrantObject {
-    // WarrantObject properties
-    objectType: string = ObjectType.PricingTier;
-    objectId: string;
-
-    // PricingTier properties
     pricingTierId: string;
 
     constructor(pricingTierId: string) {
-        this.objectId = pricingTierId;
         this.pricingTierId = pricingTierId;
     }
 
@@ -160,5 +154,14 @@ export default class PricingTier implements WarrantObject {
 
     public async hasFeature(featureId: string, context: Context = {}): Promise<boolean> {
         return Authorization.hasFeature({ featureId: featureId, subject: { objectType: ObjectType.PricingTier, objectId: this.pricingTierId }, context: context });
+    }
+
+    // WarrantObject methods
+    public getObjectType(): string {
+        return ObjectType.PricingTier;
+    }
+
+    public getObjectId(): string {
+        return this.pricingTierId;
     }
 }

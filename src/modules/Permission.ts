@@ -4,17 +4,11 @@ import { ObjectType } from "../types/ObjectType";
 import { WarrantObject } from "../types/Warrant";
 
 export default class Permission implements WarrantObject {
-    // WarrantObject properties
-    objectType: string = ObjectType.Permission;
-    objectId: string;
-
-    // Permission properties
     permissionId: string;
     name?: string;
     description?: string;
 
     constructor(permissionId: string, name?: string, description?: string) {
-        this.objectId = permissionId;
         this.permissionId = permissionId;
         this.name = name;
         this.description = description;
@@ -136,5 +130,14 @@ export default class Permission implements WarrantObject {
         } catch (e) {
             throw e;
         }
+    }
+
+    // WarrantObject methods
+    public getObjectType(): string {
+        return ObjectType.Permission;
+    }
+
+    public getObjectId(): string {
+        return this.permissionId;
     }
 }

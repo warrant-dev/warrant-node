@@ -17,6 +17,11 @@ export interface Subject {
     relation?: string;
 }
 
+export function isSubject(object: any): object is Subject {
+    return Object.prototype.hasOwnProperty.call(object, "objectType")
+        && Object.prototype.hasOwnProperty.call(object, "objectId")
+}
+
 export default interface Warrant {
     objectType: string;
     objectId: string;
@@ -26,6 +31,6 @@ export default interface Warrant {
 }
 
 export interface WarrantObject {
-    objectType: string;
-    objectId: string;
+    getObjectType(): string;
+    getObjectId(): string;
 }
