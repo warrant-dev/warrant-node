@@ -2,7 +2,11 @@ import ListOptions from "./ListOptions";
 
 export interface ListTenantOptions extends ListOptions { }
 
-export default interface Tenant {
-    tenantId?: string;
+export interface CreateTenantParams {
+    tenantId: string;
+    name?: string;
+}
+
+export interface UpdateTenantParams {
     name?: string;
 }

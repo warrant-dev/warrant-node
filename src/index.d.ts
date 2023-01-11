@@ -4,6 +4,8 @@ import Feature from "./modules/Feature";
 import Permission from "./modules/Permission";
 import PricingTier from "./modules/PricingTier";
 import Role from "./modules/Role";
+import Tenant from "./modules/Tenant";
+import User from "./modules/User";
 
 declare module 'warrant' {
     export class WarrantClient {
@@ -16,6 +18,8 @@ declare module 'warrant' {
         Permission: typeof Permission;
         PricingTier: typeof PricingTier;
         Role: typeof Role;
+        Tenant: typeof Tenant;
+        User: typeof User;
     }
 
     export default WarrantClient;

@@ -5,6 +5,8 @@ import Feature from "./modules/Feature";
 import Permission from "./modules/Permission";
 import PricingTier from "./modules/PricingTier";
 import Role from "./modules/Role";
+import Tenant from "./modules/Tenant";
+import User from "./modules/User";
 import Config from "./types/Config";
 
 export default class WarrantClient {
@@ -16,6 +18,8 @@ export default class WarrantClient {
     public Permission: typeof Permission;
     public PricingTier: typeof PricingTier;
     public Role: typeof Role;
+    public Tenant: typeof Tenant;
+    public User: typeof User;
 
     constructor(config: Config) {
         WarrantClient.config = config;
