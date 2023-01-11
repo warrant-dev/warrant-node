@@ -1,12 +1,26 @@
+import { Subject, WarrantObject } from "./Warrant";
+
+export interface ForClause {
+    object?: WarrantObject;
+    relation?: string;
+    subject?: Subject | WarrantObject;
+}
+
+export interface WhereClause {
+    object?: WarrantObject;
+    relation?: string;
+    subject?: Subject | WarrantObject;
+}
+
 export default class Query {
     selectClause: string;
-    forClauses: Object;
-    whereClauses: Object;
+    forClause: ForClause;
+    whereClause: WhereClause;
 
-    constructor(selectClause: string, forClauses: Object = {}, whereClauses: Object = {}) {
+    constructor(selectClause: string, forClause: ForClause = {}, whereClause: WhereClause = {}) {
         this.selectClause = selectClause;
-        this.forClauses = forClauses;
-        this.whereClauses = whereClauses;
+        this.forClause = forClause;
+        this.whereClause = whereClause;
     }
 
     public static selectWarrants(): Query {
@@ -17,14 +31,14 @@ export default class Query {
         return new Query("explicit warrants");
     }
 
-    public for(forClauses: Object): Query {
-        this.forClauses = forClauses;
+    public for(forClause: ForClause): Query {
+        this.forClause = forClause;
 
         return this;
     }
 
-    public where(whereClauses: Object): Query {
-        this.whereClauses = whereClauses;
+    public where(whereClause: WhereClause): Query {
+        this.whereClause = whereClause;
 
         return this;
     }
@@ -34,9 +48,9 @@ export default class Query {
 
         queryParams["select"] = `select=${this.selectClause}`;
 
-        if (Object.keys(this.forClauses).length > 0) {
+        if (Object.keys(this.forClause).length > 0) {
             let forParamsString: string = "";
-            for (const [key, value] of Object.entries(this.forClauses)) {
+            for (const [key, value] of Object.entries(this.forClause)) {
                 forParamsString += `${key}=${value},`;
             }
             forParamsString = forParamsString.slice(0, -1);
@@ -44,9 +58,9 @@ export default class Query {
             queryParams["for"] = `for=${forParamsString}`;
         }
 
-        if (Object.keys(this.whereClauses).length > 0) {
+        if (Object.keys(this.whereClause).length > 0) {
             let whereParamsString: string = "";
-            for (const [key, value] of Object.entries(this.whereClauses)) {
+            for (const [key, value] of Object.entries(this.whereClause)) {
                 whereParamsString += `${key}=${value},`;
             }
             whereParamsString = whereParamsString.slice(0, -1);
