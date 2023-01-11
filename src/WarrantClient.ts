@@ -15,15 +15,15 @@ export default class WarrantClient {
     static config: Config;
     static httpClient: ApiClient;
 
-    public Authorization: typeof Authorization;
-    public Feature: typeof Feature;
-    public Permission: typeof Permission;
-    public PricingTier: typeof PricingTier;
-    public Role: typeof Role;
-    public Session: typeof Session;
-    public Tenant: typeof Tenant;
-    public User: typeof User;
-    public Warrant: typeof Warrant;
+    public Authorization: typeof Authorization = Authorization;
+    public Feature: typeof Feature = Feature;
+    public Permission: typeof Permission = Permission;
+    public PricingTier: typeof PricingTier = PricingTier;
+    public Role: typeof Role = Role;
+    public Session: typeof Session = Session;
+    public Tenant: typeof Tenant = Tenant;
+    public User: typeof User = User;
+    public Warrant: typeof Warrant = Warrant;
 
     constructor(config: Config) {
         WarrantClient.config = config;
