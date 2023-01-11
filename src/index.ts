@@ -1,1 +1,2 @@
-export { default as Client } from "./Client";
+export * from "./types";
+export { default as WarrantClient } from "./WarrantClient";
