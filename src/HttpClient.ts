@@ -1,6 +1,8 @@
 import Axios, { AxiosRequestConfig } from "axios";
 import ApiError from "./types/ApiError";
 
+const { version } = require("../package.json");
+
 interface HttpClient {
     get(requestOptions: HttpClientRequestOptions): Promise<any>;
     delete(requestOptions: HttpClientRequestOptions): Promise<any>;
@@ -81,6 +83,7 @@ export default class ApiClient implements HttpClient {
             baseURL: this.config.baseUrl,
             headers: {
                 Authorization: `ApiKey ${this.config.apiKey}`,
+                'User-Agent': `warrant-node/${version}`,
             },
             ...requestOptions,
         };
@@ -88,6 +91,7 @@ export default class ApiClient implements HttpClient {
         if (requestOptions?.apiKey) {
             config.headers = {
                 Authorization: `ApiKey ${requestOptions.apiKey}`,
+                'User-Agent': `warrant-node/${version}`,
             };
         }
 
