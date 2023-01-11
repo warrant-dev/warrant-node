@@ -24,3 +24,8 @@ export default interface Warrant {
     subject: Subject;
     context?: Context;
 }
+
+export interface WarrantObject {
+    objectType: string;
+    objectId: string;
+}
