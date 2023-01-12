@@ -45,7 +45,7 @@ export interface WarrantObjectLiteral {
 }
 
 export interface WarrantParams {
-    object: WarrantObject;
+    object: WarrantObject | WarrantObjectLiteral;
     relation: string;
     subject: WarrantObject | Subject;
     context?: Context;

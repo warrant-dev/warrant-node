@@ -1,6 +1,6 @@
 import WarrantClient from "../WarrantClient";
 import Query from "../types/Query";
-import Warrant, { isSubject, ListWarrantOptions, WarrantParams } from "../types/Warrant";
+import Warrant, { isSubject, isWarrantObject, ListWarrantOptions, WarrantParams } from "../types/Warrant";
 
 export default class WarrantModule {
     public static async create(warrant: WarrantParams): Promise<Warrant> {
@@ -8,8 +8,8 @@ export default class WarrantModule {
             return await WarrantClient.httpClient.post({
                 url: "/v1/warrants",
                 data: {
-                    objectType: warrant.object.getObjectType(),
-                    objectId: warrant.object.getObjectId(),
+                    objectType: isWarrantObject(warrant.object) ? warrant.object.getObjectType() : warrant.object.objectType,
+                    objectId: isWarrantObject(warrant.object) ? warrant.object.getObjectId() : warrant.object.objectId,
                     relation: warrant.relation,
                     subject: isSubject(warrant.subject) ? warrant.subject : { objectType: warrant.subject.getObjectType(), objectId: warrant.subject.getObjectId() },
                     context: warrant.context
@@ -25,8 +25,8 @@ export default class WarrantModule {
             return await WarrantClient.httpClient.delete({
                 url: "/v1/warrants",
                 data: {
-                    objectType: warrant.object.getObjectType(),
-                    objectId: warrant.object.getObjectId(),
+                    objectType: isWarrantObject(warrant.object) ? warrant.object.getObjectType() : warrant.object.objectType,
+                    objectId: isWarrantObject(warrant.object) ? warrant.object.getObjectId() : warrant.object.objectId,
                     relation: warrant.relation,
                     subject: isSubject(warrant.subject) ? warrant.subject : { objectType: warrant.subject.getObjectType(), objectId: warrant.subject.getObjectId() },
                     context: warrant.context
