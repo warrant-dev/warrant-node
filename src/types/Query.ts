@@ -1,14 +1,14 @@
-import { Context, isSubject, Subject, WarrantObject } from "./Warrant";
+import { Context, isSubject, isWarrantObject, Subject, WarrantObject, WarrantObjectLiteral } from "./Warrant";
 
 export interface ForClause {
-    object?: WarrantObject;
+    object?: WarrantObject | WarrantObjectLiteral;
     relation?: string;
     subject?: Subject | WarrantObject;
     context?: Context;
 }
 
 export interface WhereClause {
-    object?: WarrantObject;
+    object?: WarrantObject | WarrantObjectLiteral;
     relation?: string;
     subject?: Subject | WarrantObject;
     context?: Context;
@@ -55,7 +55,11 @@ export default class Query {
             for (const [key, value] of Object.entries(this.forClause)) {
                 switch (key) {
                     case 'object':
-                        forParamsString += `${key}=${value.getObjectType()}:${value.getObjectId()},`;
+                        if (isWarrantObject(value)) {
+                            forParamsString += `${key}=${value.getObjectType()}:${value.getObjectId()},`;
+                        } else {
+                            forParamsString += `${key}=${value.objectType}:${value.objectId},`;
+                        }
                         break;
                     case 'relation':
                         forParamsString += `${key}=${value},`;
@@ -91,7 +95,11 @@ export default class Query {
             for (const [key, value] of Object.entries(this.whereClause)) {
                 switch (key) {
                     case 'object':
-                        whereParamsString += `${key}=${value.getObjectType()}:${value.getObjectId()},`;
+                        if (isWarrantObject(value)) {
+                            whereParamsString += `${key}=${value.getObjectType()}:${value.getObjectId()},`;
+                        } else {
+                            whereParamsString += `${key}=${value.objectType}:${value.objectId},`;
+                        }
                         break;
                     case 'relation':
                         whereParamsString += `${key}=${value},`;

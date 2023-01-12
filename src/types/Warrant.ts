@@ -35,8 +35,17 @@ export interface WarrantObject {
     getObjectId(): string;
 }
 
+export function isWarrantObject(object: any): object is WarrantObject {
+    return object.getObjectType !== undefined && object.getObjectId !== undefined;
+}
+
+export interface WarrantObjectLiteral {
+    objectType: string;
+    objectId: string;
+}
+
 export interface WarrantParams {
-    object: WarrantObject;
+    object: WarrantObject | WarrantObjectLiteral;
     relation: string;
     subject: WarrantObject | Subject;
     context?: Context;
