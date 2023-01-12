@@ -19,7 +19,7 @@ Import the Warrant client and pass your API key to the constructor to get starte
 
 ```js
 const Warrant = require("@warrantdev/warrant-node");
-const warrantClient = new Warrant.Client({
+const warrantClient = new Warrant.WarrantClient({
   apiKey: "api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
 });
 ```
@@ -27,25 +27,25 @@ const warrantClient = new Warrant.Client({
 Or using ES modules:
 
 ```js
-import { Client as WarrantClient } from "@warrantdev/warrant-node";
+import { WarrantClient } from "@warrantdev/warrant-node";
 const warrantClient = new WarrantClient({
   apiKey: "api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
 });
 ```
 
-### `createUser(user)`
+---
 
 This method creates a user in Warrant with the provided `userId`. Provide an optional `email` to make it easier to identify users in the Warrant dashboard.
 
 ```js
 const Warrant = require("@warrantdev/warrant-node");
-const warrantClient = new Warrant.Client({
+const warrantClient = new Warrant.WarrantClient({
   apiKey: "api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
 });
 
 // Creates a user with user.id as the userId
-warrantClient
-  .createUser({ userId: user.id, email: user.email })
+warrantClient.User
+  .create({ userId: user.id, email: user.email })
   .then((newUser) => console.log(newUser))
   .catch((error) => console.log(error));
 ```
@@ -53,116 +53,62 @@ warrantClient
 Or using ES modules and async/await:
 
 ```js
-import { Client as WarrantClient } from "@warrantdev/warrant-node";
+import { WarrantClient } from "@warrantdev/warrant-node";
 const warrantClient = new WarrantClient({
   apiKey: "api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
 });
 
 // Creates a user with user.id as the userId and
 // assigns the new user the "store_owner" role
-const newUser = await warrantClient.createUser({
+const newUser = await warrantClient.User.create({
   userId: user.id,
   email: user.email,
 });
 ```
 
-### `createWarrant(warrant)`
+## Authorization
 
-This method creates a warrant which specifies that the provided `subject` has `relation` on the object of type `objectType` with id `objectId`.
+All access checks are performed based on an `object`, `relation` and `subject`. You can pass your own defined objects to the check methods by implementing the `WarrantObject` interface.
 
-```js
-const Warrant = require("@warrantdev/warrant-node");
-const warrantClient = new Warrant.Client({
-  apiKey: "api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
-});
-
-// Create a warrant allowing user.id to "view" the store with id store.id
-warrantClient
-  .createWarrant({
-    objectType: "store",
-    objectId: store.id,
-    relation: "view",
-    subject: {
-      objectType: "user",
-      objectId: user.id,
-    },
-  })
-  .then((newWarrant) => console.log(newWarrant))
-  .catch((error) => console.log(error));
+```
+interface WarrantObject {
+    getObjectType(): string;
+    getObjectId(): string;
+}
 ```
 
-Or using ES modules and async/await:
+### `check(Check)`
 
-```js
-import { Client as WarrantClient } from "@warrantdev/warrant-node";
-const warrantClient = new WarrantClient({
-  apiKey: "api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
-});
-
-// Create a warrant allowing user.id to "view" the store with id store.id
-const newUser = await warrantClient.createWarrant({
-  objectType: "store",
-  objectId: store.id,
-  relation: "view",
-  subject: {
-    objectType: "user",
-    objectId: user.id,
-  },
-});
-```
-
-### `createAuthorizationSession(session)`
-
-This method creates a session in Warrant for the user with the specified `userId` and returns a session token which can be used to make authorized requests to the Warrant API only for the specified user. This session token can safely be used to make requests to the Warrant API's authorization endpoint to determine user access in web and mobile client applications.
-
-```js
-const Warrant = require("@warrantdev/warrant-node");
-const warrantClient = new Warrant.Client({
-  apiKey: "api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
-});
-
-// Creates a session token scoped to the specified userId
-// Return this token to your client application to allow
-// it to make requests for the given user.
-warrantClient
-  .createSession({ type: "sess", userId: user.id })
-  .then((sessionToken) => console.log(sessionToken))
-  .catch((error) => console.log(error));
-```
-
-Or using ES modules and async/await:
-
-```js
-const { Client as WarrantClient } = require("@warrantdev/warrant-node");
-const warrantClient = new WarrantClient({
-    apiKey: "api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
-});
-
-// Creates a session token scoped to the specified userId
-// Return this token to your client application to allow
-// it to make requests for the given user.
-const sessionToken = await warrantClient.createSession({ type: "sess", userId: user.id });
-```
-
-### `isAuthorized(warrantCheck)`
-
-This method returns a `Promise` that resolves with `true` if the `subject` has the specified `relation` to the object of type `objectType` with id `objectId` and `false` otherwise.
+This method returns a `Promise` that resolves with `true` if the `subject` has the specified `relation` to the `object` and `false` otherwise.
 
 ```js
 const Warrant = require("@warrantdev/warrant-node");
 
-const warrantClient = new Warrant.Client({
+const warrantClient = new Warrant.WarrantClient({
   apiKey: "api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
 });
+
+// Store class implements WarrantObject
+class Store {
+  private id: number;
+
+  public getObjectType(): string {
+    return "store";
+  }
+
+  public getObjectId(): string {
+    return this.id.toString();
+  }
+}
 
 //
 // Example Scenario:
 // An e-commerce website where Store Owners can edit store info
 //
-warrantClient
-  .isAuthorized({
-    objectType: "store",
-    objectId: storeId,
+const myStore = new Store('my-store');
+warrantClient.Authorization
+  .check({
+    object: myStore,
     relation: "edit",
     subject: {
       objectType: "user",
@@ -180,7 +126,7 @@ warrantClient
 Or using ES modules and async/await:
 
 ```js
-import { Client as WarrantClient } from "@warrantdev/warrant-node";
+import { WarrantClient } from "@warrantdev/warrant-node";
 
 const warrantClient = new WarrantClient({
   apiKey: "api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
@@ -190,10 +136,10 @@ const warrantClient = new WarrantClient({
 // Example Scenario:
 // An e-commerce website where Store Owners can edit store info
 //
+const myStore = new Store('my-store');
 if (
-  await warrantClient.isAuthorized({
-    objectType: "store",
-    objectId: storeId,
+  await warrantClient.Authorization.check({
+    object: myStore,
     relation: "edit",
     subject: {
       objectType: "user",
@@ -209,7 +155,7 @@ We’ve used a random API key in these code examples. Replace it with your
 [actual publishable API keys](https://app.warrant.dev) to
 test this code through your own Warrant account.
 
-For more information on how to use the Warrant API, please refer to the
+For more information on how to use the Warrant API and usage examples for all methods, please refer to the
 [Warrant API reference](https://docs.warrant.dev).
 
 Note that we may release new [minor and patch](https://semver.org/) versions of
