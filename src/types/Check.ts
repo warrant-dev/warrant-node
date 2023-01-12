@@ -1,4 +1,4 @@
-import Warrant, { Context, Subject, WarrantObject } from "./Warrant";
+import Warrant, { Context, Subject, WarrantObject, WarrantObjectLiteral } from "./Warrant";
 
 export enum CheckOp {
     AllOf = "allOf",
@@ -6,7 +6,7 @@ export enum CheckOp {
 }
 
 export interface CheckWarrant {
-    object: WarrantObject;
+    object: WarrantObject | WarrantObjectLiteral;
     relation: string;
     subject: WarrantObject | Subject;
     context?: Context;
