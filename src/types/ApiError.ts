@@ -4,7 +4,7 @@ export enum ErrorCode {
     InvalidArgument = "invalid_argument",
     InvalidParameter = "invalid_parameter",
     InvalidRequest = "invalid_request",
-    MissingParameter = "missing_parameter",
+    MissingRequiredParameter = "missing_required_parameter",
     NotFound = "not_found",
     DuplicateRecord = "duplicate_record",
     Unauthorized = "unauthorized",
@@ -36,7 +36,7 @@ export default class ApiError extends Error {
                 return "InvalidRequestError";
             case ErrorCode.InvalidParameter:
                 return "InvalidParameterError";
-            case ErrorCode.MissingParameter:
+            case ErrorCode.MissingRequiredParameter:
                 return "MissingRequiredParameterError";
             case ErrorCode.NotFound:
                 return "NotFoundError";

@@ -2,12 +2,12 @@ const { Query, WarrantClient } = require("../dist/index");
 var assert = require('assert');
 
 // Uncomment .skip and add your API_KEY to run tests
-describe.skip('Live Test', function() {
-    before(function() {
+describe.skip('Live Test', function () {
+    before(function () {
         this.warrant = new WarrantClient({ apiKey: "YOUR_KEY" });
     });
 
-    it('CRUD users', async function() {
+    it('CRUD users', async function () {
         const user1 = await this.warrant.User.create();
         assert(user1.userId);
         assert.equal(user1.email, null);
@@ -31,7 +31,7 @@ describe.skip('Live Test', function() {
         assert.strictEqual(users.length, 0);
     });
 
-    it('CRUD tenants', async function() {
+    it('CRUD tenants', async function () {
         const tenant1 = await this.warrant.Tenant.create();
         assert(tenant1.tenantId);
         assert.equal(tenant1.name, null);
@@ -55,7 +55,7 @@ describe.skip('Live Test', function() {
         assert.strictEqual(tenants.length, 0);
     });
 
-    it('CRUD roles', async function() {
+    it('CRUD roles', async function () {
         const adminRole = await this.warrant.Role.create({ roleId: "administrator", name: "Admin", description: "The admin role" });
         assert.strictEqual(adminRole.roleId, "administrator");
         assert.strictEqual(adminRole.name, "Admin");
@@ -82,7 +82,7 @@ describe.skip('Live Test', function() {
         assert.strictEqual(roles.length, 1);
     });
 
-    it('CRUD permissions', async function() {
+    it('CRUD permissions', async function () {
         const permission1 = await this.warrant.Permission.create({ permissionId: "perm1", name: "Permission 1", description: "Permission with id 1" });
         assert.strictEqual(permission1.permissionId, "perm1");
         assert.strictEqual(permission1.name, "Permission 1");
@@ -109,7 +109,7 @@ describe.skip('Live Test', function() {
         assert.strictEqual(permissions.length, 1);
     });
 
-    it('CRUD features', async function() {
+    it('CRUD features', async function () {
         const feature1 = await this.warrant.Feature.create({ featureId: "new-feature" });
         assert.strictEqual(feature1.featureId, "new-feature");
 
@@ -126,7 +126,7 @@ describe.skip('Live Test', function() {
         assert.strictEqual(features.length, 0);
     });
 
-    it('CRUD pricing tiers', async function() {
+    it('CRUD pricing tiers', async function () {
         const tier1 = await this.warrant.PricingTier.create({ pricingTierId: "new-tier-1" });
         assert.strictEqual(tier1.pricingTierId, "new-tier-1");
 
@@ -143,7 +143,7 @@ describe.skip('Live Test', function() {
         assert.strictEqual(tiers.length, 0);
     });
 
-    it('batch create users and tenants', async function() {
+    it('batch create users and tenants', async function () {
         const newUsers = [
             { userId: "user-1" },
             { userId: "user-2" }
@@ -168,7 +168,7 @@ describe.skip('Live Test', function() {
         await this.warrant.Tenant.delete("tenant-2");
     })
 
-    it('multi-tenancy example', async function() {
+    it('multi-tenancy example', async function () {
         // Create users
         const user1 = await this.warrant.User.create();
         const user2 = await this.warrant.User.create();
@@ -209,7 +209,7 @@ describe.skip('Live Test', function() {
         await this.warrant.Tenant.delete(tenant2.tenantId);
     });
 
-    it('RBAC example', async function() {
+    it('RBAC example', async function () {
         // Create users
         const adminUser = await this.warrant.User.create();
         const viewerUser = await this.warrant.User.create();
@@ -290,7 +290,7 @@ describe.skip('Live Test', function() {
         await this.warrant.Permission.delete(viewPermission.permissionId);
     });
 
-    it('pricing tiers, features, and users example', async function() {
+    it('pricing tiers, features, and users example', async function () {
         // Create users
         const freeUser = await this.warrant.User.create();
         const paidUser = await this.warrant.User.create();
@@ -374,7 +374,7 @@ describe.skip('Live Test', function() {
         await this.warrant.Feature.delete(feature2.featureId);
     });
 
-    it('pricing tiers, features, and tenants example', async function() {
+    it('pricing tiers, features, and tenants example', async function () {
         // Create tenants
         const freeTenant = await this.warrant.Tenant.create();
         const paidTenant = await this.warrant.Tenant.create();
@@ -458,7 +458,7 @@ describe.skip('Live Test', function() {
         await this.warrant.Feature.delete(feature2.featureId);
     });
 
-    it('sessions', async function() {
+    it('sessions', async function () {
         const user = await this.warrant.User.create();
         const tenant = await this.warrant.Tenant.create();
 
@@ -475,7 +475,7 @@ describe.skip('Live Test', function() {
         await this.warrant.Tenant.delete(tenant.tenantId);
     });
 
-    it('warrants', async function() {
+    it('warrants', async function () {
         const newUser = await this.warrant.User.create();
         const newPermission = await this.warrant.Permission.create({ permissionId: "perm1", name: "Permission 1", description: "Permission with id 1" });
 

@@ -31,9 +31,6 @@
         "url": "https://github.com/warrant-dev/warrant-node/issues"
     },
     "homepage": "https://github.com/warrant-dev/warrant-node#readme",
-    "dependencies": {
-        "axios": "^0.21.2"
-    },
     "devDependencies": {
         "@types/node": "^18.11.18",
         "mocha": "^10.2.0",
