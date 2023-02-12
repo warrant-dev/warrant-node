@@ -183,7 +183,7 @@ describe.skip('Live Test', function () {
         assert.strictEqual(tenant1Users.length, 0);
 
         // Assign user1 -> tenant1
-        await this.warrant.User.assignUserToTenant(tenant1.tenantId, user1.userId);
+        await this.warrant.User.assignUserToTenant(tenant1.tenantId, user1.userId, "member");
 
         user1Tenants = await this.warrant.Tenant.listTenantsForUser(user1.userId, { limit: 100, page: 1 });
         assert.strictEqual(user1Tenants.length, 1);
@@ -194,7 +194,7 @@ describe.skip('Live Test', function () {
         assert.strictEqual(tenant1Users[0].userId, user1.userId);
 
         // Remove user1 -> tenant1
-        await this.warrant.User.removeUserFromTenant(tenant1.tenantId, user1.userId);
+        await this.warrant.User.removeUserFromTenant(tenant1.tenantId, user1.userId, "member");
 
         user1Tenants = await this.warrant.Tenant.listTenantsForUser(user1.userId, { limit: 100, page: 1 });
         assert.strictEqual(user1Tenants.length, 0);
@@ -462,13 +462,16 @@ describe.skip('Live Test', function () {
         const user = await this.warrant.User.create();
         const tenant = await this.warrant.Tenant.create();
 
-        await this.warrant.User.assignUserToTenant(tenant.tenantId, user.userId);
-        await this.warrant.Permission.assignPermissionToUser(user.userId, "view-self-service-dashboard");
+        await this.warrant.User.assignUserToTenant(tenant.tenantId, user.userId, "admin");
 
         const userAuthzSession = await this.warrant.Session.createAuthorizationSession({ userId: user.userId });
         assert(userAuthzSession);
 
-        const userSelfServicDashboardUrl = await this.warrant.Session.createSelfServiceSession({ userId: user.userId, tenantId: tenant.tenantId }, "http://localhost:8080");
+        const userSelfServicDashboardUrl = await this.warrant.Session.createSelfServiceSession({
+            userId: user.userId,
+            tenantId: tenant.tenantId,
+            selfServiceStrategy: "basic",
+        }, "http://localhost:8080");
         assert(userSelfServicDashboardUrl);
 
         await this.warrant.User.delete(user.userId);

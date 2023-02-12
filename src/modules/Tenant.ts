@@ -118,12 +118,12 @@ export default class Tenant implements WarrantObject {
         return User.listUsersForTenant(this.tenantId, listOptions);
     }
 
-    public async assignUser(userId: string): Promise<Warrant> {
-        return User.assignUserToTenant(this.tenantId, userId);
+    public async assignUser(userId: string, role: string): Promise<Warrant> {
+        return User.assignUserToTenant(this.tenantId, userId, role);
     }
 
-    public async removeUser(userId: string): Promise<void> {
-        return User.removeUserFromTenant(this.tenantId, userId);
+    public async removeUser(userId: string, role: string): Promise<void> {
+        return User.removeUserFromTenant(this.tenantId, userId, role);
     }
 
     public async listPricingTiers(listOptions: ListPricingTierOptions = {}): Promise<PricingTier[]> {
