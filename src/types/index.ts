@@ -5,7 +5,7 @@ export { CreatePermissionParams, ListPermissionOptions, UpdatePermissionParams }
 export { CreatePricingTierParams, ListPricingTierOptions } from "./PricingTier";
 export { default as Query } from "./Query";
 export { CreateRoleParams, ListRoleOptions, UpdateRoleParams } from "./Role";
-export { SessionParams } from "./Session";
+export { SessionParams, SelfServiceSessionParams, SelfServiceStrategy } from "./Session";
 export { CreateTenantParams, ListTenantOptions, UpdateTenantParams } from "./Tenant";
 export { CreateUserParams, ListUserOptions, UpdateUserParams } from "./User";
 export { default as Warrant, ListWarrantOptions, Context, Subject, WarrantObject } from "./Warrant";

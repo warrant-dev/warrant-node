@@ -1,4 +1,4 @@
-const { Query, WarrantClient } = require("../dist/index");
+const { SelfServiceStrategy, Query, WarrantClient } = require("../dist/index");
 var assert = require('assert');
 
 // Uncomment .skip and add your API_KEY to run tests
@@ -470,7 +470,7 @@ describe.skip('Live Test', function () {
         const userSelfServicDashboardUrl = await this.warrant.Session.createSelfServiceSession({
             userId: user.userId,
             tenantId: tenant.tenantId,
-            selfServiceStrategy: "basic",
+            selfServiceStrategy: SelfServiceStrategy.FGAC,
         }, "http://localhost:8080");
         assert(userSelfServicDashboardUrl);
 

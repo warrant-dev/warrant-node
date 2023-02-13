@@ -8,5 +8,10 @@ export interface SessionParams {
 }
 
 export interface SelfServiceSessionParams extends SessionParams {
-    selfServiceStrategy: "basic" | "advanced";
+    selfServiceStrategy: SelfServiceStrategy;
+}
+
+export enum SelfServiceStrategy {
+    RBAC = "rbac",
+    FGAC = "fgac",
 }
