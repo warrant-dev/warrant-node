@@ -56,8 +56,8 @@ describe.skip('Live Test', function () {
     });
 
     it('CRUD roles', async function () {
-        const adminRole = await this.warrant.Role.create({ roleId: "administrator", name: "Admin", description: "The admin role" });
-        assert.strictEqual(adminRole.roleId, "administrator");
+        const adminRole = await this.warrant.Role.create({ roleId: "admin", name: "Admin", description: "The admin role" });
+        assert.strictEqual(adminRole.roleId, "admin");
         assert.strictEqual(adminRole.name, "Admin");
         assert.strictEqual(adminRole.description, "The admin role");
 
@@ -74,12 +74,12 @@ describe.skip('Live Test', function () {
         assert.strictEqual(refetchedRole.description, "Updated desc");
 
         let roles = await this.warrant.Role.listRoles({ limit: 10, page: 1 });
-        assert.strictEqual(roles.length, 3);    // includes default 'admin' role
+        assert.strictEqual(roles.length, 2);
 
         await this.warrant.Role.delete(adminRole.roleId);
         await this.warrant.Role.delete(viewerRole.roleId);
         roles = await this.warrant.Role.listRoles({ limit: 10, page: 1 });
-        assert.strictEqual(roles.length, 1);
+        assert.strictEqual(roles.length, 0);
     });
 
     it('CRUD permissions', async function () {
@@ -101,12 +101,12 @@ describe.skip('Live Test', function () {
         assert.strictEqual(refetchedPermission.description, "Updated desc");
 
         let permissions = await this.warrant.Permission.listPermissions({ limit: 10, page: 1 });
-        assert.strictEqual(permissions.length, 3);     // includes default 'view-self-service-dashboard' permission
+        assert.strictEqual(permissions.length, 2);
 
         await this.warrant.Permission.delete(permission1.permissionId);
         await this.warrant.Permission.delete(permission2.permissionId);
         permissions = await this.warrant.Permission.listPermissions({ limit: 10, page: 1 });
-        assert.strictEqual(permissions.length, 1);
+        assert.strictEqual(permissions.length, 0);
     });
 
     it('CRUD features', async function () {
@@ -215,7 +215,7 @@ describe.skip('Live Test', function () {
         const viewerUser = await this.warrant.User.create();
 
         // Create roles
-        const adminRole = await this.warrant.Role.create({ roleId: "administrator", name: "Admin", description: "The admin role" });
+        const adminRole = await this.warrant.Role.create({ roleId: "admin", name: "Admin", description: "The admin role" });
         const viewerRole = await this.warrant.Role.create({ roleId: "viewer", name: "Viewer", description: "The viewer role" });
 
         // Create permissions
