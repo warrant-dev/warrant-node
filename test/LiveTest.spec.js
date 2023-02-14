@@ -1,4 +1,4 @@
-const { Query, WarrantClient } = require("../dist/index");
+const { SelfServiceStrategy, Query, WarrantClient } = require("../dist/index");
 var assert = require('assert');
 
 // Uncomment .skip and add your API_KEY to run tests
@@ -56,8 +56,8 @@ describe.skip('Live Test', function () {
     });
 
     it('CRUD roles', async function () {
-        const adminRole = await this.warrant.Role.create({ roleId: "administrator", name: "Admin", description: "The admin role" });
-        assert.strictEqual(adminRole.roleId, "administrator");
+        const adminRole = await this.warrant.Role.create({ roleId: "admin", name: "Admin", description: "The admin role" });
+        assert.strictEqual(adminRole.roleId, "admin");
         assert.strictEqual(adminRole.name, "Admin");
         assert.strictEqual(adminRole.description, "The admin role");
 
@@ -74,12 +74,12 @@ describe.skip('Live Test', function () {
         assert.strictEqual(refetchedRole.description, "Updated desc");
 
         let roles = await this.warrant.Role.listRoles({ limit: 10, page: 1 });
-        assert.strictEqual(roles.length, 3);    // includes default 'admin' role
+        assert.strictEqual(roles.length, 2);
 
         await this.warrant.Role.delete(adminRole.roleId);
         await this.warrant.Role.delete(viewerRole.roleId);
         roles = await this.warrant.Role.listRoles({ limit: 10, page: 1 });
-        assert.strictEqual(roles.length, 1);
+        assert.strictEqual(roles.length, 0);
     });
 
     it('CRUD permissions', async function () {
@@ -101,12 +101,12 @@ describe.skip('Live Test', function () {
         assert.strictEqual(refetchedPermission.description, "Updated desc");
 
         let permissions = await this.warrant.Permission.listPermissions({ limit: 10, page: 1 });
-        assert.strictEqual(permissions.length, 3);     // includes default 'view-self-service-dashboard' permission
+        assert.strictEqual(permissions.length, 2);
 
         await this.warrant.Permission.delete(permission1.permissionId);
         await this.warrant.Permission.delete(permission2.permissionId);
         permissions = await this.warrant.Permission.listPermissions({ limit: 10, page: 1 });
-        assert.strictEqual(permissions.length, 1);
+        assert.strictEqual(permissions.length, 0);
     });
 
     it('CRUD features', async function () {
@@ -183,7 +183,7 @@ describe.skip('Live Test', function () {
         assert.strictEqual(tenant1Users.length, 0);
 
         // Assign user1 -> tenant1
-        await this.warrant.User.assignUserToTenant(tenant1.tenantId, user1.userId);
+        await this.warrant.User.assignUserToTenant(tenant1.tenantId, user1.userId, "member");
 
         user1Tenants = await this.warrant.Tenant.listTenantsForUser(user1.userId, { limit: 100, page: 1 });
         assert.strictEqual(user1Tenants.length, 1);
@@ -194,7 +194,7 @@ describe.skip('Live Test', function () {
         assert.strictEqual(tenant1Users[0].userId, user1.userId);
 
         // Remove user1 -> tenant1
-        await this.warrant.User.removeUserFromTenant(tenant1.tenantId, user1.userId);
+        await this.warrant.User.removeUserFromTenant(tenant1.tenantId, user1.userId, "member");
 
         user1Tenants = await this.warrant.Tenant.listTenantsForUser(user1.userId, { limit: 100, page: 1 });
         assert.strictEqual(user1Tenants.length, 0);
@@ -215,7 +215,7 @@ describe.skip('Live Test', function () {
         const viewerUser = await this.warrant.User.create();
 
         // Create roles
-        const adminRole = await this.warrant.Role.create({ roleId: "administrator", name: "Admin", description: "The admin role" });
+        const adminRole = await this.warrant.Role.create({ roleId: "admin", name: "Admin", description: "The admin role" });
         const viewerRole = await this.warrant.Role.create({ roleId: "viewer", name: "Viewer", description: "The viewer role" });
 
         // Create permissions
@@ -462,13 +462,16 @@ describe.skip('Live Test', function () {
         const user = await this.warrant.User.create();
         const tenant = await this.warrant.Tenant.create();
 
-        await this.warrant.User.assignUserToTenant(tenant.tenantId, user.userId);
-        await this.warrant.Permission.assignPermissionToUser(user.userId, "view-self-service-dashboard");
+        await this.warrant.User.assignUserToTenant(tenant.tenantId, user.userId, "admin");
 
         const userAuthzSession = await this.warrant.Session.createAuthorizationSession({ userId: user.userId });
         assert(userAuthzSession);
 
-        const userSelfServicDashboardUrl = await this.warrant.Session.createSelfServiceSession({ userId: user.userId, tenantId: tenant.tenantId }, "http://localhost:8080");
+        const userSelfServicDashboardUrl = await this.warrant.Session.createSelfServiceSession({
+            userId: user.userId,
+            tenantId: tenant.tenantId,
+            selfServiceStrategy: SelfServiceStrategy.FGAC,
+        }, "http://localhost:8080");
         assert(userSelfServicDashboardUrl);
 
         await this.warrant.User.delete(user.userId);

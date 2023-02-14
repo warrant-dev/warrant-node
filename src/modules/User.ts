@@ -14,6 +14,7 @@ import { ListRoleOptions } from "../types/Role";
 import { CreateUserParams, ListUserOptions, UpdateUserParams } from "../types/User";
 import { ListTenantOptions } from "../types/Tenant";
 import { Context, WarrantObject } from "../types/Warrant";
+import WarrantModule from "./WarrantModule";
 
 export default class User implements WarrantObject {
     userId: string;
@@ -114,24 +115,32 @@ export default class User implements WarrantObject {
         }
     }
 
-    public static async assignUserToTenant(tenantId: string, userId: string): Promise<Warrant> {
-        try {
-            return await WarrantClient.httpClient.post({
-                url: `/v1/tenants/${tenantId}/users/${userId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+    public static async assignUserToTenant(tenantId: string, userId: string, role: string): Promise<Warrant> {
+        return WarrantModule.create({
+            object: {
+                objectType: "tenant",
+                objectId: tenantId,
+            },
+            relation: role,
+            subject: {
+                objectType: "user",
+                objectId: userId,
+            }
+        });
     }
 
-    public static async removeUserFromTenant(tenantId: string, userId: string): Promise<void> {
-        try {
-            return await WarrantClient.httpClient.delete({
-                url: `/v1/tenants/${tenantId}/users/${userId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+    public static async removeUserFromTenant(tenantId: string, userId: string, role: string): Promise<void> {
+        return WarrantModule.delete({
+            object: {
+                objectType: "tenant",
+                objectId: tenantId,
+            },
+            relation: role,
+            subject: {
+                objectType: "user",
+                objectId: userId,
+            }
+        });
     }
 
     //
