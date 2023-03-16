@@ -118,12 +118,12 @@ export default class User implements WarrantObject {
     public static async assignUserToTenant(tenantId: string, userId: string, role: string): Promise<Warrant> {
         return WarrantModule.create({
             object: {
-                objectType: "tenant",
+                objectType: ObjectType.Tenant,
                 objectId: tenantId,
             },
             relation: role,
             subject: {
-                objectType: "user",
+                objectType: ObjectType.User,
                 objectId: userId,
             }
         });
@@ -132,12 +132,12 @@ export default class User implements WarrantObject {
     public static async removeUserFromTenant(tenantId: string, userId: string, role: string): Promise<void> {
         return WarrantModule.delete({
             object: {
-                objectType: "tenant",
+                objectType: ObjectType.Tenant,
                 objectId: tenantId,
             },
             relation: role,
             subject: {
-                objectType: "user",
+                objectType: ObjectType.User,
                 objectId: userId,
             }
         });
@@ -154,7 +154,7 @@ export default class User implements WarrantObject {
         return Role.listRolesForUser(this.userId, listOptions);
     }
 
-    public async assignRole(roleId: string): Promise<Role> {
+    public async assignRole(roleId: string): Promise<Warrant> {
         return Role.assignRoleToUser(this.userId, roleId);
     }
 
@@ -166,7 +166,7 @@ export default class User implements WarrantObject {
         return Permission.listPermissionsForUser(this.userId, listOptions);
     }
 
-    public async assignPermission(permissionId: string): Promise<Permission> {
+    public async assignPermission(permissionId: string): Promise<Warrant> {
         return Permission.assignPermissionToUser(this.userId, permissionId);
     }
 
@@ -182,7 +182,7 @@ export default class User implements WarrantObject {
         return PricingTier.listPricingTiersForUser(this.userId, listOptions);
     }
 
-    public async assignPricingTier(pricingTierId: string): Promise<PricingTier> {
+    public async assignPricingTier(pricingTierId: string): Promise<Warrant> {
         return PricingTier.assignPricingTierToUser(this.userId, pricingTierId);
     }
 
@@ -194,7 +194,7 @@ export default class User implements WarrantObject {
         return Feature.listFeaturesForUser(this.userId, listOptions);
     }
 
-    public async assignFeature(featureId: string): Promise<Feature> {
+    public async assignFeature(featureId: string): Promise<Warrant> {
         return Feature.assignFeatureToUser(this.userId, featureId);
     }
 

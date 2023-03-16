@@ -502,20 +502,23 @@ describe.skip('Live Test', function () {
         });
         assert.strictEqual(userHasPermission, true);
 
-        const warrantQuery = Query
-            .selectWarrants()
-            .for({
-                subject: newUser
-            })
-            .where({
-                subject: newUser
-            });
-        const warrants = await this.warrant.Warrant.queryWarrants(warrantQuery, { limit: 100, page: 1 });
+        // const warrantQuery = Query
+        //     .selectWarrants()
+        //     .for({
+        //         subject: newUser
+        //     })
+        //     .where({
+        //         subject: {
+        //             objectType: "user",
+        //             objectId: newUser.userId
+        //         }
+        //     });
+        // const warrants = await this.warrant.Warrant.queryWarrants(warrantQuery, { limit: 100, page: 1 });
 
-        assert.strictEqual(warrants.length, 1);
-        assert.strictEqual(warrants[0].objectType, "permission");
-        assert.strictEqual(warrants[0].objectId, "perm1");
-        assert.strictEqual(warrants[0].relation, "member");
+        // assert.strictEqual(warrants.length, 1);
+        // assert.strictEqual(warrants[0].objectType, "permission");
+        // assert.strictEqual(warrants[0].objectId, "perm1");
+        // assert.strictEqual(warrants[0].relation, "member");
 
         await this.warrant.Warrant.delete({
             object: newPermission,

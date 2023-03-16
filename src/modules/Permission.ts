@@ -1,7 +1,8 @@
+import WarrantModule from "./WarrantModule";
 import WarrantClient from "../WarrantClient";
 import { CreatePermissionParams, ListPermissionOptions, UpdatePermissionParams } from "../types/Permission";
 import { ObjectType } from "../types/ObjectType";
-import { WarrantObject } from "../types/Warrant";
+import Warrant, { WarrantObject } from "../types/Warrant";
 
 export default class Permission implements WarrantObject {
     permissionId: string;
@@ -91,26 +92,32 @@ export default class Permission implements WarrantObject {
         }
     }
 
-    public static async assignPermissionToUser(userId: string, permissionId: string): Promise<Permission> {
-        try {
-            const response = await WarrantClient.httpClient.post({
-                url: `/v1/users/${userId}/permissions/${permissionId}`,
-            });
-
-            return new Permission(response.permissionId, response.name, response.description);
-        } catch (e) {
-            throw e;
-        }
+    public static async assignPermissionToUser(userId: string, permissionId: string): Promise<Warrant> {
+        return WarrantModule.create({
+            object: {
+                objectType: ObjectType.Permission,
+                objectId: permissionId,
+            },
+            relation: "member",
+            subject: {
+                objectType: ObjectType.User,
+                objectId: userId,
+            }
+        });
     }
 
     public static async removePermissionFromUser(userId: string, permissionId: string): Promise<void> {
-        try {
-            return await WarrantClient.httpClient.delete({
-                url: `/v1/users/${userId}/permissions/${permissionId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return WarrantModule.delete({
+            object: {
+                objectType: ObjectType.Permission,
+                objectId: permissionId,
+            },
+            relation: "member",
+            subject: {
+                objectType: ObjectType.User,
+                objectId: userId,
+            }
+        });
     }
 
     public static async listPermissionsForRole(roleId: string, listOptions: ListPermissionOptions = {}): Promise<Permission[]> {
@@ -126,26 +133,32 @@ export default class Permission implements WarrantObject {
         }
     }
 
-    public static async assignPermissionToRole(roleId: string, permissionId: string): Promise<Permission> {
-        try {
-            const response = await WarrantClient.httpClient.post({
-                url: `/v1/roles/${roleId}/permissions/${permissionId}`,
-            });
-
-            return new Permission(response.permissionId, response.name, response.description);
-        } catch (e) {
-            throw e;
-        }
+    public static async assignPermissionToRole(roleId: string, permissionId: string): Promise<Warrant> {
+        return WarrantModule.create({
+            object: {
+                objectType: ObjectType.Permission,
+                objectId: permissionId,
+            },
+            relation: "member",
+            subject: {
+                objectType: ObjectType.Role,
+                objectId: roleId,
+            }
+        });
     }
 
     public static async removePermissionFromRole(roleId: string, permissionId: string): Promise<void> {
-        try {
-            return await WarrantClient.httpClient.delete({
-                url: `/v1/roles/${roleId}/permissions/${permissionId}`,
-            });
-        } catch (e) {
-            throw e;
-        }
+        return WarrantModule.delete({
+            object: {
+                objectType: ObjectType.Permission,
+                objectId: permissionId,
+            },
+            relation: "member",
+            subject: {
+                objectType: ObjectType.Role,
+                objectId: roleId,
+            }
+        });
     }
 
     // WarrantObject methods

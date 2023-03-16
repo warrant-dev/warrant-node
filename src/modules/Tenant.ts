@@ -130,7 +130,7 @@ export default class Tenant implements WarrantObject {
         return PricingTier.listPricingTiersForTenant(this.tenantId, listOptions);
     }
 
-    public async assignPricingTier(pricingTierId: string): Promise<PricingTier> {
+    public async assignPricingTier(pricingTierId: string): Promise<Warrant> {
         return PricingTier.assignPricingTierToTenant(this.tenantId, pricingTierId);
     }
 
@@ -142,7 +142,7 @@ export default class Tenant implements WarrantObject {
         return Feature.listFeaturesForTenant(this.tenantId, listOptions);
     }
 
-    public async assignFeature(featureId: string): Promise<Feature> {
+    public async assignFeature(featureId: string): Promise<Warrant> {
         return Feature.assignFeatureToTenant(this.tenantId, featureId);
     }
 
