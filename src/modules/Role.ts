@@ -98,12 +98,12 @@ export default class Role implements WarrantObject {
     public static async assignRoleToUser(userId: string, roleId: string): Promise<Warrant> {
         return WarrantModule.create({
             object: {
-                objectType: "role",
+                objectType: ObjectType.Role,
                 objectId: roleId,
             },
             relation: "member",
             subject: {
-                objectType: "user",
+                objectType: ObjectType.User,
                 objectId: userId,
             }
         });
@@ -112,12 +112,12 @@ export default class Role implements WarrantObject {
     public static async removeRoleFromUser(userId: string, roleId: string): Promise<void> {
         return WarrantModule.delete({
             object: {
-                objectType: "role",
+                objectType: ObjectType.Role,
                 objectId: roleId,
             },
             relation: "member",
             subject: {
-                objectType: "user",
+                objectType: ObjectType.User,
                 objectId: userId,
             }
         });

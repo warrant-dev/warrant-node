@@ -81,12 +81,12 @@ export default class PricingTier implements WarrantObject {
     public static async assignPricingTierToTenant(tenantId: string, pricingTierId: string): Promise<Warrant> {
         return WarrantModule.create({
             object: {
-                objectType: "pricing-tier",
+                objectType: ObjectType.PricingTier,
                 objectId: pricingTierId,
             },
             relation: "member",
             subject: {
-                objectType: "tenant",
+                objectType: ObjectType.Tenant,
                 objectId: tenantId,
             }
         });
@@ -95,12 +95,12 @@ export default class PricingTier implements WarrantObject {
     public static async removePricingTierFromTenant(tenantId: string, pricingTierId: string): Promise<void> {
         return WarrantModule.delete({
             object: {
-                objectType: "pricing-tier",
+                objectType: ObjectType.PricingTier,
                 objectId: pricingTierId,
             },
             relation: "member",
             subject: {
-                objectType: "tenant",
+                objectType: ObjectType.Tenant,
                 objectId: tenantId,
             }
         });
@@ -122,12 +122,12 @@ export default class PricingTier implements WarrantObject {
     public static async assignPricingTierToUser(userId: string, pricingTierId: string): Promise<Warrant> {
         return WarrantModule.create({
             object: {
-                objectType: "pricing-tier",
+                objectType: ObjectType.PricingTier,
                 objectId: pricingTierId,
             },
             relation: "member",
             subject: {
-                objectType: "user",
+                objectType: ObjectType.User,
                 objectId: userId,
             }
         });
@@ -136,12 +136,12 @@ export default class PricingTier implements WarrantObject {
     public static async removePricingTierFromUser(userId: string, pricingTierId: string): Promise<void> {
         return WarrantModule.delete({
             object: {
-                objectType: "pricing-tier",
+                objectType: ObjectType.PricingTier,
                 objectId: pricingTierId,
             },
             relation: "member",
             subject: {
-                objectType: "user",
+                objectType: ObjectType.User,
                 objectId: userId,
             }
         });

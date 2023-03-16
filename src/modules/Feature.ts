@@ -78,12 +78,12 @@ export default class Feature implements WarrantObject {
     public static async assignFeatureToPricingTier(pricingTierId: string, featureId: string): Promise<Warrant> {
         return WarrantModule.create({
             object: {
-                objectType: "feature",
+                objectType: ObjectType.Feature,
                 objectId: featureId,
             },
             relation: "member",
             subject: {
-                objectType: "pricing-tier",
+                objectType: ObjectType.PricingTier,
                 objectId: pricingTierId,
             }
         });
@@ -92,12 +92,12 @@ export default class Feature implements WarrantObject {
     public static async removeFeatureFromPricingTier(pricingTierId: string, featureId: string): Promise<void> {
         return WarrantModule.delete({
             object: {
-                objectType: "feature",
+                objectType: ObjectType.Feature,
                 objectId: featureId,
             },
             relation: "member",
             subject: {
-                objectType: "pricing-tier",
+                objectType: ObjectType.PricingTier,
                 objectId: pricingTierId,
             }
         });
@@ -119,12 +119,12 @@ export default class Feature implements WarrantObject {
     public static async assignFeatureToTenant(tenantId: string, featureId: string): Promise<Warrant> {
         return WarrantModule.create({
             object: {
-                objectType: "feature",
+                objectType: ObjectType.Feature,
                 objectId: featureId,
             },
             relation: "member",
             subject: {
-                objectType: "tenant",
+                objectType: ObjectType.Tenant,
                 objectId: tenantId,
             }
         });
@@ -133,12 +133,12 @@ export default class Feature implements WarrantObject {
     public static async removeFeatureFromTenant(tenantId: string, featureId: string): Promise<void> {
         return WarrantModule.delete({
             object: {
-                objectType: "feature",
+                objectType: ObjectType.Feature,
                 objectId: featureId,
             },
             relation: "member",
             subject: {
-                objectType: "tenant",
+                objectType: ObjectType.Tenant,
                 objectId: tenantId,
             }
         });
@@ -160,12 +160,12 @@ export default class Feature implements WarrantObject {
     public static async assignFeatureToUser(userId: string, featureId: string): Promise<Warrant> {
         return WarrantModule.create({
             object: {
-                objectType: "feature",
+                objectType: ObjectType.Feature,
                 objectId: featureId,
             },
             relation: "member",
             subject: {
-                objectType: "user",
+                objectType: ObjectType.User,
                 objectId: userId,
             }
         });
@@ -174,12 +174,12 @@ export default class Feature implements WarrantObject {
     public static async removeFeatureFromUser(userId: string, featureId: string): Promise<void> {
         return WarrantModule.delete({
             object: {
-                objectType: "feature",
+                objectType: ObjectType.Feature,
                 objectId: featureId,
             },
             relation: "member",
             subject: {
-                objectType: "user",
+                objectType: ObjectType.User,
                 objectId: userId,
             }
         });

@@ -95,12 +95,12 @@ export default class Permission implements WarrantObject {
     public static async assignPermissionToUser(userId: string, permissionId: string): Promise<Warrant> {
         return WarrantModule.create({
             object: {
-                objectType: "permission",
+                objectType: ObjectType.Permission,
                 objectId: permissionId,
             },
             relation: "member",
             subject: {
-                objectType: "user",
+                objectType: ObjectType.User,
                 objectId: userId,
             }
         });
@@ -109,12 +109,12 @@ export default class Permission implements WarrantObject {
     public static async removePermissionFromUser(userId: string, permissionId: string): Promise<void> {
         return WarrantModule.delete({
             object: {
-                objectType: "permission",
+                objectType: ObjectType.Permission,
                 objectId: permissionId,
             },
             relation: "member",
             subject: {
-                objectType: "user",
+                objectType: ObjectType.User,
                 objectId: userId,
             }
         });
@@ -136,12 +136,12 @@ export default class Permission implements WarrantObject {
     public static async assignPermissionToRole(roleId: string, permissionId: string): Promise<Warrant> {
         return WarrantModule.create({
             object: {
-                objectType: "permission",
+                objectType: ObjectType.Permission,
                 objectId: permissionId,
             },
             relation: "member",
             subject: {
-                objectType: "role",
+                objectType: ObjectType.Role,
                 objectId: roleId,
             }
         });
@@ -150,12 +150,12 @@ export default class Permission implements WarrantObject {
     public static async removePermissionFromRole(roleId: string, permissionId: string): Promise<void> {
         return WarrantModule.delete({
             object: {
-                objectType: "permission",
+                objectType: ObjectType.Permission,
                 objectId: permissionId,
             },
             relation: "member",
             subject: {
-                objectType: "role",
+                objectType: ObjectType.Role,
                 objectId: roleId,
             }
         });
