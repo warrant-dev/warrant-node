@@ -4,7 +4,7 @@ var assert = require('assert');
 // Uncomment .skip and add your API_KEY to run tests
 describe.skip('Live Test', function () {
     before(function () {
-        this.warrant = new WarrantClient({ apiKey: "YOUR_KEY" });
+        this.warrant = new WarrantClient({ apiKey: "", endpoint: "https://api.warrant.dev" });
     });
 
     it('CRUD users', async function () {
