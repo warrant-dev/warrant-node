@@ -66,6 +66,20 @@ const newUser = await warrantClient.User.create({
 });
 ```
 
+## Configuring the API Endpoint
+---
+The API endpoint the SDK makes requests to is configurable via the `endpoint` attribute when initializing the client:
+
+```js
+import { WarrantClient } from "@warrantdev/warrant-node";
+
+// Set api and authorize endpoints to http://localhost:8000
+const warrantClient = new WarrantClient({
+  apiKey: "api_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
+  endpoint: "http://localhost:8000",
+});
+```
+
 ## Authorization
 
 All access checks are performed based on an `object`, `relation` and `subject`. You can pass your own defined objects to the check methods by implementing the `WarrantObject` interface.
