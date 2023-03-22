@@ -92,7 +92,6 @@ export default class ApiClient implements HttpClient {
         const fetchRequestOptions: FetchRequestOptions = {
             method,
             headers: {
-                Authorization: `ApiKey ${this.config.apiKey}`,
                 'User-Agent': `warrant-node/${version}`,
                 'Content-Type': "application/json"
             },
@@ -100,6 +99,8 @@ export default class ApiClient implements HttpClient {
 
         if (requestOptions?.apiKey) {
             fetchRequestOptions.headers['Authorization'] = `ApiKey ${requestOptions.apiKey}`;
+        } else if (this.config.apiKey) {
+            fetchRequestOptions.headers['Authorization'] = `ApiKey ${this.config.apiKey}`;
         }
 
         if (requestOptions?.baseUrl) {
