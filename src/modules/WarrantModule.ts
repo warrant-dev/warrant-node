@@ -12,7 +12,7 @@ export default class WarrantModule {
                     objectId: isWarrantObject(warrant.object) ? warrant.object.getObjectId() : warrant.object.objectId,
                     relation: warrant.relation,
                     subject: isSubject(warrant.subject) ? warrant.subject : { objectType: warrant.subject.getObjectType(), objectId: warrant.subject.getObjectId() },
-                    context: warrant.context
+                    policy: warrant.policy
                 },
             });
         } catch (e) {
@@ -29,7 +29,7 @@ export default class WarrantModule {
                     objectId: isWarrantObject(warrant.object) ? warrant.object.getObjectId() : warrant.object.objectId,
                     relation: warrant.relation,
                     subject: isSubject(warrant.subject) ? warrant.subject : { objectType: warrant.subject.getObjectType(), objectId: warrant.subject.getObjectId() },
-                    context: warrant.context
+                    policy: warrant.policy
                 },
             });
         } catch (e) {

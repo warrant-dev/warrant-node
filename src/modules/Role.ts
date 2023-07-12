@@ -5,7 +5,7 @@ import WarrantClient from "../WarrantClient";
 import { ObjectType } from "../types/ObjectType";
 import { ListPermissionOptions } from "../types/Permission";
 import { CreateRoleParams, ListRoleOptions, UpdateRoleParams } from "../types/Role";
-import Warrant, { Context, WarrantObject } from "../types/Warrant";
+import Warrant, { PolicyContext, WarrantObject } from "../types/Warrant";
 
 export default class Role implements WarrantObject {
     roleId: string;
@@ -136,7 +136,7 @@ export default class Role implements WarrantObject {
         return Permission.removePermissionFromRole(this.roleId, permissionId);
     }
 
-    public async hasPermission(permissionId: string, context: Context = {}): Promise<boolean> {
+    public async hasPermission(permissionId: string, context: PolicyContext = {}): Promise<boolean> {
         return Authorization.hasPermission({ permissionId: permissionId, subject: { objectType: ObjectType.Role, objectId: this.roleId }, context: context });
     }
 

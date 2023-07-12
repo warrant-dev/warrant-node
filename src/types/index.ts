@@ -8,5 +8,5 @@ export { CreateRoleParams, ListRoleOptions, UpdateRoleParams } from "./Role";
 export { SessionParams, SelfServiceSessionParams, SelfServiceStrategy } from "./Session";
 export { CreateTenantParams, ListTenantOptions, UpdateTenantParams } from "./Tenant";
 export { CreateUserParams, ListUserOptions, UpdateUserParams } from "./User";
-export { default as Warrant, ListWarrantOptions, Context, Subject, WarrantObject } from "./Warrant";
+export { default as Warrant, ListWarrantOptions, PolicyContext, Subject, WarrantObject } from "./Warrant";
 export { default as Check, CheckMany, CheckOp, CheckWarrant, FeatureCheck, PermissionCheck } from "./Check";

@@ -1,6 +1,6 @@
 import Feature from "./Feature";
 import Permission from "./Permission";
-import Check, { AccessCheckRequest, CheckMany, FeatureCheck, PermissionCheck } from "../types/Check";
+import Check, { AccessCheckRequest, CheckMany, CheckWarrantRequest, FeatureCheck, PermissionCheck } from "../types/Check";
 import Warrant, { isSubject, isWarrantObject } from "../types/Warrant";
 import WarrantClient from "../WarrantClient";
 
@@ -24,7 +24,7 @@ export default class Authorization {
     }
 
     public static async checkMany(check: CheckMany): Promise<boolean> {
-        let warrants: Warrant[] = check.warrants.map((warrant) => {
+        let warrants: CheckWarrantRequest[] = check.warrants.map((warrant) => {
             return {
                 objectType: isWarrantObject(warrant.object) ? warrant.object.getObjectType() : warrant.object.objectType,
                 objectId: isWarrantObject(warrant.object) ? warrant.object.getObjectId() : warrant.object.objectId,

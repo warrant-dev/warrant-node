@@ -1,4 +1,4 @@
-import Warrant, { Context, Subject, WarrantObject, WarrantObjectLiteral } from "./Warrant";
+import Warrant, { PolicyContext, Subject, WarrantObject, WarrantObjectLiteral } from "./Warrant";
 
 export enum CheckOp {
     AllOf = "allOf",
@@ -9,7 +9,7 @@ export interface CheckWarrant {
     object: WarrantObject | WarrantObjectLiteral;
     relation: string;
     subject: WarrantObject | Subject;
-    context?: Context;
+    context?: PolicyContext;
 }
 
 export default interface Check extends CheckWarrant {
@@ -25,19 +25,27 @@ export interface CheckMany {
 export interface FeatureCheck {
     featureId: string;
     subject: WarrantObject | Subject;
-    context?: Context;
+    context?: PolicyContext;
     debug?: boolean;
 }
 
 export interface PermissionCheck {
     permissionId: string;
     subject: WarrantObject | Subject;
-    context?: Context;
+    context?: PolicyContext;
     debug?: boolean;
+}
+
+export interface CheckWarrantRequest {
+    objectType: string;
+    objectId: string;
+    relation: string;
+    subject: WarrantObject | Subject;
+    context?: PolicyContext;
 }
 
 export interface AccessCheckRequest {
     op?: CheckOp;
-    warrants: Warrant[];
+    warrants: CheckWarrantRequest[];
     debug?: boolean;
 }

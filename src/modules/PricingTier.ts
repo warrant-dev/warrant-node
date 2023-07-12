@@ -5,7 +5,7 @@ import WarrantClient from "../WarrantClient";
 import { ListFeatureOptions } from "../types/Feature";
 import { ObjectType } from "../types/ObjectType";
 import { CreatePricingTierParams, ListPricingTierOptions } from "../types/PricingTier";
-import Warrant, { Context, WarrantObject } from "../types/Warrant";
+import Warrant, { PolicyContext, WarrantObject } from "../types/Warrant";
 
 export default class PricingTier implements WarrantObject {
     pricingTierId: string;
@@ -160,7 +160,7 @@ export default class PricingTier implements WarrantObject {
         return Feature.removeFeatureFromPricingTier(this.pricingTierId, featureId);
     }
 
-    public async hasFeature(featureId: string, context: Context = {}): Promise<boolean> {
+    public async hasFeature(featureId: string, context: PolicyContext = {}): Promise<boolean> {
         return Authorization.hasFeature({ featureId: featureId, subject: { objectType: ObjectType.PricingTier, objectId: this.pricingTierId }, context: context });
     }
 
