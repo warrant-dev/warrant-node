@@ -14,7 +14,6 @@ export default class Authorization {
                 subject: isSubject(check.subject) ? check.subject : { objectType: check.subject.getObjectType(), objectId: check.subject.getObjectId() },
                 context: check.context
             }],
-            consistentRead: check.consistentRead,
             debug: check.debug
         }
         if (WarrantClient.config.authorizeEndpoint) {
@@ -37,7 +36,6 @@ export default class Authorization {
         const accessCheckRequest: AccessCheckRequest = {
             op: check.op,
             warrants: warrants,
-            consistentRead: check.consistentRead,
             debug: check.debug
         }
 
@@ -54,7 +52,6 @@ export default class Authorization {
             relation: "member",
             subject: featureCheck.subject,
             context: featureCheck.context,
-            consistentRead: featureCheck.consistentRead,
             debug: featureCheck.debug
         })
     }
@@ -65,7 +62,6 @@ export default class Authorization {
             relation: "member",
             subject: permissionCheck.subject,
             context: permissionCheck.context,
-            consistentRead: permissionCheck.consistentRead,
             debug: permissionCheck.debug
         })
     }
