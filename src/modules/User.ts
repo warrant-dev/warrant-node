@@ -13,7 +13,7 @@ import { ListPricingTierOptions } from "../types/PricingTier";
 import { ListRoleOptions } from "../types/Role";
 import { CreateUserParams, ListUserOptions, UpdateUserParams } from "../types/User";
 import { ListTenantOptions } from "../types/Tenant";
-import { Context, WarrantObject } from "../types/Warrant";
+import { PolicyContext, WarrantObject } from "../types/Warrant";
 import WarrantModule from "./WarrantModule";
 
 export default class User implements WarrantObject {
@@ -174,7 +174,7 @@ export default class User implements WarrantObject {
         return Permission.removePermissionFromUser(this.userId, permissionId);
     }
 
-    public async hasPermission(permissionId: string, context: Context = {}): Promise<boolean> {
+    public async hasPermission(permissionId: string, context: PolicyContext = {}): Promise<boolean> {
         return Authorization.hasPermission({ permissionId: permissionId, subject: { objectType: ObjectType.User, objectId: this.userId }, context: context });
     }
 
@@ -202,7 +202,7 @@ export default class User implements WarrantObject {
         return Feature.removeFeatureFromUser(this.userId, featureId);
     }
 
-    public async hasFeature(featureId: string, context: Context = {}): Promise<boolean> {
+    public async hasFeature(featureId: string, context: PolicyContext = {}): Promise<boolean> {
         return Authorization.hasFeature({ featureId: featureId, subject: { objectType: ObjectType.User, objectId: this.userId }, context: context });
     }
 

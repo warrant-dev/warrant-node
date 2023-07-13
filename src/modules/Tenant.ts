@@ -9,7 +9,7 @@ import { ObjectType } from "../types/ObjectType";
 import { ListPricingTierOptions } from "../types/PricingTier";
 import { CreateTenantParams, ListTenantOptions, UpdateTenantParams } from "../types/Tenant";
 import { ListUserOptions } from "../types/User";
-import { Context, WarrantObject } from "../types/Warrant";
+import { PolicyContext, WarrantObject } from "../types/Warrant";
 
 export default class Tenant implements WarrantObject {
     // Tenant properties
@@ -150,7 +150,7 @@ export default class Tenant implements WarrantObject {
         return Feature.removeFeatureFromTenant(this.tenantId, featureId);
     }
 
-    public async hasFeature(featureId: string, context: Context = {}): Promise<boolean> {
+    public async hasFeature(featureId: string, context: PolicyContext = {}): Promise<boolean> {
         return Authorization.hasFeature({ featureId: featureId, subject: { objectType: ObjectType.Tenant, objectId: this.tenantId }, context: context });
     }
 

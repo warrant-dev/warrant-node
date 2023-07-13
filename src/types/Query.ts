@@ -1,17 +1,17 @@
-import { Context, isSubject, isWarrantObject, Subject, WarrantObject, WarrantObjectLiteral } from "./Warrant";
+import { isSubject, isWarrantObject, PolicyContext, Subject, WarrantObject, WarrantObjectLiteral } from "./Warrant";
 
 export interface ForClause {
     object?: WarrantObject | WarrantObjectLiteral;
     relation?: string;
     subject?: Subject | WarrantObject;
-    context?: Context;
+    context?: PolicyContext;
 }
 
 export interface WhereClause {
     object?: WarrantObject | WarrantObjectLiteral;
     relation?: string;
     subject?: Subject | WarrantObject;
-    context?: Context;
+    context?: PolicyContext;
 }
 
 export default class Query {

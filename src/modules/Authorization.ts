@@ -1,6 +1,6 @@
 import Feature from "./Feature";
 import Permission from "./Permission";
-import Check, { AccessCheckRequest, CheckMany, FeatureCheck, PermissionCheck } from "../types/Check";
+import Check, { AccessCheckRequest, CheckMany, CheckWarrant, FeatureCheck, PermissionCheck } from "../types/Check";
 import Warrant, { isSubject, isWarrantObject } from "../types/Warrant";
 import WarrantClient from "../WarrantClient";
 
@@ -8,13 +8,11 @@ export default class Authorization {
     public static async check(check: Check): Promise<boolean> {
         const accessCheckRequest: AccessCheckRequest = {
             warrants: [{
-                objectType: isWarrantObject(check.object) ? check.object.getObjectType() : check.object.objectType,
-                objectId: isWarrantObject(check.object) ? check.object.getObjectId() : check.object.objectId,
+                object: check.object,
                 relation: check.relation,
-                subject: isSubject(check.subject) ? check.subject : { objectType: check.subject.getObjectType(), objectId: check.subject.getObjectId() },
+                subject: check.subject,
                 context: check.context
             }],
-            consistentRead: check.consistentRead,
             debug: check.debug
         }
         if (WarrantClient.config.authorizeEndpoint) {
@@ -25,19 +23,17 @@ export default class Authorization {
     }
 
     public static async checkMany(check: CheckMany): Promise<boolean> {
-        let warrants: Warrant[] = check.warrants.map((warrant) => {
+        let warrants: CheckWarrant[] = check.warrants.map((warrant) => {
             return {
-                objectType: isWarrantObject(warrant.object) ? warrant.object.getObjectType() : warrant.object.objectType,
-                objectId: isWarrantObject(warrant.object) ? warrant.object.getObjectId() : warrant.object.objectId,
+                object: warrant.object,
                 relation: warrant.relation,
-                subject: isSubject(warrant.subject) ? warrant.subject : { objectType: warrant.subject.getObjectType(), objectId: warrant.subject.getObjectId() },
+                subject: warrant.subject,
                 context: warrant.context
             }
         })
         const accessCheckRequest: AccessCheckRequest = {
             op: check.op,
             warrants: warrants,
-            consistentRead: check.consistentRead,
             debug: check.debug
         }
 
@@ -54,7 +50,6 @@ export default class Authorization {
             relation: "member",
             subject: featureCheck.subject,
             context: featureCheck.context,
-            consistentRead: featureCheck.consistentRead,
             debug: featureCheck.debug
         })
     }
@@ -65,7 +60,6 @@ export default class Authorization {
             relation: "member",
             subject: permissionCheck.subject,
             context: permissionCheck.context,
-            consistentRead: permissionCheck.consistentRead,
             debug: permissionCheck.debug
         })
     }
@@ -73,9 +67,13 @@ export default class Authorization {
     // Private methods
     private static async authorize(accessCheckRequest: AccessCheckRequest): Promise<boolean> {
         try {
+
             const response = await WarrantClient.httpClient.post({
                 url: "/v2/authorize",
-                data: accessCheckRequest,
+                data: {
+                    ...accessCheckRequest,
+                    warrants: this.mapWarrantsForRequest(accessCheckRequest.warrants),
+                },
             });
 
             return response.code === 200;
@@ -84,21 +82,36 @@ export default class Authorization {
         }
     }
 
-    private static async edgeAuthorize(warrantCheck: AccessCheckRequest): Promise<boolean> {
+    private static async edgeAuthorize(accessCheckRequest: AccessCheckRequest): Promise<boolean> {
         try {
             const response = await WarrantClient.httpClient.post({
                 baseUrl: WarrantClient.config.authorizeEndpoint,
                 url: "/v2/authorize",
-                data: warrantCheck,
+                data: {
+                    ...accessCheckRequest,
+                    warrants: this.mapWarrantsForRequest(accessCheckRequest.warrants),
+                },
             });
 
             return response.code === 200;
         } catch (e) {
             if (e.code === "cache_not_ready") {
-                return this.authorize(warrantCheck);
+                return this.authorize(accessCheckRequest);
             }
 
             throw e;
         }
+    }
+
+    private static mapWarrantsForRequest(warrants: CheckWarrant[]): any[] {
+        return warrants.map((warrant) => {
+            return {
+                objectType: isWarrantObject(warrant.object) ? warrant.object.getObjectType() : warrant.object.objectType,
+                objectId: isWarrantObject(warrant.object) ? warrant.object.getObjectId() : warrant.object.objectId,
+                relation: warrant.relation,
+                subject: isSubject(warrant.subject) ? warrant.subject : { objectType: warrant.subject.getObjectType(), objectId: warrant.subject.getObjectId() },
+                context: warrant.context
+            }
+        })
     }
 }

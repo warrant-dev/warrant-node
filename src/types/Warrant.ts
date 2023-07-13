@@ -7,8 +7,8 @@ export interface ListWarrantOptions extends ListOptions {
     userId?: string;
 }
 
-export interface Context {
-    [key: string]: string;
+export interface PolicyContext {
+    [key: string]: any;
 }
 
 export interface Subject {
@@ -27,7 +27,7 @@ export default interface Warrant {
     objectId: string;
     relation: string;
     subject: Subject;
-    context?: Context;
+    policy?: string;
 }
 
 export interface WarrantObject {
@@ -48,5 +48,5 @@ export interface WarrantParams {
     object: WarrantObject | WarrantObjectLiteral;
     relation: string;
     subject: WarrantObject | Subject;
-    context?: Context;
+    policy?: string;
 }

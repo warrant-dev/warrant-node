@@ -1,9 +1,9 @@
-import { Context } from "./Warrant";
+import { PolicyContext } from "./Warrant";
 
 export interface SessionParams {
     userId: string;
     ttl?: number;
-    context?: Context;
+    context?: PolicyContext;
 }
 
 export interface SelfServiceSessionParams extends SessionParams {

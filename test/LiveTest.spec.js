@@ -536,4 +536,64 @@ describe.skip('Live Test', function () {
         await this.warrant.User.delete(newUser.userId);
         await this.warrant.Permission.delete(newPermission.permissionId);
     });
+
+    it('warrant with policy', async function() {
+        await this.warrant.Warrant.create({
+            object: {
+                objectType: "permission",
+                objectId: "test-permission"
+            },
+            relation: "member",
+            subject: {
+                objectType: "user",
+                objectId: "user-1"
+            },
+            policy: `geo == "us"`
+        });
+
+        checkResult = await this.warrant.Authorization.check({
+            object: {
+                objectType: "permission",
+                objectId: "test-permission"
+            },
+            relation: "member",
+            subject: {
+                objectType: "user",
+                objectId: "user-1"
+            },
+            context: {
+                "geo": "us",
+            }
+        });
+        assert.strictEqual(checkResult, true);
+
+        checkResult = await this.warrant.Authorization.check({
+            object: {
+                objectType: "permission",
+                objectId: "test-permission"
+            },
+            relation: "member",
+            subject: {
+                objectType: "user",
+                objectId: "user-1"
+            },
+            context: {
+                "geo": "eu",
+            }
+        });
+        assert.strictEqual(checkResult, false);
+
+        await this.warrant.Warrant.delete({
+            object: {
+                objectType: "permission",
+                objectId: "test-permission"
+            },
+            relation: "member",
+            subject: {
+                objectType: "user",
+                objectId: "user-1"
+            },
+            policy: `geo == "us"`
+        });
+    });
 })
