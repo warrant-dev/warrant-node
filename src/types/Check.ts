@@ -36,16 +36,8 @@ export interface PermissionCheck {
     debug?: boolean;
 }
 
-export interface CheckWarrantRequest {
-    objectType: string;
-    objectId: string;
-    relation: string;
-    subject: WarrantObject | Subject;
-    context?: PolicyContext;
-}
-
 export interface AccessCheckRequest {
     op?: CheckOp;
-    warrants: CheckWarrantRequest[];
+    warrants: CheckWarrant[];
     debug?: boolean;
 }
