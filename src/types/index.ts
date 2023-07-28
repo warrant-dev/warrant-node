@@ -3,7 +3,7 @@ export { default as Config } from "./Config";
 export { CreateFeatureParams, ListFeatureOptions } from "./Feature";
 export { CreatePermissionParams, ListPermissionOptions, UpdatePermissionParams } from "./Permission";
 export { CreatePricingTierParams, ListPricingTierOptions } from "./PricingTier";
-export { default as Query } from "./Query";
+export { QueryOptions, QueryResponse, QueryResult } from "./Query";
 export { CreateRoleParams, ListRoleOptions, UpdateRoleParams } from "./Role";
 export { SessionParams, SelfServiceSessionParams, SelfServiceStrategy } from "./Session";
 export { CreateTenantParams, ListTenantOptions, UpdateTenantParams } from "./Tenant";

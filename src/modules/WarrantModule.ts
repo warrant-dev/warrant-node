@@ -1,7 +1,7 @@
 import WarrantClient from "../WarrantClient";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
-import Query from "../types/Query";
 import Warrant, { isSubject, isWarrantObject, ListWarrantOptions, WarrantParams } from "../types/Warrant";
+import { QueryOptions, QueryResponse } from "../types/Query";
 
 export default class WarrantModule {
     public static async create(warrant: WarrantParams, options: WarrantRequestOptions = {}): Promise<Warrant> {
@@ -40,13 +40,13 @@ export default class WarrantModule {
         }
     }
 
-    public static async queryWarrants(query: Query, listOptions: ListWarrantOptions = {}, options: WarrantRequestOptions = {}): Promise<Warrant[]> {
+    public static async query(query: string, queryOptions: QueryOptions = {}, options: WarrantRequestOptions = {}): Promise<QueryResponse> {
         try {
             return await WarrantClient.httpClient.get({
                 url: "/v1/query",
                 params: {
-                    ...query.toObject(),
-                    ...listOptions
+                    q: query,
+                    ...options,
                 },
                 options,
             });

@@ -1,7 +1,7 @@
-const { SelfServiceStrategy, Query, WarrantClient } = require("../dist/index");
+const { SelfServiceStrategy, WarrantClient } = require("../dist/index");
 var assert = require('assert');
 
-// Uncomment .skip and add your API_KEY to run tests
+// Remove .skip and add your API_KEY to run tests
 describe.skip('Live Test', function () {
     before(function () {
         this.warrant = new WarrantClient({ apiKey: "", endpoint: "https://api.warrant.dev" });
@@ -166,7 +166,7 @@ describe.skip('Live Test', function () {
         await this.warrant.User.delete("user-2");
         await this.warrant.Tenant.delete("tenant-1");
         await this.warrant.Tenant.delete("tenant-2");
-    })
+    });
 
     it('multi-tenancy example', async function () {
         // Create users
@@ -243,7 +243,7 @@ describe.skip('Live Test', function () {
 
         adminRolePermissions = await this.warrant.Permission.listPermissionsForRole(adminRole.roleId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(adminRolePermissions.length, 1);
-        assert.strictEqual(adminRolePermissions[0].permissionId, createPermission.permissionId)
+        assert.strictEqual(adminRolePermissions[0].permissionId, createPermission.permissionId);
 
         await this.warrant.Permission.removePermissionFromRole(adminRole.roleId, createPermission.permissionId);
         await this.warrant.Role.removeRoleFromUser(adminUser.userId, adminRole.roleId);
@@ -506,23 +506,13 @@ describe.skip('Live Test', function () {
         });
         assert.strictEqual(userHasPermission, true);
 
-        // const warrantQuery = Query
-        //     .selectWarrants()
-        //     .for({
-        //         subject: newUser
-        //     })
-        //     .where({
-        //         subject: {
-        //             objectType: "user",
-        //             objectId: newUser.userId
-        //         }
-        //     });
-        // const warrants = await this.warrant.Warrant.queryWarrants(warrantQuery, { limit: 100 });
+        const query = `select permission where user:${newUser.userId} is member`;
+        const response = await this.warrant.Warrant.query(query);
 
-        // assert.strictEqual(warrants.length, 1);
-        // assert.strictEqual(warrants[0].objectType, "permission");
-        // assert.strictEqual(warrants[0].objectId, "perm1");
-        // assert.strictEqual(warrants[0].relation, "member");
+        assert.strictEqual(response.results.length, 1);
+        assert.strictEqual(response.results[0].objectType, "permission");
+        assert.strictEqual(response.results[0].objectId, "perm1");
+        assert.strictEqual(response.results[0].warrant.relation, "member");
 
         await this.warrant.Warrant.delete({
             object: newPermission,
@@ -543,7 +533,7 @@ describe.skip('Live Test', function () {
         await this.warrant.Permission.delete(newPermission.permissionId);
     });
 
-    it('warrant with policy', async function() {
+    it('warrant with policy', async function () {
         await this.warrant.Warrant.create({
             object: {
                 objectType: "permission",
@@ -557,7 +547,7 @@ describe.skip('Live Test', function () {
             policy: `geo == "us"`
         });
 
-        checkResult = await this.warrant.Authorization.check({
+        let checkResult = await this.warrant.Authorization.check({
             object: {
                 objectType: "permission",
                 objectId: "test-permission"
@@ -606,4 +596,4 @@ describe.skip('Live Test', function () {
             policy: `geo == "us"`
         });
     });
-})
+});
