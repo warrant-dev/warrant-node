@@ -1,5 +1,5 @@
 import ApiError from "./types/ApiError";
-import { UserRequestOptions } from "./types/Params";
+import { WarrantRequestOptions } from "./types/WarrantRequestOptions";
 
 const { version } = require("../package.json");
 
@@ -21,7 +21,7 @@ export interface HttpClientRequestOptions {
     data?: any;
     params?: any;
     url: string;
-    options?: UserRequestOptions;
+    options?: WarrantRequestOptions;
 }
 
 interface RequestHeaders {

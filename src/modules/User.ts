@@ -8,7 +8,7 @@ import WarrantClient from "../WarrantClient";
 import Warrant from "./WarrantModule";
 import { ListFeatureOptions } from "../types/Feature";
 import { ObjectType } from "../types/ObjectType";
-import { UserRequestOptions } from "../types/Params";
+import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import { ListPermissionOptions } from "../types/Permission";
 import { ListPricingTierOptions } from "../types/PricingTier";
 import { ListRoleOptions } from "../types/Role";
@@ -29,7 +29,7 @@ export default class User implements WarrantObject {
     //
     // Static methods
     //
-    public static async create(user: CreateUserParams = {}, options: UserRequestOptions = {}): Promise<User> {
+    public static async create(user: CreateUserParams = {}, options: WarrantRequestOptions = {}): Promise<User> {
         try {
             const response = await WarrantClient.httpClient.post({
                 url: "/v1/users",
@@ -43,7 +43,7 @@ export default class User implements WarrantObject {
         }
     }
 
-    public static async batchCreate(users: CreateUserParams[], options: UserRequestOptions = {}): Promise<User[]> {
+    public static async batchCreate(users: CreateUserParams[], options: WarrantRequestOptions = {}): Promise<User[]> {
         try {
             const response = await WarrantClient.httpClient.post({
                 url: "/v1/users",
@@ -57,7 +57,7 @@ export default class User implements WarrantObject {
         }
     }
 
-    public static async get(userId: string, options: UserRequestOptions = {}): Promise<User> {
+    public static async get(userId: string, options: WarrantRequestOptions = {}): Promise<User> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: `/v1/users/${userId}`,
@@ -70,7 +70,7 @@ export default class User implements WarrantObject {
         }
     }
 
-    public static async update(userId: string, user: UpdateUserParams, options: UserRequestOptions = {}): Promise<User> {
+    public static async update(userId: string, user: UpdateUserParams, options: WarrantRequestOptions = {}): Promise<User> {
         try {
             const response = await WarrantClient.httpClient.put({
                 url: `/v1/users/${userId}`,
@@ -84,7 +84,7 @@ export default class User implements WarrantObject {
         }
     }
 
-    public static async delete(userId: string, options: UserRequestOptions = {}): Promise<void> {
+    public static async delete(userId: string, options: WarrantRequestOptions = {}): Promise<void> {
         try {
             return await WarrantClient.httpClient.delete({
                 url: `/v1/users/${userId}`,
@@ -95,7 +95,7 @@ export default class User implements WarrantObject {
         }
     }
 
-    public static async listUsers(listOptions: ListUserOptions = {}, options: UserRequestOptions = {}): Promise<User[]> {
+    public static async listUsers(listOptions: ListUserOptions = {}, options: WarrantRequestOptions = {}): Promise<User[]> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: "/v1/users",
@@ -109,7 +109,7 @@ export default class User implements WarrantObject {
         }
     }
 
-    public static async listUsersForTenant(tenantId: string, listOptions: ListUserOptions = {}, options: UserRequestOptions = {}): Promise<User[]> {
+    public static async listUsersForTenant(tenantId: string, listOptions: ListUserOptions = {}, options: WarrantRequestOptions = {}): Promise<User[]> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: `/v1/tenants/${tenantId}/users`,
@@ -123,7 +123,7 @@ export default class User implements WarrantObject {
         }
     }
 
-    public static async assignUserToTenant(tenantId: string, userId: string, role: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public static async assignUserToTenant(tenantId: string, userId: string, role: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return WarrantModule.create({
             object: {
                 objectType: ObjectType.Tenant,
@@ -137,7 +137,7 @@ export default class User implements WarrantObject {
         }, options);
     }
 
-    public static async removeUserFromTenant(tenantId: string, userId: string, role: string, options: UserRequestOptions = {}): Promise<void> {
+    public static async removeUserFromTenant(tenantId: string, userId: string, role: string, options: WarrantRequestOptions = {}): Promise<void> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.Tenant,
@@ -154,63 +154,63 @@ export default class User implements WarrantObject {
     //
     // Instance methods
     //
-    public async listTenants(listOptions: ListTenantOptions = {}, options: UserRequestOptions = {}): Promise<Tenant[]> {
+    public async listTenants(listOptions: ListTenantOptions = {}, options: WarrantRequestOptions = {}): Promise<Tenant[]> {
         return Tenant.listTenantsForUser(this.userId, listOptions, options);
     }
 
-    public async listRoles(listOptions: ListRoleOptions = {}, options: UserRequestOptions = {}): Promise<Role[]> {
+    public async listRoles(listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<Role[]> {
         return Role.listRolesForUser(this.userId, listOptions, options);
     }
 
-    public async assignRole(roleId: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public async assignRole(roleId: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return Role.assignRoleToUser(this.userId, roleId, options);
     }
 
-    public async removeRole(roleId: string, options: UserRequestOptions = {}): Promise<void> {
+    public async removeRole(roleId: string, options: WarrantRequestOptions = {}): Promise<void> {
         return Role.removeRoleFromUser(this.userId, roleId, options);
     }
 
-    public async listPermissions(listOptions: ListPermissionOptions = {}, options: UserRequestOptions = {}): Promise<Permission[]> {
+    public async listPermissions(listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<Permission[]> {
         return Permission.listPermissionsForUser(this.userId, listOptions, options);
     }
 
-    public async assignPermission(permissionId: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public async assignPermission(permissionId: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return Permission.assignPermissionToUser(this.userId, permissionId, options);
     }
 
-    public async removePermission(permissionId: string, options: UserRequestOptions = {}): Promise<void> {
+    public async removePermission(permissionId: string, options: WarrantRequestOptions = {}): Promise<void> {
         return Permission.removePermissionFromUser(this.userId, permissionId, options);
     }
 
-    public async hasPermission(permissionId: string, context: PolicyContext = {}, options: UserRequestOptions = {}): Promise<boolean> {
+    public async hasPermission(permissionId: string, context: PolicyContext = {}, options: WarrantRequestOptions = {}): Promise<boolean> {
         return Authorization.hasPermission({ permissionId: permissionId, subject: { objectType: ObjectType.User, objectId: this.userId }, context: context }, options);
     }
 
-    public async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: UserRequestOptions = {}): Promise<PricingTier[]> {
+    public async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<PricingTier[]> {
         return PricingTier.listPricingTiersForUser(this.userId, listOptions, options);
     }
 
-    public async assignPricingTier(pricingTierId: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public async assignPricingTier(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return PricingTier.assignPricingTierToUser(this.userId, pricingTierId, options);
     }
 
-    public async removePricingTier(pricingTierId: string, options: UserRequestOptions = {}): Promise<void> {
+    public async removePricingTier(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<void> {
         return PricingTier.removePricingTierFromUser(this.userId, pricingTierId, options);
     }
 
-    public async listFeatures(listOptions: ListFeatureOptions = {}, options: UserRequestOptions = {}): Promise<Feature[]> {
+    public async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<Feature[]> {
         return Feature.listFeaturesForUser(this.userId, listOptions, options);
     }
 
-    public async assignFeature(featureId: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public async assignFeature(featureId: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return Feature.assignFeatureToUser(this.userId, featureId, options);
     }
 
-    public async removeFeature(featureId: string, options: UserRequestOptions = {}): Promise<void> {
+    public async removeFeature(featureId: string, options: WarrantRequestOptions = {}): Promise<void> {
         return Feature.removeFeatureFromUser(this.userId, featureId, options);
     }
 
-    public async hasFeature(featureId: string, context: PolicyContext = {}, options: UserRequestOptions = {}): Promise<boolean> {
+    public async hasFeature(featureId: string, context: PolicyContext = {}, options: WarrantRequestOptions = {}): Promise<boolean> {
         return Authorization.hasFeature({ featureId: featureId, subject: { objectType: ObjectType.User, objectId: this.userId }, context: context }, options);
     }
 

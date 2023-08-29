@@ -1,12 +1,12 @@
 import Feature from "./Feature";
 import Permission from "./Permission";
 import Check, { AccessCheckRequest, CheckMany, CheckWarrant, FeatureCheck, PermissionCheck } from "../types/Check";
-import { UserRequestOptions } from "../types/Params";
+import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import Warrant, { isSubject, isWarrantObject } from "../types/Warrant";
 import WarrantClient from "../WarrantClient";
 
 export default class Authorization {
-    public static async check(check: Check, options: UserRequestOptions = {}): Promise<boolean> {
+    public static async check(check: Check, options: WarrantRequestOptions = {}): Promise<boolean> {
         const accessCheckRequest: AccessCheckRequest = {
             warrants: [{
                 object: check.object,
@@ -23,7 +23,7 @@ export default class Authorization {
         return this.authorize(accessCheckRequest, options);
     }
 
-    public static async checkMany(check: CheckMany, options: UserRequestOptions = {}): Promise<boolean> {
+    public static async checkMany(check: CheckMany, options: WarrantRequestOptions = {}): Promise<boolean> {
         let warrants: CheckWarrant[] = check.warrants.map((warrant) => {
             return {
                 object: warrant.object,
@@ -45,7 +45,7 @@ export default class Authorization {
         return this.authorize(accessCheckRequest, options);
     }
 
-    public static async hasFeature(featureCheck: FeatureCheck, options: UserRequestOptions = {}): Promise<boolean> {
+    public static async hasFeature(featureCheck: FeatureCheck, options: WarrantRequestOptions = {}): Promise<boolean> {
         return this.check({
             object: new Feature(featureCheck.featureId),
             relation: "member",
@@ -55,7 +55,7 @@ export default class Authorization {
         }, options)
     }
 
-    public static async hasPermission(permissionCheck: PermissionCheck, options: UserRequestOptions = {}): Promise<boolean> {
+    public static async hasPermission(permissionCheck: PermissionCheck, options: WarrantRequestOptions = {}): Promise<boolean> {
         return this.check({
             object: new Permission(permissionCheck.permissionId),
             relation: "member",
@@ -66,7 +66,7 @@ export default class Authorization {
     }
 
     // Private methods
-    private static async authorize(accessCheckRequest: AccessCheckRequest, options: UserRequestOptions = {}): Promise<boolean> {
+    private static async authorize(accessCheckRequest: AccessCheckRequest, options: WarrantRequestOptions = {}): Promise<boolean> {
         try {
 
             const response = await WarrantClient.httpClient.post({
@@ -84,7 +84,7 @@ export default class Authorization {
         }
     }
 
-    private static async edgeAuthorize(accessCheckRequest: AccessCheckRequest, options: UserRequestOptions = {}): Promise<boolean> {
+    private static async edgeAuthorize(accessCheckRequest: AccessCheckRequest, options: WarrantRequestOptions = {}): Promise<boolean> {
         try {
             const response = await WarrantClient.httpClient.post({
                 baseUrl: WarrantClient.config.authorizeEndpoint,

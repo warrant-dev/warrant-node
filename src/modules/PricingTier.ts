@@ -4,7 +4,7 @@ import WarrantModule from "./WarrantModule";
 import WarrantClient from "../WarrantClient";
 import { ListFeatureOptions } from "../types/Feature";
 import { ObjectType } from "../types/ObjectType";
-import { UserRequestOptions } from "../types/Params";
+import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import { CreatePricingTierParams, ListPricingTierOptions } from "../types/PricingTier";
 import Warrant, { PolicyContext, WarrantObject } from "../types/Warrant";
 
@@ -18,7 +18,7 @@ export default class PricingTier implements WarrantObject {
     //
     // Static methods
     //
-    public static async create(pricingTier: CreatePricingTierParams, options: UserRequestOptions = {}): Promise<PricingTier> {
+    public static async create(pricingTier: CreatePricingTierParams, options: WarrantRequestOptions = {}): Promise<PricingTier> {
         try {
             const response = await WarrantClient.httpClient.post({
                 url: "/v1/pricing-tiers",
@@ -32,7 +32,7 @@ export default class PricingTier implements WarrantObject {
         }
     }
 
-    public static async get(pricingTierId: string, options: UserRequestOptions = {}): Promise<PricingTier> {
+    public static async get(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<PricingTier> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: `/v1/pricing-tiers/${pricingTierId}`,
@@ -45,7 +45,7 @@ export default class PricingTier implements WarrantObject {
         }
     }
 
-    public static async delete(pricingTierId: string, options: UserRequestOptions = {}): Promise<void> {
+    public static async delete(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<void> {
         try {
             return await WarrantClient.httpClient.delete({
                 url: `/v1/pricing-tiers/${pricingTierId}`,
@@ -56,7 +56,7 @@ export default class PricingTier implements WarrantObject {
         }
     }
 
-    public static async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: UserRequestOptions = {}): Promise<PricingTier[]> {
+    public static async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<PricingTier[]> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: "/v1/pricing-tiers",
@@ -70,7 +70,7 @@ export default class PricingTier implements WarrantObject {
         }
     }
 
-    public static async listPricingTiersForTenant(tenantId: string, listOptions: ListPricingTierOptions = {}, options: UserRequestOptions = {}): Promise<PricingTier[]> {
+    public static async listPricingTiersForTenant(tenantId: string, listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<PricingTier[]> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: `/v1/tenants/${tenantId}/pricing-tiers`,
@@ -84,7 +84,7 @@ export default class PricingTier implements WarrantObject {
         }
     }
 
-    public static async assignPricingTierToTenant(tenantId: string, pricingTierId: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public static async assignPricingTierToTenant(tenantId: string, pricingTierId: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return WarrantModule.create({
             object: {
                 objectType: ObjectType.PricingTier,
@@ -98,7 +98,7 @@ export default class PricingTier implements WarrantObject {
         }, options);
     }
 
-    public static async removePricingTierFromTenant(tenantId: string, pricingTierId: string, options: UserRequestOptions = {}): Promise<void> {
+    public static async removePricingTierFromTenant(tenantId: string, pricingTierId: string, options: WarrantRequestOptions = {}): Promise<void> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.PricingTier,
@@ -112,7 +112,7 @@ export default class PricingTier implements WarrantObject {
         }, options);
     }
 
-    public static async listPricingTiersForUser(userId: string, listOptions: ListPricingTierOptions = {}, options: UserRequestOptions = {}): Promise<PricingTier[]> {
+    public static async listPricingTiersForUser(userId: string, listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<PricingTier[]> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: `/v1/users/${userId}/pricing-tiers`,
@@ -126,7 +126,7 @@ export default class PricingTier implements WarrantObject {
         }
     }
 
-    public static async assignPricingTierToUser(userId: string, pricingTierId: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public static async assignPricingTierToUser(userId: string, pricingTierId: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return WarrantModule.create({
             object: {
                 objectType: ObjectType.PricingTier,
@@ -140,7 +140,7 @@ export default class PricingTier implements WarrantObject {
         }, options);
     }
 
-    public static async removePricingTierFromUser(userId: string, pricingTierId: string, options: UserRequestOptions = {}): Promise<void> {
+    public static async removePricingTierFromUser(userId: string, pricingTierId: string, options: WarrantRequestOptions = {}): Promise<void> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.PricingTier,
@@ -155,19 +155,19 @@ export default class PricingTier implements WarrantObject {
     }
 
     // Instance methods
-    public async listFeatures(listOptions: ListFeatureOptions = {}, options: UserRequestOptions = {}): Promise<Feature[]> {
+    public async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<Feature[]> {
         return Feature.listFeaturesForPricingTier(this.pricingTierId, listOptions, options);
     }
 
-    public async assignFeature(featureId: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public async assignFeature(featureId: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return Feature.assignFeatureToPricingTier(this.pricingTierId, featureId, options);
     }
 
-    public async removeFeature(featureId: string, options: UserRequestOptions = {}): Promise<void> {
+    public async removeFeature(featureId: string, options: WarrantRequestOptions = {}): Promise<void> {
         return Feature.removeFeatureFromPricingTier(this.pricingTierId, featureId, options);
     }
 
-    public async hasFeature(featureId: string, context: PolicyContext = {}, options: UserRequestOptions = {}): Promise<boolean> {
+    public async hasFeature(featureId: string, context: PolicyContext = {}, options: WarrantRequestOptions = {}): Promise<boolean> {
         return Authorization.hasFeature({ featureId: featureId, subject: { objectType: ObjectType.PricingTier, objectId: this.pricingTierId }, context: context }, options);
     }
 

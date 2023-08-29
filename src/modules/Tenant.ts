@@ -6,7 +6,7 @@ import WarrantClient from "../WarrantClient";
 import Warrant from "./WarrantModule";
 import { ListFeatureOptions } from "../types/Feature";
 import { ObjectType } from "../types/ObjectType";
-import { UserRequestOptions } from "../types/Params";
+import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import { ListPricingTierOptions } from "../types/PricingTier";
 import { CreateTenantParams, ListTenantOptions, UpdateTenantParams } from "../types/Tenant";
 import { ListUserOptions } from "../types/User";
@@ -25,7 +25,7 @@ export default class Tenant implements WarrantObject {
     //
     // Static methods
     //
-    public static async create(tenant: CreateTenantParams = {}, options: UserRequestOptions = {}): Promise<Tenant> {
+    public static async create(tenant: CreateTenantParams = {}, options: WarrantRequestOptions = {}): Promise<Tenant> {
         try {
             const response = await WarrantClient.httpClient.post({
                 url: "/v1/tenants",
@@ -39,7 +39,7 @@ export default class Tenant implements WarrantObject {
         }
     }
 
-    public static async batchCreate(tenants: CreateTenantParams[], options: UserRequestOptions = {}): Promise<Tenant[]> {
+    public static async batchCreate(tenants: CreateTenantParams[], options: WarrantRequestOptions = {}): Promise<Tenant[]> {
         try {
             const response = await WarrantClient.httpClient.post({
                 url: "/v1/tenants",
@@ -53,7 +53,7 @@ export default class Tenant implements WarrantObject {
         }
     }
 
-    public static async get(tenantId: string, options: UserRequestOptions = {}): Promise<Tenant> {
+    public static async get(tenantId: string, options: WarrantRequestOptions = {}): Promise<Tenant> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: `/v1/tenants/${tenantId}`,
@@ -66,7 +66,7 @@ export default class Tenant implements WarrantObject {
         }
     }
 
-    public static async update(tenantId: string, tenant: UpdateTenantParams, options: UserRequestOptions = {}): Promise<Tenant> {
+    public static async update(tenantId: string, tenant: UpdateTenantParams, options: WarrantRequestOptions = {}): Promise<Tenant> {
         try {
             const response = await WarrantClient.httpClient.put({
                 url: `/v1/tenants/${tenantId}`,
@@ -80,7 +80,7 @@ export default class Tenant implements WarrantObject {
         }
     }
 
-    public static async delete(tenantId: string, options: UserRequestOptions = {}): Promise<void> {
+    public static async delete(tenantId: string, options: WarrantRequestOptions = {}): Promise<void> {
         try {
             return await WarrantClient.httpClient.delete({
                 url: `/v1/tenants/${tenantId}`,
@@ -91,7 +91,7 @@ export default class Tenant implements WarrantObject {
         }
     }
 
-    public static async listTenants(listOptions: ListTenantOptions = {}, options: UserRequestOptions = {}): Promise<Tenant[]> {
+    public static async listTenants(listOptions: ListTenantOptions = {}, options: WarrantRequestOptions = {}): Promise<Tenant[]> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: "/v1/tenants",
@@ -105,7 +105,7 @@ export default class Tenant implements WarrantObject {
         }
     }
 
-    public static async listTenantsForUser(userId: string, listOptions: ListTenantOptions = {}, options: UserRequestOptions = {}): Promise<Tenant[]> {
+    public static async listTenantsForUser(userId: string, listOptions: ListTenantOptions = {}, options: WarrantRequestOptions = {}): Promise<Tenant[]> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: `/v1/users/${userId}/tenants`,
@@ -122,43 +122,43 @@ export default class Tenant implements WarrantObject {
     //
     // Instance methods
     //
-    public async listUsers(listOptions: ListUserOptions = {}, options: UserRequestOptions = {}): Promise<User[]> {
+    public async listUsers(listOptions: ListUserOptions = {}, options: WarrantRequestOptions = {}): Promise<User[]> {
         return User.listUsersForTenant(this.tenantId, listOptions, options);
     }
 
-    public async assignUser(userId: string, role: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public async assignUser(userId: string, role: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return User.assignUserToTenant(this.tenantId, userId, role, options);
     }
 
-    public async removeUser(userId: string, role: string, options: UserRequestOptions = {}): Promise<void> {
+    public async removeUser(userId: string, role: string, options: WarrantRequestOptions = {}): Promise<void> {
         return User.removeUserFromTenant(this.tenantId, userId, role, options);
     }
 
-    public async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: UserRequestOptions = {}): Promise<PricingTier[]> {
+    public async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<PricingTier[]> {
         return PricingTier.listPricingTiersForTenant(this.tenantId, listOptions, options);
     }
 
-    public async assignPricingTier(pricingTierId: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public async assignPricingTier(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return PricingTier.assignPricingTierToTenant(this.tenantId, pricingTierId, options);
     }
 
-    public async removePricingTier(pricingTierId: string, options: UserRequestOptions = {}): Promise<void> {
+    public async removePricingTier(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<void> {
         return PricingTier.removePricingTierFromTenant(this.tenantId, pricingTierId, options);
     }
 
-    public async listFeatures(listOptions: ListFeatureOptions = {}, options: UserRequestOptions = {}): Promise<Feature[]> {
+    public async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<Feature[]> {
         return Feature.listFeaturesForTenant(this.tenantId, listOptions, options);
     }
 
-    public async assignFeature(featureId: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public async assignFeature(featureId: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return Feature.assignFeatureToTenant(this.tenantId, featureId, options);
     }
 
-    public async removeFeature(featureId: string, options: UserRequestOptions = {}): Promise<void> {
+    public async removeFeature(featureId: string, options: WarrantRequestOptions = {}): Promise<void> {
         return Feature.removeFeatureFromTenant(this.tenantId, featureId, options);
     }
 
-    public async hasFeature(featureId: string, context: PolicyContext = {}, options: UserRequestOptions = {}): Promise<boolean> {
+    public async hasFeature(featureId: string, context: PolicyContext = {}, options: WarrantRequestOptions = {}): Promise<boolean> {
         return Authorization.hasFeature({ featureId: featureId, subject: { objectType: ObjectType.Tenant, objectId: this.tenantId }, context: context }, options);
     }
 

@@ -3,7 +3,7 @@ import Permission from "./Permission";
 import WarrantModule from "./WarrantModule";
 import WarrantClient from "../WarrantClient";
 import { ObjectType } from "../types/ObjectType";
-import { UserRequestOptions } from "../types/Params";
+import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import { ListPermissionOptions } from "../types/Permission";
 import { CreateRoleParams, ListRoleOptions, UpdateRoleParams } from "../types/Role";
 import Warrant, { PolicyContext, WarrantObject } from "../types/Warrant";
@@ -22,7 +22,7 @@ export default class Role implements WarrantObject {
     //
     // Static methods
     //
-    public static async create(role: CreateRoleParams, options: UserRequestOptions = {}): Promise<Role> {
+    public static async create(role: CreateRoleParams, options: WarrantRequestOptions = {}): Promise<Role> {
         try {
             const response = await WarrantClient.httpClient.post({
                 url: "/v1/roles",
@@ -36,7 +36,7 @@ export default class Role implements WarrantObject {
         }
     }
 
-    public static async get(roleId: string, options: UserRequestOptions = {}): Promise<Role> {
+    public static async get(roleId: string, options: WarrantRequestOptions = {}): Promise<Role> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: `/v1/roles/${roleId}`,
@@ -49,7 +49,7 @@ export default class Role implements WarrantObject {
         }
     }
 
-    public static async update(roleId: string, role: UpdateRoleParams, options: UserRequestOptions = {}): Promise<Role> {
+    public static async update(roleId: string, role: UpdateRoleParams, options: WarrantRequestOptions = {}): Promise<Role> {
         try {
             const response = await WarrantClient.httpClient.put({
                 url: `/v1/roles/${roleId}`,
@@ -63,7 +63,7 @@ export default class Role implements WarrantObject {
         }
     }
 
-    public static async delete(roleId: string, options: UserRequestOptions = {}): Promise<void> {
+    public static async delete(roleId: string, options: WarrantRequestOptions = {}): Promise<void> {
         try {
             return await WarrantClient.httpClient.delete({
                 url: `/v1/roles/${roleId}`,
@@ -74,7 +74,7 @@ export default class Role implements WarrantObject {
         }
     }
 
-    public static async listRoles(listOptions: ListRoleOptions = {}, options: UserRequestOptions = {}): Promise<Role[]> {
+    public static async listRoles(listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<Role[]> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: "/v1/roles",
@@ -88,7 +88,7 @@ export default class Role implements WarrantObject {
         }
     }
 
-    public static async listRolesForUser(userId: string, listOptions: ListRoleOptions = {}, options: UserRequestOptions = {}): Promise<Role[]> {
+    public static async listRolesForUser(userId: string, listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<Role[]> {
         try {
             const response = await WarrantClient.httpClient.get({
                 url: `/v1/users/${userId}/roles`,
@@ -102,7 +102,7 @@ export default class Role implements WarrantObject {
         }
     }
 
-    public static async assignRoleToUser(userId: string, roleId: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public static async assignRoleToUser(userId: string, roleId: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return WarrantModule.create({
             object: {
                 objectType: ObjectType.Role,
@@ -116,7 +116,7 @@ export default class Role implements WarrantObject {
         }, options);
     }
 
-    public static async removeRoleFromUser(userId: string, roleId: string, options: UserRequestOptions = {}): Promise<void> {
+    public static async removeRoleFromUser(userId: string, roleId: string, options: WarrantRequestOptions = {}): Promise<void> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.Role,
@@ -131,19 +131,19 @@ export default class Role implements WarrantObject {
     }
 
     // Instance methods
-    public async listPermissions(listOptions: ListPermissionOptions = {}, options: UserRequestOptions = {}): Promise<Permission[]> {
+    public async listPermissions(listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<Permission[]> {
         return Permission.listPermissionsForRole(this.roleId, listOptions, options);
     }
 
-    public async assignPermission(permissionId: string, options: UserRequestOptions = {}): Promise<Warrant> {
+    public async assignPermission(permissionId: string, options: WarrantRequestOptions = {}): Promise<Warrant> {
         return Permission.assignPermissionToRole(this.roleId, permissionId, options);
     }
 
-    public async removePermission(permissionId: string, options: UserRequestOptions = {}): Promise<void> {
+    public async removePermission(permissionId: string, options: WarrantRequestOptions = {}): Promise<void> {
         return Permission.removePermissionFromRole(this.roleId, permissionId, options);
     }
 
-    public async hasPermission(permissionId: string, context: PolicyContext = {}, options: UserRequestOptions = {}): Promise<boolean> {
+    public async hasPermission(permissionId: string, context: PolicyContext = {}, options: WarrantRequestOptions = {}): Promise<boolean> {
         return Authorization.hasPermission({ permissionId: permissionId, subject: { objectType: ObjectType.Role, objectId: this.roleId }, context: context }, options);
     }
 
