@@ -543,7 +543,7 @@ describe.skip('Live Test', function () {
         await this.warrant.Permission.delete(newPermission.permissionId);
     });
 
-    it.only('warrant with policy', async function() {
+    it('warrant with policy', async function() {
         await this.warrant.Warrant.create({
             object: {
                 objectType: "permission",
