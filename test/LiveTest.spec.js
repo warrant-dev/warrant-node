@@ -13,21 +13,21 @@ describe.skip('Live Test', function () {
         assert.equal(user1.email, null);
 
         let user2 = await this.warrant.User.create({ userId: "some_id", email: "test@email.com" });
-        let refetchedUser = await this.warrant.User.get(user2.userId);
+        let refetchedUser = await this.warrant.User.get(user2.userId, { warrantToken: "latest" });
         assert.strictEqual(user2.userId, refetchedUser.userId);
         assert.strictEqual(user2.email, refetchedUser.email);
 
         user2 = await this.warrant.User.update("some_id", { email: "updated@email.com" });
-        refetchedUser = await this.warrant.User.get("some_id");
+        refetchedUser = await this.warrant.User.get("some_id", { warrantToken: "latest" });
         assert.strictEqual(refetchedUser.userId, "some_id");
         assert.strictEqual(refetchedUser.email, "updated@email.com");
 
-        let users = await this.warrant.User.listUsers({ limit: 10 });
+        let users = await this.warrant.User.listUsers({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(users.length, 2);
 
         await this.warrant.User.delete(user1.userId);
         await this.warrant.User.delete(user2.userId);
-        users = await this.warrant.User.listUsers({ limit: 10 });
+        users = await this.warrant.User.listUsers({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(users.length, 0);
     });
 
@@ -37,21 +37,21 @@ describe.skip('Live Test', function () {
         assert.equal(tenant1.name, null);
 
         let tenant2 = await this.warrant.Tenant.create({ tenantId: "some_tenant_id", name: "new_name" });
-        let refetchedTenant = await this.warrant.Tenant.get(tenant2.tenantId);
+        let refetchedTenant = await this.warrant.Tenant.get(tenant2.tenantId, { warrantToken: "latest" });
         assert.strictEqual(tenant2.tenantId, refetchedTenant.tenantId);
         assert.strictEqual(tenant2.name, refetchedTenant.name);
 
         tenant2 = await this.warrant.Tenant.update("some_tenant_id", { name: "updated_name" });
-        refetchedTenant = await this.warrant.Tenant.get("some_tenant_id");
+        refetchedTenant = await this.warrant.Tenant.get("some_tenant_id", { warrantToken: "latest" });
         assert.strictEqual(refetchedTenant.tenantId, "some_tenant_id");
         assert.strictEqual(refetchedTenant.name, "updated_name");
 
-        let tenants = await this.warrant.Tenant.listTenants({ limit: 10 });
+        let tenants = await this.warrant.Tenant.listTenants({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(tenants.length, 2);
 
         await this.warrant.Tenant.delete(tenant1.tenantId);
         await this.warrant.Tenant.delete(tenant2.tenantId);
-        tenants = await this.warrant.Tenant.listTenants({ limit: 10 });
+        tenants = await this.warrant.Tenant.listTenants({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(tenants.length, 0);
     });
 
@@ -62,23 +62,23 @@ describe.skip('Live Test', function () {
         assert.strictEqual(adminRole.description, "The admin role");
 
         let viewerRole = await this.warrant.Role.create({ roleId: "viewer", name: "Viewer", description: "The viewer role" });
-        let refetchedRole = await this.warrant.Role.get(viewerRole.roleId);
+        let refetchedRole = await this.warrant.Role.get(viewerRole.roleId, { warrantToken: "latest" });
         assert.strictEqual(viewerRole.roleId, refetchedRole.roleId);
         assert.strictEqual(viewerRole.name, refetchedRole.name);
         assert.strictEqual(viewerRole.description, refetchedRole.description);
 
         viewerRole = await this.warrant.Role.update("viewer", { name: "Viewer Updated", description: "Updated desc" });
-        refetchedRole = await this.warrant.Role.get("viewer");
+        refetchedRole = await this.warrant.Role.get("viewer", { warrantToken: "latest" });
         assert.strictEqual(refetchedRole.roleId, "viewer");
         assert.strictEqual(refetchedRole.name, "Viewer Updated");
         assert.strictEqual(refetchedRole.description, "Updated desc");
 
-        let roles = await this.warrant.Role.listRoles({ limit: 10 });
+        let roles = await this.warrant.Role.listRoles({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(roles.length, 2);
 
         await this.warrant.Role.delete(adminRole.roleId);
         await this.warrant.Role.delete(viewerRole.roleId);
-        roles = await this.warrant.Role.listRoles({ limit: 10 });
+        roles = await this.warrant.Role.listRoles({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(roles.length, 0);
     });
 
@@ -89,23 +89,23 @@ describe.skip('Live Test', function () {
         assert.strictEqual(permission1.description, "Permission with id 1");
 
         let permission2 = await this.warrant.Permission.create({ permissionId: "perm2", name: "Permission 2", description: "Permission with id 2" });
-        let refetchedPermission = await this.warrant.Permission.get(permission2.permissionId);
+        let refetchedPermission = await this.warrant.Permission.get(permission2.permissionId, { warrantToken: "latest" });
         assert.strictEqual(permission2.permissionId, refetchedPermission.permissionId);
         assert.strictEqual(permission2.name, refetchedPermission.name);
         assert.strictEqual(permission2.description, refetchedPermission.description);
 
         permission2 = await this.warrant.Permission.update("perm2", { name: "Permission 2 Updated", description: "Updated desc" });
-        refetchedPermission = await this.warrant.Permission.get("perm2");
+        refetchedPermission = await this.warrant.Permission.get("perm2", { warrantToken: "latest" });
         assert.strictEqual(refetchedPermission.permissionId, "perm2");
         assert.strictEqual(refetchedPermission.name, "Permission 2 Updated");
         assert.strictEqual(refetchedPermission.description, "Updated desc");
 
-        let permissions = await this.warrant.Permission.listPermissions({ limit: 10 });
+        let permissions = await this.warrant.Permission.listPermissions({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(permissions.length, 2);
 
         await this.warrant.Permission.delete(permission1.permissionId);
         await this.warrant.Permission.delete(permission2.permissionId);
-        permissions = await this.warrant.Permission.listPermissions({ limit: 10 });
+        permissions = await this.warrant.Permission.listPermissions({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(permissions.length, 0);
     });
 
@@ -114,15 +114,15 @@ describe.skip('Live Test', function () {
         assert.strictEqual(feature1.featureId, "new-feature");
 
         const feature2 = await this.warrant.Feature.create({ featureId: "feature-2" });
-        const refetchedFeature = await this.warrant.Feature.get(feature2.featureId);
+        const refetchedFeature = await this.warrant.Feature.get(feature2.featureId, { warrantToken: "latest" });
         assert.strictEqual(feature2.featureId, refetchedFeature.featureId);
 
-        let features = await this.warrant.Feature.listFeatures({ limit: 10 });
+        let features = await this.warrant.Feature.listFeatures({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(features.length, 2);
 
         await this.warrant.Feature.delete(feature1.featureId);
         await this.warrant.Feature.delete(feature2.featureId);
-        features = await this.warrant.Feature.listFeatures({ limit: 10 });
+        features = await this.warrant.Feature.listFeatures({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(features.length, 0);
     });
 
@@ -131,15 +131,15 @@ describe.skip('Live Test', function () {
         assert.strictEqual(tier1.pricingTierId, "new-tier-1");
 
         const tier2 = await this.warrant.PricingTier.create({ pricingTierId: "tier-2" });
-        const refetchedTier = await this.warrant.PricingTier.get(tier2.pricingTierId);
+        const refetchedTier = await this.warrant.PricingTier.get(tier2.pricingTierId, { warrantToken: "latest" });
         assert.strictEqual(tier2.pricingTierId, refetchedTier.pricingTierId);
 
-        let tiers = await this.warrant.PricingTier.listPricingTiers({ limit: 10 });
+        let tiers = await this.warrant.PricingTier.listPricingTiers({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(tiers.length, 2);
 
         await this.warrant.PricingTier.delete(tier1.pricingTierId);
         await this.warrant.PricingTier.delete(tier2.pricingTierId);
-        tiers = await this.warrant.PricingTier.listPricingTiers({ limit: 10 });
+        tiers = await this.warrant.PricingTier.listPricingTiers({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(tiers.length, 0);
     });
 
@@ -177,29 +177,29 @@ describe.skip('Live Test', function () {
         const tenant1 = await this.warrant.Tenant.create({ tenantId: "tenant-1", name: "Tenant 1" });
         const tenant2 = await this.warrant.Tenant.create({ tenantId: "tenant-2", name: "Tenant 2" });
 
-        let user1Tenants = await this.warrant.Tenant.listTenantsForUser(user1.userId, { limit: 100 });
-        let tenant1Users = await this.warrant.User.listUsersForTenant("tenant-1", { limit: 100 });
+        let user1Tenants = await this.warrant.Tenant.listTenantsForUser(user1.userId, { limit: 100 }, { warrantToken: "latest" });
+        let tenant1Users = await this.warrant.User.listUsersForTenant("tenant-1", { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(user1Tenants.length, 0);
         assert.strictEqual(tenant1Users.length, 0);
 
         // Assign user1 -> tenant1
         await this.warrant.User.assignUserToTenant(tenant1.tenantId, user1.userId, "member");
 
-        user1Tenants = await this.warrant.Tenant.listTenantsForUser(user1.userId, { limit: 100 });
+        user1Tenants = await this.warrant.Tenant.listTenantsForUser(user1.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(user1Tenants.length, 1);
         assert.strictEqual(user1Tenants[0].tenantId, "tenant-1");
 
-        tenant1Users = await this.warrant.User.listUsersForTenant("tenant-1", { limit: 100 });
+        tenant1Users = await this.warrant.User.listUsersForTenant("tenant-1", { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(tenant1Users.length, 1);
         assert.strictEqual(tenant1Users[0].userId, user1.userId);
 
         // Remove user1 -> tenant1
         await this.warrant.User.removeUserFromTenant(tenant1.tenantId, user1.userId, "member");
 
-        user1Tenants = await this.warrant.Tenant.listTenantsForUser(user1.userId, { limit: 100 });
+        user1Tenants = await this.warrant.Tenant.listTenantsForUser(user1.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(user1Tenants.length, 0);
 
-        tenant1Users = await this.warrant.User.listUsersForTenant(tenant1.tenantId, { limit: 100 });
+        tenant1Users = await this.warrant.User.listUsersForTenant(tenant1.tenantId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(tenant1Users.length, 0);
 
         // Clean up
@@ -222,26 +222,26 @@ describe.skip('Live Test', function () {
         const createPermission = await this.warrant.Permission.create({ permissionId: "create-report", name: "Create Report", description: "Permission to create reports" });
         const viewPermission = await this.warrant.Permission.create({ permissionId: "view-report", name: "View Report", description: "Permission to view reports" });
 
-        let adminUserRoles = await this.warrant.Role.listRolesForUser(adminUser.userId, { limit: 100 });
-        let adminRolePermissions = await this.warrant.Permission.listPermissionsForRole(adminRole.roleId, { limit: 100 });
+        let adminUserRoles = await this.warrant.Role.listRolesForUser(adminUser.userId, { limit: 100 }, { warrantToken: "latest" });
+        let adminRolePermissions = await this.warrant.Permission.listPermissionsForRole(adminRole.roleId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(adminUserRoles.length, 0);
         assert.strictEqual(adminRolePermissions.length, 0);
 
-        let adminUserHasPermission = await this.warrant.Authorization.hasPermission({ permissionId: "create-report", subject: adminUser });
+        let adminUserHasPermission = await this.warrant.Authorization.hasPermission({ permissionId: "create-report", subject: adminUser }, { warrantToken: "latest" });
         assert.strictEqual(adminUserHasPermission, false);
 
         // Assign 'create-report' -> admin role -> admin user
         await this.warrant.Permission.assignPermissionToRole(adminRole.roleId, createPermission.permissionId);
         await this.warrant.Role.assignRoleToUser(adminUser.userId, adminRole.roleId);
 
-        adminUserHasPermission = await this.warrant.Authorization.hasPermission({ permissionId: "create-report", subject: adminUser });
+        adminUserHasPermission = await this.warrant.Authorization.hasPermission({ permissionId: "create-report", subject: adminUser }, { warrantToken: "latest" });
         assert.strictEqual(adminUserHasPermission, true);
 
-        adminUserRoles = await this.warrant.Role.listRolesForUser(adminUser.userId, { limit: 100 });
+        adminUserRoles = await this.warrant.Role.listRolesForUser(adminUser.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(adminUserRoles.length, 1);
         assert.strictEqual(adminUserRoles[0].roleId, adminRole.roleId);
 
-        adminRolePermissions = await this.warrant.Permission.listPermissionsForRole(adminRole.roleId, { limit: 100 });
+        adminRolePermissions = await this.warrant.Permission.listPermissionsForRole(adminRole.roleId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(adminRolePermissions.length, 1);
         assert.strictEqual(adminRolePermissions[0].permissionId, createPermission.permissionId)
 
@@ -251,34 +251,34 @@ describe.skip('Live Test', function () {
         adminUserHasPermission = await this.warrant.Authorization.hasPermission({ permissionId: "create-report", subject: adminUser });
         assert.strictEqual(adminUserHasPermission, false);
 
-        adminUserRoles = await this.warrant.Role.listRolesForUser(adminUser.userId, { limit: 100 });
+        adminUserRoles = await this.warrant.Role.listRolesForUser(adminUser.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(adminUserRoles.length, 0);
 
-        adminRolePermissions = await this.warrant.Permission.listPermissionsForRole(adminRole.roleId, { limit: 100 });
+        adminRolePermissions = await this.warrant.Permission.listPermissionsForRole(adminRole.roleId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(adminRolePermissions.length, 0);
 
         // Assign 'view-report' -> viewer user
         let viewerUserHasPermission = await this.warrant.Authorization.hasPermission({ permissionId: "view-report", subject: viewerUser });
         assert.strictEqual(viewerUserHasPermission, false);
 
-        let viewerUserPermissions = await this.warrant.Permission.listPermissionsForUser(viewerUser.userId, { limit: 100 });
+        let viewerUserPermissions = await this.warrant.Permission.listPermissionsForUser(viewerUser.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(viewerUserPermissions.length, 0);
 
         await this.warrant.Permission.assignPermissionToUser(viewerUser.userId, viewPermission.permissionId);
 
-        viewerUserHasPermission = await this.warrant.Authorization.hasPermission({ permissionId: "view-report", subject: viewerUser });
+        viewerUserHasPermission = await this.warrant.Authorization.hasPermission({ permissionId: "view-report", subject: viewerUser }, { warrantToken: "latest" });
         assert.strictEqual(viewerUserHasPermission, true);
 
-        viewerUserPermissions = await this.warrant.Permission.listPermissionsForUser(viewerUser.userId, { limit: 100 });
+        viewerUserPermissions = await this.warrant.Permission.listPermissionsForUser(viewerUser.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(viewerUserPermissions.length, 1);
         assert.strictEqual(viewerUserPermissions[0].permissionId, viewPermission.permissionId);
 
         await this.warrant.Permission.removePermissionFromUser(viewerUser.userId, viewPermission.permissionId);
 
-        viewerUserHasPermission = await this.warrant.Authorization.hasPermission({ permissionId: "view-report", subject: viewerUser });
+        viewerUserHasPermission = await this.warrant.Authorization.hasPermission({ permissionId: "view-report", subject: viewerUser }, { warrantToken: "latest" });
         assert.strictEqual(viewerUserHasPermission, false);
 
-        viewerUserPermissions = await this.warrant.Permission.listPermissionsForUser(viewerUser.userId, { limit: 100 });
+        viewerUserPermissions = await this.warrant.Permission.listPermissionsForUser(viewerUser.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(viewerUserPermissions.length, 0);
 
         // Clean up
@@ -305,63 +305,63 @@ describe.skip('Live Test', function () {
         const feature2 = await this.warrant.Feature.create({ featureId: "feature-2" });
 
         // Assign 'custom-feature' -> paid user
-        let paidUserHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "custom-feature", subject: paidUser });
+        let paidUserHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "custom-feature", subject: paidUser }, { warrantToken: "latest" });
         assert.strictEqual(paidUserHasFeature, false);
 
-        let paidUserFeatures = await this.warrant.Feature.listFeaturesForUser(paidUser.userId, { limit: 100 });
+        let paidUserFeatures = await this.warrant.Feature.listFeaturesForUser(paidUser.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(paidUserFeatures.length, 0);
 
         await this.warrant.Feature.assignFeatureToUser(paidUser.userId, customFeature.featureId);
 
-        paidUserHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "custom-feature", subject: paidUser });
+        paidUserHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "custom-feature", subject: paidUser }, { warrantToken: "latest" });
         assert.strictEqual(paidUserHasFeature, true);
 
-        paidUserFeatures = await this.warrant.Feature.listFeaturesForUser(paidUser.userId, { limit: 100 });
+        paidUserFeatures = await this.warrant.Feature.listFeaturesForUser(paidUser.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(paidUserFeatures.length, 1);
         assert.strictEqual(paidUserFeatures[0].featureId, "custom-feature");
 
         await this.warrant.Feature.removeFeatureFromUser(paidUser.userId, customFeature.featureId);
 
-        paidUserHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "custom-feature", subject: paidUser });
+        paidUserHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "custom-feature", subject: paidUser }, { warrantToken: "latest" });
         assert.strictEqual(paidUserHasFeature, false);
 
-        paidUserFeatures = await this.warrant.Feature.listFeaturesForUser(paidUser.userId, { limit: 100 });
+        paidUserFeatures = await this.warrant.Feature.listFeaturesForUser(paidUser.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(paidUserFeatures.length, 0);
 
         // Assign 'feature-1' -> 'free' tier -> free user
-        let freeUserHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "feature-1", subject: freeUser });
+        let freeUserHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "feature-1", subject: freeUser }, { warrantToken: "latest" });
         assert.strictEqual(freeUserHasFeature, false);
 
-        let freeTierFeatures = await this.warrant.Feature.listFeaturesForPricingTier(freeTier.pricingTierId, { limit: 100 });
+        let freeTierFeatures = await this.warrant.Feature.listFeaturesForPricingTier(freeTier.pricingTierId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(freeTierFeatures.length, 0);
 
-        let freeUserTiers = await this.warrant.PricingTier.listPricingTiersForUser(freeUser.userId, { limit: 100 });
+        let freeUserTiers = await this.warrant.PricingTier.listPricingTiersForUser(freeUser.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(freeUserTiers.length, 0);
 
         await this.warrant.Feature.assignFeatureToPricingTier(freeTier.pricingTierId, feature1.featureId);
         await this.warrant.PricingTier.assignPricingTierToUser(freeUser.userId, freeTier.pricingTierId);
 
-        freeUserHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "feature-1", subject: freeUser });
+        freeUserHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "feature-1", subject: freeUser }, { warrantToken: "latest" });
         assert.strictEqual(freeUserHasFeature, true);
 
-        freeTierFeatures = await this.warrant.Feature.listFeaturesForPricingTier(freeTier.pricingTierId, { limit: 100 });
+        freeTierFeatures = await this.warrant.Feature.listFeaturesForPricingTier(freeTier.pricingTierId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(freeTierFeatures.length, 1);
         assert.strictEqual(freeTierFeatures[0].featureId, "feature-1");
 
-        freeUserTiers = await this.warrant.PricingTier.listPricingTiersForUser(freeUser.userId, { limit: 100 });
+        freeUserTiers = await this.warrant.PricingTier.listPricingTiersForUser(freeUser.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(freeUserTiers.length, 1);
         assert.strictEqual(freeUserTiers[0].pricingTierId, "free");
 
         await this.warrant.Feature.removeFeatureFromPricingTier(freeTier.pricingTierId, feature1.featureId);
         await this.warrant.PricingTier.removePricingTierFromUser(freeUser.userId, freeTier.pricingTierId);
 
-        freeUserHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "feature-1", subject: freeUser });
+        freeUserHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "feature-1", subject: freeUser }, { warrantToken: "latest" });
         assert.strictEqual(freeUserHasFeature, false);
 
-        freeTierFeatures = await this.warrant.Feature.listFeaturesForPricingTier(freeTier.pricingTierId, { limit: 100 });
+        freeTierFeatures = await this.warrant.Feature.listFeaturesForPricingTier(freeTier.pricingTierId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(freeTierFeatures.length, 0);
 
-        freeUserTiers = await this.warrant.PricingTier.listPricingTiersForUser(freeUser.userId, { limit: 100 });
+        freeUserTiers = await this.warrant.PricingTier.listPricingTiersForUser(freeUser.userId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(freeUserTiers.length, 0);
 
         // Clean up
@@ -389,63 +389,63 @@ describe.skip('Live Test', function () {
         const feature2 = await this.warrant.Feature.create({ featureId: "feature-2" });
 
         // Assign 'custom-feature' -> paid tenant
-        let paidTenantHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "custom-feature", subject: paidTenant });
+        let paidTenantHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "custom-feature", subject: paidTenant }, { warrantToken: "latest" });
         assert.strictEqual(paidTenantHasFeature, false);
 
-        let paidTenantFeatures = await this.warrant.Feature.listFeaturesForTenant(paidTenant.tenantId, { limit: 100 });
+        let paidTenantFeatures = await this.warrant.Feature.listFeaturesForTenant(paidTenant.tenantId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(paidTenantFeatures.length, 0);
 
         await this.warrant.Feature.assignFeatureToTenant(paidTenant.tenantId, customFeature.featureId);
 
-        paidTenantHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "custom-feature", subject: paidTenant });
+        paidTenantHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "custom-feature", subject: paidTenant }, { warrantToken: "latest" });
         assert.strictEqual(paidTenantHasFeature, true);
 
-        paidTenantFeatures = await this.warrant.Feature.listFeaturesForTenant(paidTenant.tenantId, { limit: 100 });
+        paidTenantFeatures = await this.warrant.Feature.listFeaturesForTenant(paidTenant.tenantId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(paidTenantFeatures.length, 1);
         assert.strictEqual(paidTenantFeatures[0].featureId, "custom-feature");
 
         await this.warrant.Feature.removeFeatureFromTenant(paidTenant.tenantId, customFeature.featureId);
 
-        paidTenantHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "custom-feature", subject: paidTenant });
+        paidTenantHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "custom-feature", subject: paidTenant }, { warrantToken: "latest" });
         assert.strictEqual(paidTenantHasFeature, false);
 
-        paidTenantFeatures = await this.warrant.Feature.listFeaturesForTenant(paidTenant.tenantId, { limit: 100 });
+        paidTenantFeatures = await this.warrant.Feature.listFeaturesForTenant(paidTenant.tenantId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(paidTenantFeatures.length, 0);
 
         // Assign 'feature-1' -> 'free' tier -> free tenant
-        let freeTenantHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "feature-1", subject: freeTenant });
+        let freeTenantHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "feature-1", subject: freeTenant }, { warrantToken: "latest" });
         assert.strictEqual(freeTenantHasFeature, false);
 
-        let freeTierFeatures = await this.warrant.Feature.listFeaturesForPricingTier(freeTier.pricingTierId, { limit: 100 });
+        let freeTierFeatures = await this.warrant.Feature.listFeaturesForPricingTier(freeTier.pricingTierId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(freeTierFeatures.length, 0);
 
-        let freeTenantTiers = await this.warrant.PricingTier.listPricingTiersForTenant(freeTenant.tenantId, { limit: 100 });
+        let freeTenantTiers = await this.warrant.PricingTier.listPricingTiersForTenant(freeTenant.tenantId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(freeTenantTiers.length, 0);
 
         await this.warrant.Feature.assignFeatureToPricingTier(freeTier.pricingTierId, feature1.featureId);
         await this.warrant.PricingTier.assignPricingTierToTenant(freeTenant.tenantId, freeTier.pricingTierId);
 
-        freeTenantHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "feature-1", subject: freeTenant });
+        freeTenantHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "feature-1", subject: freeTenant }, { warrantToken: "latest" });
         assert.strictEqual(freeTenantHasFeature, true);
 
-        freeTierFeatures = await this.warrant.Feature.listFeaturesForPricingTier(freeTier.pricingTierId, { limit: 100 });
+        freeTierFeatures = await this.warrant.Feature.listFeaturesForPricingTier(freeTier.pricingTierId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(freeTierFeatures.length, 1);
         assert.strictEqual(freeTierFeatures[0].featureId, "feature-1");
 
-        freeTenantTiers = await this.warrant.PricingTier.listPricingTiersForTenant(freeTenant.tenantId, { limit: 100 });
+        freeTenantTiers = await this.warrant.PricingTier.listPricingTiersForTenant(freeTenant.tenantId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(freeTenantTiers.length, 1);
         assert.strictEqual(freeTenantTiers[0].pricingTierId, "free");
 
         await this.warrant.Feature.removeFeatureFromPricingTier(freeTier.pricingTierId, feature1.featureId);
         await this.warrant.PricingTier.removePricingTierFromTenant(freeTenant.tenantId, freeTier.pricingTierId);
 
-        freeTenantHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "feature-1", subject: freeTenant });
+        freeTenantHasFeature = await this.warrant.Authorization.hasFeature({ featureId: "feature-1", subject: freeTenant }, { warrantToken: "latest" });
         assert.strictEqual(freeTenantHasFeature, false);
 
-        freeTierFeatures = await this.warrant.Feature.listFeaturesForPricingTier(freeTier.pricingTierId, { limit: 100 });
+        freeTierFeatures = await this.warrant.Feature.listFeaturesForPricingTier(freeTier.pricingTierId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(freeTierFeatures.length, 0);
 
-        freeTenantTiers = await this.warrant.PricingTier.listPricingTiersForTenant(freeTenant.tenantId, { limit: 100 });
+        freeTenantTiers = await this.warrant.PricingTier.listPricingTiersForTenant(freeTenant.tenantId, { limit: 100 }, { warrantToken: "latest" });
         assert.strictEqual(freeTenantTiers.length, 0);
 
         // Clean up
@@ -486,6 +486,8 @@ describe.skip('Live Test', function () {
             object: newPermission,
             relation: "member",
             subject: newUser
+        }, {
+            warrantToken: "latest"
         });
         assert.strictEqual(userHasPermission, false);
 
@@ -499,6 +501,8 @@ describe.skip('Live Test', function () {
             object: newPermission,
             relation: "member",
             subject: newUser
+        }, {
+            warrantToken: "latest"
         });
         assert.strictEqual(userHasPermission, true);
 
@@ -530,6 +534,8 @@ describe.skip('Live Test', function () {
             object: newPermission,
             relation: "member",
             subject: newUser
+        }, {
+            warrantToken: "latest"
         });
         assert.strictEqual(userHasPermission, false);
 
@@ -537,7 +543,7 @@ describe.skip('Live Test', function () {
         await this.warrant.Permission.delete(newPermission.permissionId);
     });
 
-    it('warrant with policy', async function() {
+    it.only('warrant with policy', async function() {
         await this.warrant.Warrant.create({
             object: {
                 objectType: "permission",
@@ -564,6 +570,8 @@ describe.skip('Live Test', function () {
             context: {
                 "geo": "us",
             }
+        }, {
+            warrantToken: "latest"
         });
         assert.strictEqual(checkResult, true);
 
@@ -580,6 +588,8 @@ describe.skip('Live Test', function () {
             context: {
                 "geo": "eu",
             }
+        }, {
+            warrantToken: "latest"
         });
         assert.strictEqual(checkResult, false);
 

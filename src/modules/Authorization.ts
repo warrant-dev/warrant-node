@@ -1,11 +1,12 @@
 import Feature from "./Feature";
 import Permission from "./Permission";
 import Check, { AccessCheckRequest, CheckMany, CheckWarrant, FeatureCheck, PermissionCheck } from "../types/Check";
+import { UserRequestOptions } from "../types/Params";
 import Warrant, { isSubject, isWarrantObject } from "../types/Warrant";
 import WarrantClient from "../WarrantClient";
 
 export default class Authorization {
-    public static async check(check: Check): Promise<boolean> {
+    public static async check(check: Check, options: UserRequestOptions = {}): Promise<boolean> {
         const accessCheckRequest: AccessCheckRequest = {
             warrants: [{
                 object: check.object,
@@ -16,13 +17,13 @@ export default class Authorization {
             debug: check.debug
         }
         if (WarrantClient.config.authorizeEndpoint) {
-            return this.edgeAuthorize(accessCheckRequest);
+            return this.edgeAuthorize(accessCheckRequest, options);
         }
 
-        return this.authorize(accessCheckRequest);
+        return this.authorize(accessCheckRequest, options);
     }
 
-    public static async checkMany(check: CheckMany): Promise<boolean> {
+    public static async checkMany(check: CheckMany, options: UserRequestOptions = {}): Promise<boolean> {
         let warrants: CheckWarrant[] = check.warrants.map((warrant) => {
             return {
                 object: warrant.object,
@@ -38,34 +39,34 @@ export default class Authorization {
         }
 
         if (WarrantClient.config.authorizeEndpoint) {
-            return this.edgeAuthorize(accessCheckRequest);
+            return this.edgeAuthorize(accessCheckRequest, options);
         }
 
-        return this.authorize(accessCheckRequest);
+        return this.authorize(accessCheckRequest, options);
     }
 
-    public static async hasFeature(featureCheck: FeatureCheck): Promise<boolean> {
+    public static async hasFeature(featureCheck: FeatureCheck, options: UserRequestOptions = {}): Promise<boolean> {
         return this.check({
             object: new Feature(featureCheck.featureId),
             relation: "member",
             subject: featureCheck.subject,
             context: featureCheck.context,
             debug: featureCheck.debug
-        })
+        }, options)
     }
 
-    public static async hasPermission(permissionCheck: PermissionCheck): Promise<boolean> {
+    public static async hasPermission(permissionCheck: PermissionCheck, options: UserRequestOptions = {}): Promise<boolean> {
         return this.check({
             object: new Permission(permissionCheck.permissionId),
             relation: "member",
             subject: permissionCheck.subject,
             context: permissionCheck.context,
             debug: permissionCheck.debug
-        })
+        }, options)
     }
 
     // Private methods
-    private static async authorize(accessCheckRequest: AccessCheckRequest): Promise<boolean> {
+    private static async authorize(accessCheckRequest: AccessCheckRequest, options: UserRequestOptions = {}): Promise<boolean> {
         try {
 
             const response = await WarrantClient.httpClient.post({
@@ -74,6 +75,7 @@ export default class Authorization {
                     ...accessCheckRequest,
                     warrants: this.mapWarrantsForRequest(accessCheckRequest.warrants),
                 },
+                options,
             });
 
             return response.code === 200;
@@ -82,7 +84,7 @@ export default class Authorization {
         }
     }
 
-    private static async edgeAuthorize(accessCheckRequest: AccessCheckRequest): Promise<boolean> {
+    private static async edgeAuthorize(accessCheckRequest: AccessCheckRequest, options: UserRequestOptions = {}): Promise<boolean> {
         try {
             const response = await WarrantClient.httpClient.post({
                 baseUrl: WarrantClient.config.authorizeEndpoint,
@@ -91,6 +93,7 @@ export default class Authorization {
                     ...accessCheckRequest,
                     warrants: this.mapWarrantsForRequest(accessCheckRequest.warrants),
                 },
+                options,
             });
 
             return response.code === 200;
