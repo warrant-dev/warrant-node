@@ -1,5 +1,6 @@
 import WarrantClient from "../WarrantClient";
 import { SELF_SERVICE_DASH_URL_BASE } from "../constants";
+import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import { SelfServiceSessionParams, SessionParams } from "../types/Session";
 
 export default class Session {
@@ -10,7 +11,7 @@ export default class Session {
      * @param session A session object containing the userId, redirectUrl, and optional tenantId for which the authorization session should be created.
      * @returns A session token that can be passed to any of the Warrant client-side SDKs to allow the SDK to make client-side authorization checks for the specified user.
      */
-    public static async createAuthorizationSession(session: SessionParams): Promise<string> {
+    public static async createAuthorizationSession(session: SessionParams, options: WarrantRequestOptions = {}): Promise<string> {
         try {
             const sess = await WarrantClient.httpClient.post({
                 url: "/v1/sessions",
@@ -18,6 +19,7 @@ export default class Session {
                     ...session,
                     type: "sess",
                 },
+                options,
             });
 
             return sess.token;
@@ -33,7 +35,7 @@ export default class Session {
      * @param session A session object containing the userId, redirectUrl, and optional tenantId for which the self service session should be created.
      * @returns A url pointing to the self-service dashboard that will allow the specified user to make changes to the roles and permissions of users in their tenant.
      */
-    public static async createSelfServiceSession(session: SelfServiceSessionParams, redirectUrl: string): Promise<string> {
+    public static async createSelfServiceSession(session: SelfServiceSessionParams, redirectUrl: string, options: WarrantRequestOptions = {}): Promise<string> {
         try {
             const sess = await WarrantClient.httpClient.post({
                 url: "/v1/sessions",
@@ -41,6 +43,7 @@ export default class Session {
                     ...session,
                     type: "ssdash",
                 },
+                options,
             });
 
             return `${SELF_SERVICE_DASH_URL_BASE}/${sess.token}?redirectUrl=${redirectUrl}`;

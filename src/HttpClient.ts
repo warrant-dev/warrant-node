@@ -1,4 +1,5 @@
 import ApiError from "./types/ApiError";
+import { WarrantRequestOptions } from "./types/WarrantRequestOptions";
 
 const { version } = require("../package.json");
 
@@ -20,6 +21,7 @@ export interface HttpClientRequestOptions {
     data?: any;
     params?: any;
     url: string;
+    options?: WarrantRequestOptions;
 }
 
 interface RequestHeaders {
@@ -105,6 +107,10 @@ export default class ApiClient implements HttpClient {
 
         if (requestOptions?.baseUrl) {
             baseUrl = requestOptions.baseUrl;
+        }
+
+        if (requestOptions?.options?.warrantToken) {
+            fetchRequestOptions.headers['Warrant-Token'] = requestOptions.options.warrantToken;
         }
 
         let requestUrl = `${baseUrl}${requestOptions.url}`;
