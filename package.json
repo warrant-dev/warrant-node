@@ -31,6 +31,9 @@
         "url": "https://github.com/warrant-dev/warrant-node/issues"
     },
     "homepage": "https://github.com/warrant-dev/warrant-node#readme",
+    "engines": {
+        "node": ">=18.0.0"
+    },
     "devDependencies": {
         "@types/node": "^18.11.18",
         "mocha": "^10.2.0",
