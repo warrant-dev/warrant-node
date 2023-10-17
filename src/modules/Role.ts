@@ -2,6 +2,7 @@ import Authorization from "./Authorization";
 import Permission from "./Permission";
 import WarrantModule from "./WarrantModule";
 import WarrantClient from "../WarrantClient";
+import { API_VERSION } from "../constants";
 import { ObjectType } from "../types/ObjectType";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import { ListPermissionOptions } from "../types/Permission";
@@ -25,7 +26,7 @@ export default class Role implements WarrantObject {
     public static async create(role: CreateRoleParams, options: WarrantRequestOptions = {}): Promise<Role> {
         try {
             const response = await WarrantClient.httpClient.post({
-                url: "/v1/roles",
+                url: `/${API_VERSION}/roles`,
                 data: role,
                 options,
             });
@@ -39,7 +40,7 @@ export default class Role implements WarrantObject {
     public static async get(roleId: string, options: WarrantRequestOptions = {}): Promise<Role> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/roles/${roleId}`,
+                url: `/${API_VERSION}/roles/${roleId}`,
                 options,
             });
 
@@ -52,7 +53,7 @@ export default class Role implements WarrantObject {
     public static async update(roleId: string, role: UpdateRoleParams, options: WarrantRequestOptions = {}): Promise<Role> {
         try {
             const response = await WarrantClient.httpClient.put({
-                url: `/v1/roles/${roleId}`,
+                url: `/${API_VERSION}/roles/${roleId}`,
                 data: role,
                 options,
             });
@@ -66,7 +67,7 @@ export default class Role implements WarrantObject {
     public static async delete(roleId: string, options: WarrantRequestOptions = {}): Promise<void> {
         try {
             return await WarrantClient.httpClient.delete({
-                url: `/v1/roles/${roleId}`,
+                url: `/${API_VERSION}/roles/${roleId}`,
                 options,
             });
         } catch (e) {
@@ -77,7 +78,7 @@ export default class Role implements WarrantObject {
     public static async listRoles(listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<Role[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: "/v1/roles",
+                url: `/${API_VERSION}/roles`,
                 params: listOptions,
                 options,
             });
@@ -91,7 +92,7 @@ export default class Role implements WarrantObject {
     public static async listRolesForUser(userId: string, listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<Role[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/users/${userId}/roles`,
+                url: `/${API_VERSION}/users/${userId}/roles`,
                 params: listOptions,
                 options,
             });

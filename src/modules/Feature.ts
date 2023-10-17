@@ -1,5 +1,6 @@
 import WarrantModule from "./WarrantModule";
 import WarrantClient from "../WarrantClient";
+import { API_VERSION } from "../constants";
 import { CreateFeatureParams, ListFeatureOptions } from "../types/Feature";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import Warrant, { WarrantObject } from "../types/Warrant";
@@ -18,7 +19,7 @@ export default class Feature implements WarrantObject {
     public static async create(feature: CreateFeatureParams, options: WarrantRequestOptions = {}): Promise<Feature> {
         try {
             const response = await WarrantClient.httpClient.post({
-                url: "/v1/features",
+                url: `/${API_VERSION}/features`,
                 data: feature,
                 options,
             });
@@ -32,7 +33,7 @@ export default class Feature implements WarrantObject {
     public static async get(featureId: string, options: WarrantRequestOptions = {}): Promise<Feature> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/features/${featureId}`,
+                url: `/${API_VERSION}/features/${featureId}`,
                 options,
             });
 
@@ -45,7 +46,7 @@ export default class Feature implements WarrantObject {
     public static async delete(featureId: string, options: WarrantRequestOptions = {}): Promise<void> {
         try {
             return await WarrantClient.httpClient.delete({
-                url: `/v1/features/${featureId}`,
+                url: `/${API_VERSION}/features/${featureId}`,
                 options,
             });
         } catch (e) {
@@ -56,7 +57,7 @@ export default class Feature implements WarrantObject {
     public static async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<Feature[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: "/v1/features",
+                url: `/${API_VERSION}/features`,
                 params: listOptions,
                 options,
             });
@@ -70,7 +71,7 @@ export default class Feature implements WarrantObject {
     public static async listFeaturesForPricingTier(pricingTierId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<Feature[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/pricing-tiers/${pricingTierId}/features`,
+                url: `/${API_VERSION}/pricing-tiers/${pricingTierId}/features`,
                 params: listOptions,
                 options,
             });
@@ -112,7 +113,7 @@ export default class Feature implements WarrantObject {
     public static async listFeaturesForTenant(tenantId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<Feature[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/tenants/${tenantId}/features`,
+                url: `/${API_VERSION}/tenants/${tenantId}/features`,
                 params: listOptions,
                 options,
             });
@@ -154,7 +155,7 @@ export default class Feature implements WarrantObject {
     public static async listFeaturesForUser(userId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<Feature[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/users/${userId}/features`,
+                url: `/${API_VERSION}/users/${userId}/features`,
                 params: listOptions,
                 options,
             });

@@ -1,5 +1,5 @@
 import WarrantClient from "../WarrantClient";
-import { SELF_SERVICE_DASH_URL_BASE } from "../constants";
+import { API_VERSION, SELF_SERVICE_DASH_URL_BASE } from "../constants";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import { SelfServiceSessionParams, SessionParams } from "../types/Session";
 
@@ -14,7 +14,7 @@ export default class Session {
     public static async createAuthorizationSession(session: SessionParams, options: WarrantRequestOptions = {}): Promise<string> {
         try {
             const sess = await WarrantClient.httpClient.post({
-                url: "/v1/sessions",
+                url: `/${API_VERSION}/sessions`,
                 data: {
                     ...session,
                     type: "sess",
@@ -38,7 +38,7 @@ export default class Session {
     public static async createSelfServiceSession(session: SelfServiceSessionParams, redirectUrl: string, options: WarrantRequestOptions = {}): Promise<string> {
         try {
             const sess = await WarrantClient.httpClient.post({
-                url: "/v1/sessions",
+                url: `/${API_VERSION}/sessions`,
                 data: {
                     ...session,
                     type: "ssdash",

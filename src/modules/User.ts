@@ -6,6 +6,7 @@ import Role from "./Role";
 import Tenant from "./Tenant";
 import WarrantClient from "../WarrantClient";
 import Warrant from "./WarrantModule";
+import { API_VERSION } from "../constants";
 import { ListFeatureOptions } from "../types/Feature";
 import { ObjectType } from "../types/ObjectType";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
@@ -32,7 +33,7 @@ export default class User implements WarrantObject {
     public static async create(user: CreateUserParams = {}, options: WarrantRequestOptions = {}): Promise<User> {
         try {
             const response = await WarrantClient.httpClient.post({
-                url: "/v1/users",
+                url: `/${API_VERSION}/users`,
                 data: user,
                 options,
             });
@@ -46,7 +47,7 @@ export default class User implements WarrantObject {
     public static async batchCreate(users: CreateUserParams[], options: WarrantRequestOptions = {}): Promise<User[]> {
         try {
             const response = await WarrantClient.httpClient.post({
-                url: "/v1/users",
+                url: `/${API_VERSION}/users`,
                 data: users,
                 options,
             });
@@ -60,7 +61,7 @@ export default class User implements WarrantObject {
     public static async get(userId: string, options: WarrantRequestOptions = {}): Promise<User> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/users/${userId}`,
+                url: `/${API_VERSION}/users/${userId}`,
                 options,
             });
 
@@ -73,7 +74,7 @@ export default class User implements WarrantObject {
     public static async update(userId: string, user: UpdateUserParams, options: WarrantRequestOptions = {}): Promise<User> {
         try {
             const response = await WarrantClient.httpClient.put({
-                url: `/v1/users/${userId}`,
+                url: `/${API_VERSION}/users/${userId}`,
                 data: user,
                 options,
             });
@@ -87,7 +88,7 @@ export default class User implements WarrantObject {
     public static async delete(userId: string, options: WarrantRequestOptions = {}): Promise<void> {
         try {
             return await WarrantClient.httpClient.delete({
-                url: `/v1/users/${userId}`,
+                url: `/${API_VERSION}/users/${userId}`,
                 options,
             });
         } catch (e) {
@@ -98,7 +99,7 @@ export default class User implements WarrantObject {
     public static async listUsers(listOptions: ListUserOptions = {}, options: WarrantRequestOptions = {}): Promise<User[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: "/v1/users",
+                url: `/${API_VERSION}/users`,
                 params: listOptions,
                 options,
             });
@@ -112,7 +113,7 @@ export default class User implements WarrantObject {
     public static async listUsersForTenant(tenantId: string, listOptions: ListUserOptions = {}, options: WarrantRequestOptions = {}): Promise<User[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/tenants/${tenantId}/users`,
+                url: `/${API_VERSION}/tenants/${tenantId}/users`,
                 params: listOptions,
                 options,
             });

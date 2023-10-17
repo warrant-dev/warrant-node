@@ -2,6 +2,7 @@ import Authorization from "./Authorization";
 import Feature from "./Feature";
 import WarrantModule from "./WarrantModule";
 import WarrantClient from "../WarrantClient";
+import { API_VERSION } from "../constants";
 import { ListFeatureOptions } from "../types/Feature";
 import { ObjectType } from "../types/ObjectType";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
@@ -21,7 +22,7 @@ export default class PricingTier implements WarrantObject {
     public static async create(pricingTier: CreatePricingTierParams, options: WarrantRequestOptions = {}): Promise<PricingTier> {
         try {
             const response = await WarrantClient.httpClient.post({
-                url: "/v1/pricing-tiers",
+                url: `/${API_VERSION}/pricing-tiers`,
                 data: pricingTier,
                 options,
             });
@@ -35,7 +36,7 @@ export default class PricingTier implements WarrantObject {
     public static async get(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<PricingTier> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/pricing-tiers/${pricingTierId}`,
+                url: `/${API_VERSION}/pricing-tiers/${pricingTierId}`,
                 options,
             });
 
@@ -48,7 +49,7 @@ export default class PricingTier implements WarrantObject {
     public static async delete(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<void> {
         try {
             return await WarrantClient.httpClient.delete({
-                url: `/v1/pricing-tiers/${pricingTierId}`,
+                url: `/${API_VERSION}/pricing-tiers/${pricingTierId}`,
                 options,
             });
         } catch (e) {
@@ -59,7 +60,7 @@ export default class PricingTier implements WarrantObject {
     public static async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<PricingTier[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: "/v1/pricing-tiers",
+                url: `/${API_VERSION}/pricing-tiers`,
                 params: listOptions,
                 options,
             });
@@ -73,7 +74,7 @@ export default class PricingTier implements WarrantObject {
     public static async listPricingTiersForTenant(tenantId: string, listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<PricingTier[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/tenants/${tenantId}/pricing-tiers`,
+                url: `/${API_VERSION}/tenants/${tenantId}/pricing-tiers`,
                 params: listOptions,
                 options,
             });
@@ -115,7 +116,7 @@ export default class PricingTier implements WarrantObject {
     public static async listPricingTiersForUser(userId: string, listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<PricingTier[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/users/${userId}/pricing-tiers`,
+                url: `/${API_VERSION}/users/${userId}/pricing-tiers`,
                 params: listOptions,
                 options,
             });

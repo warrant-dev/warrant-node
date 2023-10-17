@@ -1,5 +1,6 @@
 import WarrantModule from "./WarrantModule";
 import WarrantClient from "../WarrantClient";
+import { API_VERSION } from "../constants";
 import { CreatePermissionParams, ListPermissionOptions, UpdatePermissionParams } from "../types/Permission";
 import { ObjectType } from "../types/ObjectType";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
@@ -22,7 +23,7 @@ export default class Permission implements WarrantObject {
     public static async create(permission: CreatePermissionParams, options: WarrantRequestOptions = {}): Promise<Permission> {
         try {
             const response = await WarrantClient.httpClient.post({
-                url: "/v1/permissions",
+                url: `/${API_VERSION}/permissions`,
                 data: permission,
                 options,
             });
@@ -36,7 +37,7 @@ export default class Permission implements WarrantObject {
     public static async get(permissionId: string, options: WarrantRequestOptions = {}): Promise<Permission> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/permissions/${permissionId}`,
+                url: `/${API_VERSION}/permissions/${permissionId}`,
                 options,
             });
 
@@ -49,7 +50,7 @@ export default class Permission implements WarrantObject {
     public static async update(permissionId: string, permission: UpdatePermissionParams, options: WarrantRequestOptions = {}): Promise<Permission> {
         try {
             const response = await WarrantClient.httpClient.put({
-                url: `/v1/permissions/${permissionId}`,
+                url: `/${API_VERSION}/permissions/${permissionId}`,
                 data: permission,
                 options,
             });
@@ -63,7 +64,7 @@ export default class Permission implements WarrantObject {
     public static async delete(permissionId: string, options: WarrantRequestOptions = {}): Promise<void> {
         try {
             return await WarrantClient.httpClient.delete({
-                url: `/v1/permissions/${permissionId}`,
+                url: `/${API_VERSION}/permissions/${permissionId}`,
                 options,
             });
         } catch (e) {
@@ -74,7 +75,7 @@ export default class Permission implements WarrantObject {
     public static async listPermissions(listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<Permission[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: "/v1/permissions",
+                url: `/${API_VERSION}/permissions`,
                 params: listOptions,
                 options,
             });
@@ -88,7 +89,7 @@ export default class Permission implements WarrantObject {
     public static async listPermissionsForUser(userId: string, listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<Permission[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/users/${userId}/permissions`,
+                url: `/${API_VERSION}/users/${userId}/permissions`,
                 params: listOptions,
                 options,
             });
@@ -130,7 +131,7 @@ export default class Permission implements WarrantObject {
     public static async listPermissionsForRole(roleId: string, listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<Permission[]> {
         try {
             const response = await WarrantClient.httpClient.get({
-                url: `/v1/roles/${roleId}/permissions`,
+                url: `/${API_VERSION}/roles/${roleId}/permissions`,
                 params: listOptions,
                 options,
             });
