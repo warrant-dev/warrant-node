@@ -6,6 +6,7 @@ import { ObjectType } from "../types/ObjectType";
 import { isSubject } from "../types/Warrant";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import WarrantClient from "../WarrantClient";
+import { API_VERSION } from "../constants";
 
 export default class Authorization {
     public static async check(check: Check, options: WarrantRequestOptions = {}): Promise<boolean> {
@@ -78,7 +79,7 @@ export default class Authorization {
         try {
 
             const response = await WarrantClient.httpClient.post({
-                url: "/v2/authorize",
+                url: `/${API_VERSION}/check`,
                 data: {
                     ...accessCheckRequest,
                     warrants: this.mapWarrantsForRequest(accessCheckRequest.warrants),
@@ -96,7 +97,7 @@ export default class Authorization {
         try {
             const response = await WarrantClient.httpClient.post({
                 baseUrl: WarrantClient.config.authorizeEndpoint,
-                url: "/v2/authorize",
+                url: `/${API_VERSION}/check`,
                 data: {
                     ...accessCheckRequest,
                     warrants: this.mapWarrantsForRequest(accessCheckRequest.warrants),
