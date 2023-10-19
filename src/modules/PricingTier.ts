@@ -1,33 +1,42 @@
 import Authorization from "./Authorization";
-import Feature from "./Feature";
+import Feature, { ListFeaturesResult } from "./Feature";
+import ObjectModule from "./ObjectModule";
 import WarrantModule from "./WarrantModule";
-import WarrantClient from "../WarrantClient";
-import { API_VERSION } from "../constants";
 import { ListFeatureOptions } from "../types/Feature";
+import { WarrantObject, WarrantObjectLiteral } from "../types/Object";
 import { ObjectType } from "../types/ObjectType";
-import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import { CreatePricingTierParams, ListPricingTierOptions } from "../types/PricingTier";
-import Warrant, { PolicyContext, WarrantObject } from "../types/Warrant";
+import { QueryResult } from "../types/Query";
+import Warrant, { PolicyContext } from "../types/Warrant";
+import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
+
+export interface ListPricingTiersResult {
+    results: PricingTier[];
+    prevCursor?: string;
+    nextCursor?: string;
+}
 
 export default class PricingTier implements WarrantObject {
     pricingTierId: string;
+    meta?: { [key: string]: any }
 
-    constructor(pricingTierId: string) {
+    constructor(pricingTierId: string, meta: { [key: string]: any }) {
         this.pricingTierId = pricingTierId;
+        this.meta = meta;
     }
 
     //
     // Static methods
     //
-    public static async create(pricingTier: CreatePricingTierParams, options: WarrantRequestOptions = {}): Promise<PricingTier> {
+    public static async create(pricingTier: CreatePricingTierParams = {}, options: WarrantRequestOptions = {}): Promise<PricingTier> {
         try {
-            const response = await WarrantClient.httpClient.post({
-                url: `/${API_VERSION}/pricing-tiers`,
-                data: pricingTier,
-                options,
-            });
+            const response = await ObjectModule.create({
+                objectType: ObjectType.PricingTier,
+                objectId: pricingTier.pricingTierId,
+                meta: pricingTier.meta,
+            }, options);
 
-            return new PricingTier(response.pricingTierId);
+            return new PricingTier(response.objectId, response.meta);
         } catch (e) {
             throw e;
         }
@@ -35,51 +44,53 @@ export default class PricingTier implements WarrantObject {
 
     public static async get(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<PricingTier> {
         try {
-            const response = await WarrantClient.httpClient.get({
-                url: `/${API_VERSION}/pricing-tiers/${pricingTierId}`,
-                options,
-            });
+            const response = await ObjectModule.get(ObjectType.PricingTier, pricingTierId, options);
 
-            return new PricingTier(response.pricingTierId);
+            return new PricingTier(response.objectId, response.meta);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public static async update(pricingTierId: string, meta: { [key: string]: any }, options: WarrantRequestOptions = {}): Promise<PricingTier> {
+        try {
+            const response = await ObjectModule.update(ObjectType.PricingTier, pricingTierId, meta, options);
+
+            return new PricingTier(response.objectId, response.meta);
         } catch (e) {
             throw e;
         }
     }
 
     public static async delete(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<void> {
+        return await ObjectModule.delete(ObjectType.PricingTier, pricingTierId, options);
+    }
+
+    public static async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<ListPricingTiersResult> {
         try {
-            return await WarrantClient.httpClient.delete({
-                url: `/${API_VERSION}/pricing-tiers/${pricingTierId}`,
-                options,
-            });
+            const response = await ObjectModule.list({
+                objectType: ObjectType.PricingTier,
+                ...listOptions,
+            }, options);
+
+            const pricingTiers: PricingTier[] = response.results.map((object: WarrantObjectLiteral) => new PricingTier(object.objectId, object.meta));
+            return {
+                ...response,
+                results: pricingTiers,
+            };
         } catch (e) {
             throw e;
         }
     }
 
-    public static async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<PricingTier[]> {
+    public static async listPricingTiersForTenant(tenantId: string, listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<ListPricingTiersResult> {
         try {
-            const response = await WarrantClient.httpClient.get({
-                url: `/${API_VERSION}/pricing-tiers`,
-                params: listOptions,
-                options,
-            });
-
-            return response.map((pricingTier: PricingTier) => new PricingTier(pricingTier.pricingTierId));
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    public static async listPricingTiersForTenant(tenantId: string, listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<PricingTier[]> {
-        try {
-            const response = await WarrantClient.httpClient.get({
-                url: `/${API_VERSION}/tenants/${tenantId}/pricing-tiers`,
-                params: listOptions,
-                options,
-            });
-
-            return response.map((pricingTier: PricingTier) => new PricingTier(pricingTier.pricingTierId));
+            const queryResponse = await WarrantModule.query(`select pricing-tier where tenant:${tenantId} is *`, listOptions)
+            const pricingTiers: PricingTier[] = queryResponse.results.map((queryResult: QueryResult) => new PricingTier(queryResult.objectId, queryResult.meta));
+            return {
+                ...queryResponse,
+                results: pricingTiers,
+            };
         } catch (e) {
             throw e;
         }
@@ -113,15 +124,14 @@ export default class PricingTier implements WarrantObject {
         }, options);
     }
 
-    public static async listPricingTiersForUser(userId: string, listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<PricingTier[]> {
+    public static async listPricingTiersForUser(userId: string, listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<ListPricingTiersResult> {
         try {
-            const response = await WarrantClient.httpClient.get({
-                url: `/${API_VERSION}/users/${userId}/pricing-tiers`,
-                params: listOptions,
-                options,
-            });
-
-            return response.map((pricingTier: PricingTier) => new PricingTier(pricingTier.pricingTierId));
+            const queryResponse = await WarrantModule.query(`select pricing-tier where user:${userId} is *`, listOptions)
+            const pricingTiers: PricingTier[] = queryResponse.results.map((queryResult: QueryResult) => new PricingTier(queryResult.objectId, queryResult.meta));
+            return {
+                ...queryResponse,
+                results: pricingTiers,
+            };
         } catch (e) {
             throw e;
         }
@@ -156,7 +166,7 @@ export default class PricingTier implements WarrantObject {
     }
 
     // Instance methods
-    public async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<Feature[]> {
+    public async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListFeaturesResult> {
         return Feature.listFeaturesForPricingTier(this.pricingTierId, listOptions, options);
     }
 

@@ -1,8 +1,10 @@
 import Feature from "./Feature";
 import Permission from "./Permission";
 import Check, { AccessCheckRequest, CheckMany, CheckWarrant, FeatureCheck, PermissionCheck } from "../types/Check";
+import { isWarrantObject } from "../types/Object";
+import { ObjectType } from "../types/ObjectType";
+import { isSubject } from "../types/Warrant";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
-import Warrant, { isSubject, isWarrantObject } from "../types/Warrant";
 import WarrantClient from "../WarrantClient";
 
 export default class Authorization {
@@ -47,7 +49,10 @@ export default class Authorization {
 
     public static async hasFeature(featureCheck: FeatureCheck, options: WarrantRequestOptions = {}): Promise<boolean> {
         return this.check({
-            object: new Feature(featureCheck.featureId),
+            object: {
+                objectType: ObjectType.Feature,
+                objectId: featureCheck.featureId,
+            },
             relation: "member",
             subject: featureCheck.subject,
             context: featureCheck.context,
@@ -57,7 +62,10 @@ export default class Authorization {
 
     public static async hasPermission(permissionCheck: PermissionCheck, options: WarrantRequestOptions = {}): Promise<boolean> {
         return this.check({
-            object: new Permission(permissionCheck.permissionId),
+            object: {
+                objectType: ObjectType.Permission,
+                objectId: permissionCheck.permissionId,
+            },
             relation: "member",
             subject: permissionCheck.subject,
             context: permissionCheck.context,

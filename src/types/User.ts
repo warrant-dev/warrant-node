@@ -4,9 +4,9 @@ export interface ListUserOptions extends ListOptions { }
 
 export interface CreateUserParams {
     userId?: string;
-    email?: string;
+    meta?: { [key: string]: any };
 }
 
-export interface UpdateUserParams {
-    email?: string;
+export interface DeleteUserParams {
+    userId: string;
 }

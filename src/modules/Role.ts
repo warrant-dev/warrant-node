@@ -1,37 +1,42 @@
 import Authorization from "./Authorization";
-import Permission from "./Permission";
+import ObjectModule from "./ObjectModule";
+import Permission, { ListPermissionsResult } from "./Permission";
 import WarrantModule from "./WarrantModule";
-import WarrantClient from "../WarrantClient";
-import { API_VERSION } from "../constants";
+import { WarrantObject, WarrantObjectLiteral } from "../types/Object";
 import { ObjectType } from "../types/ObjectType";
-import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import { ListPermissionOptions } from "../types/Permission";
-import { CreateRoleParams, ListRoleOptions, UpdateRoleParams } from "../types/Role";
-import Warrant, { PolicyContext, WarrantObject } from "../types/Warrant";
+import { QueryResult } from "../types/Query";
+import { CreateRoleParams, ListRoleOptions } from "../types/Role";
+import Warrant, { PolicyContext } from "../types/Warrant";
+import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
+
+export interface ListRolesResult {
+    results: Role[];
+    prevCursor?: string;
+    nextCursor?: string;
+}
 
 export default class Role implements WarrantObject {
     roleId: string;
-    name?: string;
-    description?: string;
+    meta?: { [key: string]: any }
 
-    constructor(roleId: string, name?: string, description?: string) {
+    constructor(roleId: string,  meta: { [key: string]: any }) {
         this.roleId = roleId;
-        this.name = name;
-        this.description = description;
+        this.meta = meta;
     }
 
     //
     // Static methods
     //
-    public static async create(role: CreateRoleParams, options: WarrantRequestOptions = {}): Promise<Role> {
+    public static async create(role: CreateRoleParams = {}, options: WarrantRequestOptions = {}): Promise<Role> {
         try {
-            const response = await WarrantClient.httpClient.post({
-                url: `/${API_VERSION}/roles`,
-                data: role,
-                options,
-            });
+            const response = await ObjectModule.create({
+                objectType: ObjectType.Role,
+                objectId: role.roleId,
+                meta: role.meta,
+            }, options)
 
-            return new Role(response.roleId, response.name, response.description);
+            return new Role(response.objectId, response.meta);
         } catch (e) {
             throw e;
         }
@@ -39,65 +44,54 @@ export default class Role implements WarrantObject {
 
     public static async get(roleId: string, options: WarrantRequestOptions = {}): Promise<Role> {
         try {
-            const response = await WarrantClient.httpClient.get({
-                url: `/${API_VERSION}/roles/${roleId}`,
-                options,
-            });
+            const response = await ObjectModule.get(ObjectType.Role, roleId, options);
 
-            return new Role(response.roleId, response.name, response.description);
+            return new Role(response.objectId, response.meta);
         } catch (e) {
             throw e;
         }
     }
 
-    public static async update(roleId: string, role: UpdateRoleParams, options: WarrantRequestOptions = {}): Promise<Role> {
+    public static async update(roleId: string, meta: { [key: string]: any }, options: WarrantRequestOptions = {}): Promise<Role> {
         try {
-            const response = await WarrantClient.httpClient.put({
-                url: `/${API_VERSION}/roles/${roleId}`,
-                data: role,
-                options,
-            });
+            const response = await ObjectModule.update(ObjectType.Role, roleId, meta, options);
 
-            return new Role(response.roleId, response.name, response.description);
+            return new Role(response.objectId, response.meta);
         } catch (e) {
             throw e;
         }
     }
 
     public static async delete(roleId: string, options: WarrantRequestOptions = {}): Promise<void> {
+        return await ObjectModule.delete(ObjectType.Role, roleId, options);
+    }
+
+    public static async listRoles(listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<ListRolesResult> {
         try {
-            return await WarrantClient.httpClient.delete({
-                url: `/${API_VERSION}/roles/${roleId}`,
-                options,
-            });
+            const response = await ObjectModule.list({
+                objectType: ObjectType.Role,
+                ...listOptions,
+            }, options);
+
+            const roles: Role[] = response.results.map((object: WarrantObjectLiteral) => new Role(object.objectId, object.meta));
+            return {
+                ...response,
+                results: roles,
+            };
         } catch (e) {
             throw e;
         }
     }
 
-    public static async listRoles(listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<Role[]> {
+    public static async listRolesForUser(userId: string, listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<ListRolesResult> {
         try {
-            const response = await WarrantClient.httpClient.get({
-                url: `/${API_VERSION}/roles`,
-                params: listOptions,
-                options,
-            });
+            const queryResponse = await WarrantModule.query(`select role where user:${userId} is *`, listOptions, options);
+            const roles: Role[] = queryResponse.results.map((queryResult: QueryResult) => new Role(queryResult.objectId, queryResult.meta));
 
-            return response.map((role: Role) => new Role(role.roleId, role.name, role.description));
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    public static async listRolesForUser(userId: string, listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<Role[]> {
-        try {
-            const response = await WarrantClient.httpClient.get({
-                url: `/${API_VERSION}/users/${userId}/roles`,
-                params: listOptions,
-                options,
-            });
-
-            return response.map((role: Role) => new Role(role.roleId, role.name, role.description));
+            return {
+                ...queryResponse,
+                results: roles,
+            };
         } catch (e) {
             throw e;
         }
@@ -132,7 +126,7 @@ export default class Role implements WarrantObject {
     }
 
     // Instance methods
-    public async listPermissions(listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<Permission[]> {
+    public async listPermissions(listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListPermissionsResult> {
         return Permission.listPermissionsForRole(this.roleId, listOptions, options);
     }
 

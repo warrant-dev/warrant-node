@@ -3,12 +3,7 @@ import ListOptions from "./ListOptions";
 export interface ListRoleOptions extends ListOptions { }
 
 export interface CreateRoleParams {
-    roleId: string;
-    name?: string;
-    description?: string;
+    roleId?: string;
+    meta?: { [key: string]: any };
 }
 
-export interface UpdateRoleParams {
-    name?: string;
-    description?: string;
-}

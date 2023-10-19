@@ -2,6 +2,7 @@ import { API_URL_BASE } from "./constants";
 import ApiClient from "./HttpClient";
 import Authorization from "./modules/Authorization";
 import Feature from "./modules/Feature";
+import Object from "./modules/ObjectModule";
 import Permission from "./modules/Permission";
 import PricingTier from "./modules/PricingTier";
 import Role from "./modules/Role";
@@ -17,6 +18,7 @@ export default class WarrantClient {
 
     public Authorization: typeof Authorization = Authorization;
     public Feature: typeof Feature = Feature;
+    public Object: typeof Object = Object;
     public Permission: typeof Permission = Permission;
     public PricingTier: typeof PricingTier = PricingTier;
     public Role: typeof Role = Role;

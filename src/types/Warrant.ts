@@ -1,4 +1,5 @@
 import ListOptions from "./ListOptions";
+import { WarrantObject, WarrantObjectLiteral } from "./Object";
 
 export interface ListWarrantOptions extends ListOptions {
     objectType?: string;
@@ -28,20 +29,6 @@ export default interface Warrant {
     relation: string;
     subject: Subject;
     policy?: string;
-}
-
-export interface WarrantObject {
-    getObjectType(): string;
-    getObjectId(): string;
-}
-
-export function isWarrantObject(object: any): object is WarrantObject {
-    return object.getObjectType !== undefined && object.getObjectId !== undefined;
-}
-
-export interface WarrantObjectLiteral {
-    objectType: string;
-    objectId: string;
 }
 
 export interface WarrantParams {

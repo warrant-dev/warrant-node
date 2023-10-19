@@ -4,9 +4,9 @@ export interface ListTenantOptions extends ListOptions { }
 
 export interface CreateTenantParams {
     tenantId?: string;
-    name?: string;
+    meta?: { [key: string]: any };
 }
 
-export interface UpdateTenantParams {
-    name?: string;
+export interface DeleteTenantParams {
+    tenantId: string;
 }

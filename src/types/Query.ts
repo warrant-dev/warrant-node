@@ -1,12 +1,9 @@
 import Warrant from "./Warrant";
 
-export interface QueryOptions {
-    lastId?: string;
-}
-
 export interface QueryResponse {
     results: QueryResult[];
-    lastId?: string;
+    prevCursor?: string;
+    nextCursor?: string;
 }
 
 export interface QueryResult {

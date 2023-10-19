@@ -1,7 +1,7 @@
 import WarrantClient from "../WarrantClient";
 import { API_VERSION, SELF_SERVICE_DASH_URL_BASE } from "../constants";
-import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 import { SelfServiceSessionParams, SessionParams } from "../types/Session";
+import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 
 export default class Session {
     /**
