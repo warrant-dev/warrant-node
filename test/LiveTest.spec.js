@@ -33,6 +33,32 @@ describe.skip('Live Test', function () {
         assert.strictEqual(usersList.results.length, 0);
     });
 
+    it('batch create/delete users', async function() {
+        const users = await this.warrant.User.batchCreate([
+            { userId: "user-a", meta: { name: "User A" }},
+            { userId: "user-b" },
+            { userId: "user-c", meta: { email: "user-c@email.com" }},
+        ])
+        assert.strictEqual(users.length, 3);
+
+        let fetchedUsers = await this.warrant.User.listUsers({ limit: 10 }, { warrantToken: "latest" });
+        assert.strictEqual(fetchedUsers.results.length, 3);
+        assert.strictEqual(fetchedUsers.results[0].userId, "user-a");
+        assert.deepStrictEqual(fetchedUsers.results[0].meta, { name: "User A" });
+        assert.strictEqual(fetchedUsers.results[1].userId, "user-b");
+        assert.strictEqual(fetchedUsers.results[2].userId, "user-c");
+        assert.deepStrictEqual(fetchedUsers.results[2].meta, { email: "user-c@email.com" });
+
+        await this.warrant.User.batchDelete([
+            { userId: "user-a" },
+            { userId: "user-b" },
+            { userId: "user-c" },
+        ]);
+
+        fetchedUsers = await this.warrant.User.listUsers({ limit: 10 }, { warrantToken: "latest" });
+        assert.strictEqual(fetchedUsers.results.length, 0);
+    });
+
     it('CRUD tenants', async function () {
         const tenant1 = await this.warrant.Tenant.create();
         assert(tenant1.tenantId);
@@ -57,6 +83,32 @@ describe.skip('Live Test', function () {
         await this.warrant.Tenant.delete(tenant2.tenantId);
         tenantsList = await this.warrant.Tenant.listTenants({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(tenantsList.results.length, 0);
+    });
+
+    it('batch create/delete tenants', async function() {
+        const tenants = await this.warrant.Tenant.batchCreate([
+            { tenantId: "tenant-a", meta: { name: "Tenant A" }},
+            { tenantId: "tenant-b" },
+            { tenantId: "tenant-c", meta: { description: "Company C" }},
+        ])
+        assert.strictEqual(tenants.length, 3);
+
+        let fetchedTenants = await this.warrant.Tenant.listTenants({ limit: 10 }, { warrantToken: "latest" });
+        assert.strictEqual(fetchedTenants.results.length, 3);
+        assert.strictEqual(fetchedTenants.results[0].tenantId, "tenant-a");
+        assert.deepStrictEqual(fetchedTenants.results[0].meta, { name: "Tenant A" });
+        assert.strictEqual(fetchedTenants.results[1].tenantId, "tenant-b");
+        assert.strictEqual(fetchedTenants.results[2].tenantId, "tenant-c");
+        assert.deepStrictEqual(fetchedTenants.results[2].meta, { description: "Company C" });
+
+        await this.warrant.Tenant.batchDelete([
+            { tenantId: "tenant-a" },
+            { tenantId: "tenant-b" },
+            { tenantId: "tenant-c" },
+        ]);
+
+        fetchedTenants = await this.warrant.Tenant.listTenants({ limit: 10 }, { warrantToken: "latest" });
+        assert.strictEqual(fetchedTenants.results.length, 0);
     });
 
     it('CRUD roles', async function () {
@@ -163,31 +215,63 @@ describe.skip('Live Test', function () {
         assert.strictEqual(tiersList.results.length, 0);
     });
 
-    it('batch create users and tenants', async function () {
-        const newUsers = [
-            { userId: "user-1" },
-            { userId: "user-2", meta: { name: "User 2" }}
-        ];
-        const createdUsers = await this.warrant.User.batchCreate(newUsers);
-        assert.strictEqual(createdUsers.length, 2);
-        assert.strictEqual(createdUsers[0].userId, "user-1");
-        assert.strictEqual(createdUsers[1].userId, "user-2");
-        assert.deepStrictEqual(createdUsers[1].meta, { name: "User 2" });
+    it('CRUD objects', async function () {
+        const object1 = await this.warrant.Object.create({ objectType: "document" });
+        console.log(object1);
+        assert.strictEqual(object1.objectType, "document");
+        assert(object1.objectId);
+        assert.strictEqual(object1.meta, undefined);
 
-        const newTenants = [
-            { tenantId: "tenant-1" },
-            { tenantId: "tenant-2", meta: { name: "Tenant 2" }}
-        ];
-        const createdTenants = await this.warrant.Tenant.batchCreate(newTenants);
-        assert.strictEqual(createdTenants.length, 2);
-        assert.strictEqual(createdTenants[0].tenantId, "tenant-1");
-        assert.strictEqual(createdTenants[1].tenantId, "tenant-2");
-        assert.deepStrictEqual(createdTenants[1].meta, { name: "Tenant 2" });
+        let object2 = await this.warrant.Object.create({ objectType: "folder", objectId: "planning" });
+        let refetchedObject = await this.warrant.Object.get(object2.objectType, object2.objectId, { warrantToken: "latest" });
+        assert.strictEqual(refetchedObject.objectType, object2.objectType);
+        assert.strictEqual(refetchedObject.objectId, object2.objectId);
+        assert.deepStrictEqual(refetchedObject.meta, object2.meta);
 
-        await this.warrant.User.delete("user-1");
-        await this.warrant.User.delete("user-2");
-        await this.warrant.Tenant.delete("tenant-1");
-        await this.warrant.Tenant.delete("tenant-2");
+        object2 = await this.warrant.Object.update(object2.objectType, object2.objectId, { description: "Second document" });
+        refetchedObject = await this.warrant.Object.get(object2.objectType, object2.objectId, { warrantToken: "latest" });
+        assert.strictEqual(refetchedObject.objectType, object2.objectType);
+        assert.strictEqual(refetchedObject.objectId, object2.objectId);
+        assert.deepStrictEqual(refetchedObject.meta, object2.meta);
+
+        let objectsList = await this.warrant.Object.list({ sortBy: "createdAt", limit: 10 }, { warrantToken: "latest" });
+        assert.strictEqual(objectsList.results.length, 2);
+        assert.strictEqual(objectsList.results[0].objectType, object1.objectType);
+        assert.strictEqual(objectsList.results[0].objectId, object1.objectId);
+        assert.strictEqual(objectsList.results[1].objectType, object2.objectType);
+        assert.strictEqual(objectsList.results[1].objectId, object2.objectId);
+
+        await this.warrant.Object.delete(object1.objectType, object1.objectId);
+        await this.warrant.Object.delete(object2.objectType, object2.objectId);
+        objectsList = await this.warrant.Object.list({ sortBy: "createdAt", limit: 10 }, { warrantToken: "latest" });
+        assert.strictEqual(objectsList.results.length, 0);
+    });
+
+    it('batch create/delete objects', async function () {
+        const objects = await this.warrant.Object.batchCreate([
+            { objectType: "document", objectId: "document-a" },
+            { objectType: "document", objectId: "document-b" },
+            { objectType: "folder", objectId: "resources", meta: { description: "Helpful documents" }},
+        ]);
+        assert.strictEqual(objects.length, 3);
+
+        let fetchedObjects = await this.warrant.Object.list({ limit: 10 }, { warrantToken: "latest" });
+        assert.strictEqual(fetchedObjects.results.length, 3);
+        assert.strictEqual(fetchedObjects.results[0].objectType, "document");
+        assert.strictEqual(fetchedObjects.results[0].objectId, "document-a");
+        assert.strictEqual(fetchedObjects.results[1].objectType, "document");
+        assert.strictEqual(fetchedObjects.results[1].objectId, "document-b");
+        assert.strictEqual(fetchedObjects.results[2].objectType, "folder");
+        assert.strictEqual(fetchedObjects.results[2].objectId, "resources");
+        assert.deepStrictEqual(fetchedObjects.results[2].meta, { description: "Helpful documents" });
+
+        await this.warrant.Object.batchDelete([
+            { objectType: "document", objectId: "document-a" },
+            { objectType: "document", objectId: "document-b" },
+            { objectType: "folder", objectId: "resources" },
+        ]);
+        fetchedObjects = await this.warrant.Object.list({ limit: 10 }, { warrantToken: "latest" });
+        assert.strictEqual(fetchedObjects.results.length, 0);
     });
 
     it('multi-tenancy example', async function () {
@@ -513,7 +597,7 @@ describe.skip('Live Test', function () {
 
     it('warrants', async function () {
         const newUser = await this.warrant.User.create();
-        const newPermission = await this.warrant.Permission.create({ permissionId: "perm1", meta: { name: "Permission 1", description: "Permission with id 1" }});
+        const newPermission = await this.warrant.Permission.create({ permissionId: "perm1", meta: { name: "Permission 1", description: "Permission 1" }});
 
         let userHasPermission = await this.warrant.Authorization.check({
             object: newPermission,
@@ -564,6 +648,80 @@ describe.skip('Live Test', function () {
 
         await this.warrant.User.delete(newUser.userId);
         await this.warrant.Permission.delete(newPermission.permissionId);
+    });
+
+    it('batch create/delete warrants', async function () {
+        const newUser = await this.warrant.User.create();
+        const permission1 = await this.warrant.Permission.create({ permissionId: "perm1", meta: { name: "Permission 1", description: "Permission 1" }});
+        const permission2 = await this.warrant.Permission.create({ permissionId: "perm2", meta: { name: "Permission 2", description: "Permission 2" }});
+
+        let userHasPermission1 = await this.warrant.Authorization.check({
+            object: permission1,
+            relation: "member",
+            subject: newUser
+        }, {
+            warrantToken: "latest"
+        });
+        assert.strictEqual(userHasPermission1, false);
+
+        let userHasPermission2 = await this.warrant.Authorization.check({
+            object: permission2,
+            relation: "member",
+            subject: newUser
+        }, {
+            warrantToken: "latest"
+        });
+        assert.strictEqual(userHasPermission2, false);
+
+        const warrants = await this.warrant.Warrant.batchCreate([
+            {
+                object: permission1,
+                relation: "member",
+                subject: newUser
+            },
+            {
+                object: permission2,
+                relation: "member",
+                subject: newUser
+            }
+        ]);
+        assert.strictEqual(warrants.length, 2);
+
+        userHasPermission1 = await this.warrant.Authorization.check({
+            object: permission1,
+            relation: "member",
+            subject: newUser
+        }, {
+            warrantToken: "latest"
+        });
+        assert.strictEqual(userHasPermission1, true);
+
+        userHasPermission2 = await this.warrant.Authorization.check({
+            object: permission2,
+            relation: "member",
+            subject: newUser
+        }, {
+            warrantToken: "latest"
+        });
+        assert.strictEqual(userHasPermission2, true);
+
+        await this.warrant.Warrant.batchDelete([
+            {
+                object: permission1,
+                relation: "member",
+                subject: newUser
+            },
+            {
+                object: permission2,
+                relation: "member",
+                subject: newUser
+            }
+        ]);
+        await this.warrant.Object.batchDelete([
+            { objectType: "permission", objectId: permission1.permissionId },
+            { objectType: "permission", objectId: permission2.permissionId },
+            { objectType: "user", objectId: newUser.userId },
+        ]);
     });
 
     it('warrant with policy', async function () {
