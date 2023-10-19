@@ -1,5 +1,5 @@
 import { WarrantObject, WarrantObjectLiteral } from "./Object";
-import Warrant, { PolicyContext, Subject } from "./Warrant";
+import { PolicyContext, Subject } from "./Warrant";
 
 export enum CheckOp {
     AllOf = "allOf",

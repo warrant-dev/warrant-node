@@ -3,7 +3,7 @@ import { API_VERSION } from "../constants";
 import ListOptions from "../types/ListOptions";
 import { isWarrantObject } from "../types/Object";
 import { QueryResponse } from "../types/Query";
-import Warrant, { isSubject, ListWarrantOptions, WarrantParams } from "../types/Warrant";
+import Warrant, { isSubject, WarrantParams } from "../types/Warrant";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 
 export default class WarrantModule {

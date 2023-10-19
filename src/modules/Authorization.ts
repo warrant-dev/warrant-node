@@ -1,5 +1,3 @@
-import Feature from "./Feature";
-import Permission from "./Permission";
 import Check, { AccessCheckRequest, CheckMany, CheckWarrant, FeatureCheck, PermissionCheck } from "../types/Check";
 import { isWarrantObject } from "../types/Object";
 import { ObjectType } from "../types/ObjectType";
