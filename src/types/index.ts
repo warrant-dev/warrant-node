@@ -2,6 +2,7 @@ export { default as ApiError } from "./ApiError";
 export { default as Config } from "./Config";
 export { CreateFeatureParams, ListFeatureOptions } from "./Feature";
 export { CreatePermissionParams, ListPermissionOptions, UpdatePermissionParams } from "./Permission";
+export { WarrantObject, WarrantObjectLiteral } from "./Object";
 export { CreatePricingTierParams, ListPricingTierOptions } from "./PricingTier";
 export { QueryOptions, QueryResponse, QueryResult } from "./Query";
 export { CreateRoleParams, ListRoleOptions, UpdateRoleParams } from "./Role";
