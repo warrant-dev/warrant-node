@@ -82,7 +82,7 @@ export default class Feature implements WarrantObject {
 
     public static async listFeaturesForPricingTier(pricingTierId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListFeaturesResult> {
         try {
-            const queryResponse = await WarrantModule.query(`select feature where pricing-tier:${pricingTierId} is *`, listOptions)
+            const queryResponse = await WarrantModule.query(`select feature where pricing-tier:${pricingTierId} is *`, listOptions, options);
             const features: Feature[] = queryResponse.results.map((queryResult: QueryResult) => new Feature(queryResult.objectId, queryResult.meta));
             return {
                 ...queryResponse,
@@ -123,7 +123,7 @@ export default class Feature implements WarrantObject {
 
     public static async listFeaturesForTenant(tenantId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListFeaturesResult> {
         try {
-            const queryResponse = await WarrantModule.query(`select feature where tenant:${tenantId} is *`, listOptions)
+            const queryResponse = await WarrantModule.query(`select feature where tenant:${tenantId} is *`, listOptions, options);
             const features: Feature[] = queryResponse.results.map((queryResult: QueryResult) => new Feature(queryResult.objectId, queryResult.meta));
             return {
                 ...queryResponse,
@@ -164,7 +164,7 @@ export default class Feature implements WarrantObject {
 
     public static async listFeaturesForUser(userId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListFeaturesResult> {
         try {
-            const queryResponse = await WarrantModule.query(`select feature where user:${userId} is *`, listOptions)
+            const queryResponse = await WarrantModule.query(`select feature where user:${userId} is *`, listOptions, options);
             const features: Feature[] = queryResponse.results.map((queryResult: QueryResult) => new Feature(queryResult.objectId, queryResult.meta));
             return {
                 ...queryResponse,

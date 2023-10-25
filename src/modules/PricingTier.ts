@@ -85,7 +85,7 @@ export default class PricingTier implements WarrantObject {
 
     public static async listPricingTiersForTenant(tenantId: string, listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<ListPricingTiersResult> {
         try {
-            const queryResponse = await WarrantModule.query(`select pricing-tier where tenant:${tenantId} is *`, listOptions)
+            const queryResponse = await WarrantModule.query(`select pricing-tier where tenant:${tenantId} is *`, listOptions, options);
             const pricingTiers: PricingTier[] = queryResponse.results.map((queryResult: QueryResult) => new PricingTier(queryResult.objectId, queryResult.meta));
             return {
                 ...queryResponse,
@@ -126,7 +126,7 @@ export default class PricingTier implements WarrantObject {
 
     public static async listPricingTiersForUser(userId: string, listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<ListPricingTiersResult> {
         try {
-            const queryResponse = await WarrantModule.query(`select pricing-tier where user:${userId} is *`, listOptions)
+            const queryResponse = await WarrantModule.query(`select pricing-tier where user:${userId} is *`, listOptions, options);
             const pricingTiers: PricingTier[] = queryResponse.results.map((queryResult: QueryResult) => new PricingTier(queryResult.objectId, queryResult.meta));
             return {
                 ...queryResponse,
