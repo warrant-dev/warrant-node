@@ -1,8 +1,8 @@
 import WarrantClient from "../WarrantClient";
 import { API_VERSION } from "../constants";
-import ListOptions from "../types/ListOptions";
+import ListOptions, { ListResponse } from "../types/List";
 import { isWarrantObject } from "../types/Object";
-import { QueryResponse } from "../types/Query";
+import { QueryResult } from "../types/Query";
 import Warrant, { isSubject, WarrantParams } from "../types/Warrant";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 
@@ -87,7 +87,7 @@ export default class WarrantModule {
         }
     }
 
-    public static async query(query: string, listOptions: ListOptions = {}, options: WarrantRequestOptions = {}): Promise<QueryResponse> {
+    public static async query(query: string, listOptions: ListOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<QueryResult>> {
         try {
             return await WarrantClient.httpClient.get({
                 url: `/${API_VERSION}/query`,

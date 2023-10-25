@@ -1,4 +1,4 @@
-import ListOptions from "./ListOptions";
+import ListOptions from "./List";
 import { WarrantObject, WarrantObjectLiteral } from "./Object";
 
 export interface ListWarrantOptions extends ListOptions {

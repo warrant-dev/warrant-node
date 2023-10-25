@@ -1,13 +1,9 @@
 import WarrantClient from "../WarrantClient";
 import { API_VERSION } from "../constants";
+import { ListResponse } from "../types/List";
 import { CreateObjectParams, DeleteObjectParams, ListObjectOptions, WarrantObjectLiteral } from "../types/Object";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 
-export interface ListObjectsResult {
-    results: WarrantObjectLiteral[];
-    prevCursor?: string;
-    nextCursor?: string;
-}
 
 export default class ObjectModule {
     //
@@ -48,7 +44,7 @@ export default class ObjectModule {
         }
     }
 
-    public static async list(listOptions: ListObjectOptions, options: WarrantRequestOptions = {}): Promise<ListObjectsResult> {
+    public static async list(listOptions: ListObjectOptions, options: WarrantRequestOptions = {}): Promise<ListResponse<WarrantObjectLiteral>> {
         try {
             return await WarrantClient.httpClient.get({
                 url: `/${API_VERSION}/objects`,

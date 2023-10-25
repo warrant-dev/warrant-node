@@ -1,12 +1,13 @@
 import Authorization from "./Authorization";
-import Feature, { ListFeaturesResult } from "./Feature";
+import Feature from "./Feature";
 import ObjectModule from "./ObjectModule";
-import Permission, { ListPermissionsResult } from "./Permission";
-import PricingTier, { ListPricingTiersResult } from "./PricingTier";
-import Role, { ListRolesResult } from "./Role";
-import Tenant, { ListTenantsResult } from "./Tenant";
+import Permission from "./Permission";
+import PricingTier from "./PricingTier";
+import Role from "./Role";
+import Tenant from "./Tenant";
 import WarrantModule from "./WarrantModule";
 import { ListFeatureOptions } from "../types/Feature";
+import { ListResponse } from "../types/List";
 import { WarrantObject, WarrantObjectLiteral } from "../types/Object";
 import { ObjectType } from "../types/ObjectType";
 import { ListPermissionOptions } from "../types/Permission";
@@ -18,11 +19,6 @@ import { ListTenantOptions } from "../types/Tenant";
 import Warrant, { PolicyContext } from "../types/Warrant";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 
-export interface ListUsersResult {
-    results: User[];
-    prevCursor?: string;
-    nextCursor?: string;
-}
 
 export default class User implements WarrantObject {
     userId: string;
@@ -94,7 +90,7 @@ export default class User implements WarrantObject {
         }
     }
 
-    public static async listUsers(listOptions: ListUserOptions = {}, options: WarrantRequestOptions = {}): Promise<ListUsersResult> {
+    public static async listUsers(listOptions: ListUserOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<User>> {
         try {
             const response = await ObjectModule.list({
                 objectType: ObjectType.User,
@@ -111,7 +107,7 @@ export default class User implements WarrantObject {
         }
     }
 
-    public static async listUsersForTenant(tenantId: string, listOptions: ListUserOptions = {}, options: WarrantRequestOptions = {}): Promise<ListUsersResult> {
+    public static async listUsersForTenant(tenantId: string, listOptions: ListUserOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<User>> {
         try {
             const queryResponse = await WarrantModule.query(`select * of type user for tenant:${tenantId}`, listOptions, options);
             const users: User[] = queryResponse.results.map((queryResult: QueryResult) => new User(queryResult.objectId, queryResult.meta));
@@ -156,11 +152,11 @@ export default class User implements WarrantObject {
     //
     // Instance methods
     //
-    public async listTenants(listOptions: ListTenantOptions = {}, options: WarrantRequestOptions = {}): Promise<ListTenantsResult> {
+    public async listTenants(listOptions: ListTenantOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Tenant>> {
         return Tenant.listTenantsForUser(this.userId, listOptions, options);
     }
 
-    public async listRoles(listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<ListRolesResult> {
+    public async listRoles(listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Role>> {
         return Role.listRolesForUser(this.userId, listOptions, options);
     }
 
@@ -172,7 +168,7 @@ export default class User implements WarrantObject {
         return Role.removeRoleFromUser(this.userId, roleId, options);
     }
 
-    public async listPermissions(listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListPermissionsResult> {
+    public async listPermissions(listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Permission>> {
         return Permission.listPermissionsForUser(this.userId, listOptions, options);
     }
 
@@ -188,7 +184,7 @@ export default class User implements WarrantObject {
         return Authorization.hasPermission({ permissionId: permissionId, subject: { objectType: ObjectType.User, objectId: this.userId }, context: context }, options);
     }
 
-    public async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<ListPricingTiersResult> {
+    public async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<PricingTier>> {
         return PricingTier.listPricingTiersForUser(this.userId, listOptions, options);
     }
 
@@ -200,7 +196,7 @@ export default class User implements WarrantObject {
         return PricingTier.removePricingTierFromUser(this.userId, pricingTierId, options);
     }
 
-    public async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListFeaturesResult> {
+    public async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Feature>> {
         return Feature.listFeaturesForUser(this.userId, listOptions, options);
     }
 

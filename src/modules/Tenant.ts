@@ -1,10 +1,11 @@
 import Authorization from "./Authorization";
-import Feature, { ListFeaturesResult } from "./Feature";
+import Feature from "./Feature";
 import ObjectModule from "./ObjectModule";
-import PricingTier, { ListPricingTiersResult } from "./PricingTier";
-import User, { ListUsersResult } from "./User";
+import PricingTier from "./PricingTier";
+import User from "./User";
 import WarrantModule from "./WarrantModule";
 import { ListFeatureOptions } from "../types/Feature";
+import { ListResponse } from "../types/List";
 import { WarrantObject, WarrantObjectLiteral } from "../types/Object";
 import { ObjectType } from "../types/ObjectType";
 import { ListPricingTierOptions } from "../types/PricingTier";
@@ -14,11 +15,6 @@ import { ListUserOptions } from "../types/User";
 import Warrant, { PolicyContext } from "../types/Warrant";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 
-export interface ListTenantsResult {
-    results: Tenant[];
-    prevCursor?: string;
-    nextCursor?: string;
-}
 
 export default class Tenant implements WarrantObject {
     tenantId: string;
@@ -90,7 +86,7 @@ export default class Tenant implements WarrantObject {
         }
     }
 
-    public static async listTenants(listOptions: ListTenantOptions = {}, options: WarrantRequestOptions = {}): Promise<ListTenantsResult> {
+    public static async listTenants(listOptions: ListTenantOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Tenant>> {
         try {
             const response = await ObjectModule.list({
                 objectType: ObjectType.Tenant,
@@ -107,7 +103,7 @@ export default class Tenant implements WarrantObject {
         }
     }
 
-    public static async listTenantsForUser(userId: string, listOptions: ListTenantOptions = {}, options: WarrantRequestOptions = {}): Promise<ListTenantsResult> {
+    public static async listTenantsForUser(userId: string, listOptions: ListTenantOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Tenant>> {
         try {
             const queryResponse = await WarrantModule.query(`select tenant where user:${userId} is *`, listOptions, options);
             const tenants: Tenant[] = queryResponse.results.map((queryResult: QueryResult) => new Tenant(queryResult.objectId, queryResult.meta));
@@ -124,7 +120,7 @@ export default class Tenant implements WarrantObject {
     //
     // Instance methods
     //
-    public async listUsers(listOptions: ListUserOptions = {}, options: WarrantRequestOptions = {}): Promise<ListUsersResult> {
+    public async listUsers(listOptions: ListUserOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<User>> {
         return User.listUsersForTenant(this.tenantId, listOptions, options);
     }
 
@@ -136,7 +132,7 @@ export default class Tenant implements WarrantObject {
         return User.removeUserFromTenant(this.tenantId, userId, role, options);
     }
 
-    public async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<ListPricingTiersResult> {
+    public async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<PricingTier>> {
         return PricingTier.listPricingTiersForTenant(this.tenantId, listOptions, options);
     }
 
@@ -148,7 +144,7 @@ export default class Tenant implements WarrantObject {
         return PricingTier.removePricingTierFromTenant(this.tenantId, pricingTierId, options);
     }
 
-    public async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListFeaturesResult> {
+    public async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Feature>> {
         return Feature.listFeaturesForTenant(this.tenantId, listOptions, options);
     }
 

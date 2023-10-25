@@ -1,4 +1,4 @@
-import ListOptions from "./ListOptions";
+import ListOptions from "./List";
 
 export interface ListPricingTierOptions extends ListOptions { }
 

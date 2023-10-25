@@ -1,17 +1,12 @@
 import ObjectModule from "./ObjectModule";
 import WarrantModule from "./WarrantModule";
 import { CreateFeatureParams, ListFeatureOptions } from "../types/Feature";
+import { ListResponse } from "../types/List";
 import { WarrantObject, WarrantObjectLiteral } from "../types/Object";
 import { ObjectType } from "../types/ObjectType";
 import { QueryResult } from "../types/Query";
 import Warrant from "../types/Warrant";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
-
-export interface ListFeaturesResult {
-    results: Feature[];
-    prevCursor?: string;
-    nextCursor?: string;
-}
 
 export default class Feature implements WarrantObject {
     featureId: string;
@@ -63,7 +58,7 @@ export default class Feature implements WarrantObject {
         return await ObjectModule.delete(ObjectType.Feature, featureId, options);
     }
 
-    public static async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListFeaturesResult> {
+    public static async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Feature>> {
         try {
             const response = await ObjectModule.list({
                 objectType: ObjectType.Feature,
@@ -80,7 +75,7 @@ export default class Feature implements WarrantObject {
         }
     }
 
-    public static async listFeaturesForPricingTier(pricingTierId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListFeaturesResult> {
+    public static async listFeaturesForPricingTier(pricingTierId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Feature>> {
         try {
             const queryResponse = await WarrantModule.query(`select feature where pricing-tier:${pricingTierId} is *`, listOptions, options);
             const features: Feature[] = queryResponse.results.map((queryResult: QueryResult) => new Feature(queryResult.objectId, queryResult.meta));
@@ -121,7 +116,7 @@ export default class Feature implements WarrantObject {
         }, options);
     }
 
-    public static async listFeaturesForTenant(tenantId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListFeaturesResult> {
+    public static async listFeaturesForTenant(tenantId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Feature>> {
         try {
             const queryResponse = await WarrantModule.query(`select feature where tenant:${tenantId} is *`, listOptions, options);
             const features: Feature[] = queryResponse.results.map((queryResult: QueryResult) => new Feature(queryResult.objectId, queryResult.meta));
@@ -162,7 +157,7 @@ export default class Feature implements WarrantObject {
         }, options);
     }
 
-    public static async listFeaturesForUser(userId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListFeaturesResult> {
+    public static async listFeaturesForUser(userId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Feature>> {
         try {
             const queryResponse = await WarrantModule.query(`select feature where user:${userId} is *`, listOptions, options);
             const features: Feature[] = queryResponse.results.map((queryResult: QueryResult) => new Feature(queryResult.objectId, queryResult.meta));

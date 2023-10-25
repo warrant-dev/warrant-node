@@ -1,11 +1,11 @@
 export { default as ApiError } from "./ApiError";
 export { default as Config } from "./Config";
 export { CreateFeatureParams, ListFeatureOptions } from "./Feature";
-export { default as ListOptions } from "./ListOptions";
+export { default as ListOptions, ListResponse } from "./List";
 export { WarrantObject, WarrantObjectLiteral } from "./Object";
 export { CreatePermissionParams, ListPermissionOptions } from "./Permission";
 export { CreatePricingTierParams, ListPricingTierOptions } from "./PricingTier";
-export { QueryResponse, QueryResult } from "./Query";
+export { QueryResult } from "./Query";
 export { CreateRoleParams, ListRoleOptions } from "./Role";
 export { SessionParams, SelfServiceSessionParams, SelfServiceStrategy } from "./Session";
 export { CreateTenantParams, ListTenantOptions } from "./Tenant";

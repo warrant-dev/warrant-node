@@ -1,5 +1,6 @@
 import ObjectModule from "./ObjectModule";
 import WarrantModule from "./WarrantModule";
+import { ListResponse } from "../types/List";
 import { WarrantObject, WarrantObjectLiteral } from "../types/Object";
 import { ObjectType } from "../types/ObjectType";
 import { CreatePermissionParams, ListPermissionOptions } from "../types/Permission";
@@ -7,11 +8,6 @@ import { QueryResult } from "../types/Query";
 import Warrant from "../types/Warrant";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 
-export interface ListPermissionsResult {
-    results: Permission[];
-    prevCursor?: string;
-    nextCursor?: string;
-}
 
 export default class Permission implements WarrantObject {
     permissionId: string;
@@ -63,7 +59,7 @@ export default class Permission implements WarrantObject {
         return await ObjectModule.delete(ObjectType.Permission, permissionId, options);
     }
 
-    public static async listPermissions(listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListPermissionsResult> {
+    public static async listPermissions(listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Permission>> {
         try {
             const response = await ObjectModule.list({
                 objectType: ObjectType.Permission,
@@ -80,7 +76,7 @@ export default class Permission implements WarrantObject {
         }
     }
 
-    public static async listPermissionsForUser(userId: string, listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListPermissionsResult> {
+    public static async listPermissionsForUser(userId: string, listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Permission>> {
         try {
             const queryResponse = await WarrantModule.query(`select permission where user:${userId} is *`, listOptions, options);
             const permissions: Permission[] = queryResponse.results.map((queryResult: QueryResult) => new Permission(queryResult.objectId, queryResult.meta));
@@ -122,7 +118,7 @@ export default class Permission implements WarrantObject {
         }, options);
     }
 
-    public static async listPermissionsForRole(roleId: string, listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListPermissionsResult> {
+    public static async listPermissionsForRole(roleId: string, listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Permission>> {
         try {
             const queryResponse = await WarrantModule.query(`select permission where role:${roleId} is *`, listOptions, options);
             const permissions: Permission[] = queryResponse.results.map((queryResult: QueryResult) => new Permission(queryResult.objectId, queryResult.meta));

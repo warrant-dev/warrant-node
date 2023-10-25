@@ -5,3 +5,9 @@ export default interface ListOptions {
     sortOrder?: string;
     limit?: number;
 }
+
+export interface ListResponse<T> {
+    results: T[];
+    prevCursor?: string;
+    nextCursor?: string;
+}
