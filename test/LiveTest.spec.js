@@ -217,7 +217,6 @@ describe.skip('Live Test', function () {
 
     it('CRUD objects', async function () {
         const object1 = await this.warrant.Object.create({ objectType: "document" });
-        console.log(object1);
         assert.strictEqual(object1.objectType, "document");
         assert(object1.objectId);
         assert.strictEqual(object1.meta, undefined);
@@ -791,4 +790,78 @@ describe.skip('Live Test', function () {
         await this.warrant.Permission.delete("test-permission");
         await this.warrant.User.delete("user-1");
     });
+
+    it('query', async function() {
+        const userA = await this.warrant.User.create({ userId: "userA" });
+        const userB = await this.warrant.User.create({ userId: "userB" });
+        const permission1 = await this.warrant.Permission.create({
+            permissionId: "perm1",
+            meta: {
+                name: "Permission 1",
+                description: "This is permission 1.",
+            },
+        });
+        const permission2 = await this.warrant.Permission.create({ permissionId: "perm2" });
+        const permission3 = await this.warrant.Permission.create({
+            permissionId: "perm3",
+            meta: {
+                name: "Permission 3",
+                description: "This is permission 3.",
+            },
+        });
+        const role1 = await this.warrant.Role.create({
+            roleId: "role1",
+            meta: {
+                name: "Role 1",
+                description: "This is role 1.",
+            },
+        });
+        const role2 = await this.warrant.Role.create({
+            roleId: "role2",
+            meta: {
+                name: "Role 2",
+            },
+        });
+
+        await this.warrant.Permission.assignPermissionToRole(role1.roleId, permission1.permissionId);
+        await this.warrant.Permission.assignPermissionToRole(role2.roleId, permission2.permissionId);
+        await this.warrant.Permission.assignPermissionToRole(role2.roleId, permission3.permissionId);
+        await this.warrant.Warrant.create({
+            object: role2,
+            relation: "member",
+            subject: role1,
+        });
+        await this.warrant.Role.assignRoleToUser(userA.userId, role1.roleId);
+        await this.warrant.Role.assignRoleToUser(userB.userId, role2.roleId);
+
+        let resultSet = await this.warrant.Warrant.query("select role where user:userA is member", { limit: 1 });
+        assert.strictEqual(1, resultSet.results.length);
+        assert.strictEqual("role", resultSet.results[0].objectType);
+        assert.strictEqual("role1", resultSet.results[0].objectId);
+        assert.strictEqual(false, resultSet.results[0].isImplicit);
+        assert.strictEqual("role", resultSet.results[0].warrant.objectType);
+        assert.strictEqual("role1", resultSet.results[0].warrant.objectId);
+        assert.strictEqual("member", resultSet.results[0].warrant.relation);
+        assert.strictEqual("user", resultSet.results[0].warrant.subject.objectType);
+        assert.strictEqual("userA", resultSet.results[0].warrant.subject.objectId);
+
+        resultSet = await this.warrant.Warrant.query("select role where user:userA is member", { limit: 1, nextCursor: resultSet.nextCursor });
+        assert.strictEqual(1, resultSet.results.length);
+        assert.strictEqual("role", resultSet.results[0].objectType);
+        assert.strictEqual("role2", resultSet.results[0].objectId);
+        assert.strictEqual(true, resultSet.results[0].isImplicit);
+        assert.strictEqual("role", resultSet.results[0].warrant.objectType);
+        assert.strictEqual("role2", resultSet.results[0].warrant.objectId);
+        assert.strictEqual("member", resultSet.results[0].warrant.relation);
+        assert.strictEqual("role", resultSet.results[0].warrant.subject.objectType);
+        assert.strictEqual("role1", resultSet.results[0].warrant.subject.objectId);
+
+        await this.warrant.Role.delete(role1.roleId);
+        await this.warrant.Role.delete(role2.roleId);
+        await this.warrant.Permission.delete(permission1.permissionId);
+        await this.warrant.Permission.delete(permission2.permissionId);
+        await this.warrant.Permission.delete(permission3.permissionId);
+        await this.warrant.User.delete(userA.userId);
+        await this.warrant.User.delete(userB.userId);
+    })
 });
