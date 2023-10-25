@@ -34,7 +34,7 @@ export default class Tenant implements WarrantObject {
                 objectType: ObjectType.Tenant,
                 objectId: tenant.tenantId,
                 meta: tenant.meta,
-            })
+            }, options);
 
             return new Tenant(response.objectId, response.meta);
         } catch (e) {
