@@ -240,6 +240,11 @@ describe.skip('Live Test', function () {
         assert.strictEqual(objectsList.results[1].objectType, object2.objectType);
         assert.strictEqual(objectsList.results[1].objectId, object2.objectId);
 
+        objectsList = await this.warrant.Object.list({ sortBy: "createdAt", limit: 10, q: "planning" }, { warrantToken: "latest" });
+        assert.strictEqual(objectsList.results.length, 1);
+        assert.strictEqual(objectsList.results[0].objectType, object2.objectType);
+        assert.strictEqual(objectsList.results[0].objectId, object2.objectId);
+
         await this.warrant.Object.delete(object1.objectType, object1.objectId);
         await this.warrant.Object.delete(object2.objectType, object2.objectId);
         objectsList = await this.warrant.Object.list({ sortBy: "createdAt", limit: 10 }, { warrantToken: "latest" });

@@ -23,7 +23,7 @@ export interface CreateObjectParams {
 
 export interface ListObjectOptions extends ListOptions {
     objectType?: string;
-    objectId?: string;
+    q?: string;
 }
 
 export interface DeleteObjectParams {
