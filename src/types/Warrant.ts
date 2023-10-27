@@ -29,6 +29,7 @@ export default interface Warrant {
     relation: string;
     subject: Subject;
     policy?: string;
+    warrantToken?: string;
 }
 
 export interface WarrantParams {

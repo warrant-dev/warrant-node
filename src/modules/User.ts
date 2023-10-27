@@ -135,7 +135,7 @@ export default class User implements WarrantObject {
         }, options);
     }
 
-    public static async removeUserFromTenant(tenantId: string, userId: string, role: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async removeUserFromTenant(tenantId: string, userId: string, role: string, options: WarrantRequestOptions = {}): Promise<string> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.Tenant,
@@ -164,7 +164,7 @@ export default class User implements WarrantObject {
         return Role.assignRoleToUser(this.userId, roleId, options);
     }
 
-    public async removeRole(roleId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public async removeRole(roleId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return Role.removeRoleFromUser(this.userId, roleId, options);
     }
 
@@ -176,7 +176,7 @@ export default class User implements WarrantObject {
         return Permission.assignPermissionToUser(this.userId, permissionId, options);
     }
 
-    public async removePermission(permissionId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public async removePermission(permissionId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return Permission.removePermissionFromUser(this.userId, permissionId, options);
     }
 
@@ -192,7 +192,7 @@ export default class User implements WarrantObject {
         return PricingTier.assignPricingTierToUser(this.userId, pricingTierId, options);
     }
 
-    public async removePricingTier(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public async removePricingTier(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return PricingTier.removePricingTierFromUser(this.userId, pricingTierId, options);
     }
 
@@ -204,7 +204,7 @@ export default class User implements WarrantObject {
         return Feature.assignFeatureToUser(this.userId, featureId, options);
     }
 
-    public async removeFeature(featureId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public async removeFeature(featureId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return Feature.removeFeatureFromUser(this.userId, featureId, options);
     }
 

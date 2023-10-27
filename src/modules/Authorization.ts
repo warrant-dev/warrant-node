@@ -75,7 +75,6 @@ export default class Authorization {
     // Private methods
     private static async authorize(accessCheckRequest: AccessCheckRequest, options: WarrantRequestOptions = {}): Promise<boolean> {
         try {
-
             const response = await WarrantClient.httpClient.post({
                 url: `/${API_VERSION}/check`,
                 data: {

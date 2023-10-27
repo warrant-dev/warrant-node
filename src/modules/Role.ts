@@ -107,7 +107,7 @@ export default class Role implements WarrantObject {
         }, options);
     }
 
-    public static async removeRoleFromUser(userId: string, roleId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async removeRoleFromUser(userId: string, roleId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.Role,
@@ -130,7 +130,7 @@ export default class Role implements WarrantObject {
         return Permission.assignPermissionToRole(this.roleId, permissionId, options);
     }
 
-    public async removePermission(permissionId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public async removePermission(permissionId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return Permission.removePermissionFromRole(this.roleId, permissionId, options);
     }
 

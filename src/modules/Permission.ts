@@ -104,7 +104,7 @@ export default class Permission implements WarrantObject {
         }, options);
     }
 
-    public static async removePermissionFromUser(userId: string, permissionId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async removePermissionFromUser(userId: string, permissionId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.Permission,
@@ -146,7 +146,7 @@ export default class Permission implements WarrantObject {
         }, options);
     }
 
-    public static async removePermissionFromRole(roleId: string, permissionId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async removePermissionFromRole(roleId: string, permissionId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.Permission,

@@ -106,7 +106,7 @@ export default class PricingTier implements WarrantObject {
         }, options);
     }
 
-    public static async removePricingTierFromTenant(tenantId: string, pricingTierId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async removePricingTierFromTenant(tenantId: string, pricingTierId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.PricingTier,
@@ -147,7 +147,7 @@ export default class PricingTier implements WarrantObject {
         }, options);
     }
 
-    public static async removePricingTierFromUser(userId: string, pricingTierId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async removePricingTierFromUser(userId: string, pricingTierId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.PricingTier,
@@ -170,7 +170,7 @@ export default class PricingTier implements WarrantObject {
         return Feature.assignFeatureToPricingTier(this.pricingTierId, featureId, options);
     }
 
-    public async removeFeature(featureId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public async removeFeature(featureId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return Feature.removeFeatureFromPricingTier(this.pricingTierId, featureId, options);
     }
 

@@ -9,7 +9,7 @@ import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 export default class WarrantModule {
     public static async create(warrant: WarrantParams, options: WarrantRequestOptions = {}): Promise<Warrant> {
         try {
-            return await WarrantClient.httpClient.post({
+            const response = await WarrantClient.httpClient.post({
                 url: `/${API_VERSION}/warrants`,
                 data: {
                     objectType: isWarrantObject(warrant.object) ? warrant.object.getObjectType() : warrant.object.objectType,
@@ -20,6 +20,8 @@ export default class WarrantModule {
                 },
                 options,
             });
+
+            return response;
         } catch (e) {
             throw e;
         }
@@ -47,9 +49,9 @@ export default class WarrantModule {
         }
     }
 
-    public static async delete(warrant: WarrantParams, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async delete(warrant: WarrantParams, options: WarrantRequestOptions = {}): Promise<string> {
         try {
-            return await WarrantClient.httpClient.delete({
+            const response = await WarrantClient.httpClient.delete({
                 url: `/${API_VERSION}/warrants`,
                 data: {
                     objectType: isWarrantObject(warrant.object) ? warrant.object.getObjectType() : warrant.object.objectType,
@@ -60,6 +62,8 @@ export default class WarrantModule {
                 },
                 options,
             });
+
+            return response.warrantToken;
         } catch (e) {
             throw e;
         }

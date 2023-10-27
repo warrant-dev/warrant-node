@@ -612,11 +612,12 @@ describe.skip('Live Test', function () {
         });
         assert.strictEqual(userHasPermission, false);
 
-        await this.warrant.Warrant.create({
+        const newWarrant = await this.warrant.Warrant.create({
             object: newPermission,
             relation: "member",
             subject: newUser
         });
+        assert(newWarrant.warrantToken);
 
         userHasPermission = await this.warrant.Authorization.check({
             object: newPermission,
@@ -635,11 +636,12 @@ describe.skip('Live Test', function () {
         assert.strictEqual(response.results[0].objectId, "perm1");
         assert.strictEqual(response.results[0].warrant.relation, "member");
 
-        await this.warrant.Warrant.delete({
+        const warrantToken = await this.warrant.Warrant.delete({
             object: newPermission,
             relation: "member",
             subject: newUser
         });
+        assert(warrantToken);
 
         userHasPermission = await this.warrant.Authorization.check({
             object: newPermission,
@@ -778,7 +780,7 @@ describe.skip('Live Test', function () {
         });
         assert.strictEqual(checkResult, false);
 
-        await this.warrant.Warrant.delete({
+        const warrantToken = await this.warrant.Warrant.delete({
             object: {
                 objectType: "permission",
                 objectId: "test-permission"
@@ -790,6 +792,7 @@ describe.skip('Live Test', function () {
             },
             policy: `geo == "us"`
         });
+        assert(warrantToken);
 
         // Clean up
         await this.warrant.Permission.delete("test-permission");

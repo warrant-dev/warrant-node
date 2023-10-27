@@ -128,7 +128,7 @@ export default class Tenant implements WarrantObject {
         return User.assignUserToTenant(this.tenantId, userId, role, options);
     }
 
-    public async removeUser(userId: string, role: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public async removeUser(userId: string, role: string, options: WarrantRequestOptions = {}): Promise<string> {
         return User.removeUserFromTenant(this.tenantId, userId, role, options);
     }
 
@@ -140,7 +140,7 @@ export default class Tenant implements WarrantObject {
         return PricingTier.assignPricingTierToTenant(this.tenantId, pricingTierId, options);
     }
 
-    public async removePricingTier(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public async removePricingTier(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return PricingTier.removePricingTierFromTenant(this.tenantId, pricingTierId, options);
     }
 
@@ -152,7 +152,7 @@ export default class Tenant implements WarrantObject {
         return Feature.assignFeatureToTenant(this.tenantId, featureId, options);
     }
 
-    public async removeFeature(featureId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public async removeFeature(featureId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return Feature.removeFeatureFromTenant(this.tenantId, featureId, options);
     }
 
