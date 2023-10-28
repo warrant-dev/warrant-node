@@ -58,7 +58,7 @@ export default class PricingTier implements WarrantObject {
         }
     }
 
-    public static async delete(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async delete(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return await ObjectModule.delete(ObjectType.PricingTier, pricingTierId, options);
     }
 

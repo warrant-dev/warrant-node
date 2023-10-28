@@ -77,11 +77,11 @@ export default class User implements WarrantObject {
         }
     }
 
-    public static async delete(userId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async delete(userId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return await ObjectModule.delete(ObjectType.User, userId, options);
     }
 
-    public static async batchDelete(users: DeleteUserParams[], options: WarrantRequestOptions = {}): Promise<void> {
+    public static async batchDelete(users: DeleteUserParams[], options: WarrantRequestOptions = {}): Promise<string> {
         try {
             const objects = users.map((user: DeleteUserParams) => { return { objectType: ObjectType.User, objectId: user.userId } })
             return await ObjectModule.batchDelete(objects, options);

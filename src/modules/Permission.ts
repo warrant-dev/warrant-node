@@ -55,7 +55,7 @@ export default class Permission implements WarrantObject {
         }
     }
 
-    public static async delete(permissionId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async delete(permissionId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return await ObjectModule.delete(ObjectType.Permission, permissionId, options);
     }
 

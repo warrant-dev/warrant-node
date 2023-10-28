@@ -70,24 +70,28 @@ export default class ObjectModule {
         }
     }
 
-    public static async delete(objectType: string, objectId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async delete(objectType: string, objectId: string, options: WarrantRequestOptions = {}): Promise<string> {
         try {
-            return await WarrantClient.httpClient.delete({
+            const response = await WarrantClient.httpClient.delete({
                 url: `/${API_VERSION}/objects/${objectType}/${objectId}`,
                 options,
             });
+
+            return response.warrantToken;
         } catch (e) {
             throw e;
         }
     }
 
-    public static async batchDelete(objects: DeleteObjectParams[], options: WarrantRequestOptions = {}): Promise<void> {
+    public static async batchDelete(objects: DeleteObjectParams[], options: WarrantRequestOptions = {}): Promise<string> {
         try {
-            return await WarrantClient.httpClient.delete({
+            const response = await WarrantClient.httpClient.delete({
                 url: `/${API_VERSION}/objects`,
                 data: objects,
                 options,
             });
+
+            return response.warrantToken;
         } catch (e) {
             throw e;
         }
