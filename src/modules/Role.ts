@@ -59,7 +59,7 @@ export default class Role implements WarrantObject {
     }
 
     public static async delete(roleId: string, options: WarrantRequestOptions = {}): Promise<string> {
-        return await ObjectModule.delete(ObjectType.Role, roleId, options);
+        return ObjectModule.delete(ObjectType.Role, roleId, options);
     }
 
     public static async listRoles(listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Role>> {

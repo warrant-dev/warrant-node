@@ -78,7 +78,7 @@ export default class User implements WarrantObject {
     }
 
     public static async delete(userId: string, options: WarrantRequestOptions = {}): Promise<string> {
-        return await ObjectModule.delete(ObjectType.User, userId, options);
+        return ObjectModule.delete(ObjectType.User, userId, options);
     }
 
     public static async batchDelete(users: DeleteUserParams[], options: WarrantRequestOptions = {}): Promise<string> {

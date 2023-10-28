@@ -74,7 +74,7 @@ export default class Tenant implements WarrantObject {
     }
 
     public static async delete(tenantId: string, options: WarrantRequestOptions = {}): Promise<string> {
-        return await ObjectModule.delete(ObjectType.Tenant, tenantId, options);
+        return ObjectModule.delete(ObjectType.Tenant, tenantId, options);
     }
 
     public static async batchDelete(tenants: DeleteTenantParams[], options: WarrantRequestOptions = {}): Promise<string> {

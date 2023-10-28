@@ -55,7 +55,7 @@ export default class Feature implements WarrantObject {
     }
 
     public static async delete(featureId: string, options: WarrantRequestOptions = {}): Promise<string> {
-        return await ObjectModule.delete(ObjectType.Feature, featureId, options);
+        return ObjectModule.delete(ObjectType.Feature, featureId, options);
     }
 
     public static async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Feature>> {
