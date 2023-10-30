@@ -1,5 +1,6 @@
-const { SelfServiceStrategy, WarrantClient } = require("../dist/index");
-var assert = require('assert');
+import WarrantClient from "../src/WarrantClient";
+import { SelfServiceStrategy } from "../src/types/Session";
+import { assert } from "chai";
 
 // Remove .skip and add your API_KEY to run tests
 describe.skip('Live Test', function () {
