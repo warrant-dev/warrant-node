@@ -27,8 +27,10 @@ export default class PricingTier implements WarrantObject {
     public static async create(pricingTier: CreatePricingTierParams = {}, options: WarrantRequestOptions = {}): Promise<PricingTier> {
         try {
             const response = await ObjectModule.create({
-                objectType: ObjectType.PricingTier,
-                objectId: pricingTier.pricingTierId,
+                object: {
+                    objectType: ObjectType.PricingTier,
+                    objectId: pricingTier.pricingTierId,
+                },
                 meta: pricingTier.meta,
             }, options);
 
@@ -50,7 +52,10 @@ export default class PricingTier implements WarrantObject {
 
     public static async update(pricingTierId: string, meta: { [key: string]: any }, options: WarrantRequestOptions = {}): Promise<PricingTier> {
         try {
-            const response = await ObjectModule.update(ObjectType.PricingTier, pricingTierId, meta, options);
+            const response = await ObjectModule.update({
+                objectType: ObjectType.PricingTier,
+                objectId: pricingTierId,
+            }, meta, options);
 
             return new PricingTier(response.objectId, response.meta);
         } catch (e) {
@@ -59,7 +64,10 @@ export default class PricingTier implements WarrantObject {
     }
 
     public static async delete(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<string> {
-        return ObjectModule.delete(ObjectType.PricingTier, pricingTierId, options);
+        return ObjectModule.delete({
+            objectType: ObjectType.PricingTier,
+            objectId: pricingTierId,
+        }, options);
     }
 
     public static async listPricingTiers(listOptions: ListPricingTierOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<PricingTier>> {

@@ -230,18 +230,18 @@ describe.skip('Live Test', function () {
     });
 
     it('CRUD objects', async function () {
-        const object1 = await this.warrant.Object.create({ objectType: "document" });
+        const object1 = await this.warrant.Object.create({ object: { objectType: "document" }});
         assert.strictEqual(object1.objectType, "document");
         assert(object1.objectId);
         assert.strictEqual(object1.meta, undefined);
 
-        let object2 = await this.warrant.Object.create({ objectType: "folder", objectId: "planning" });
+        let object2 = await this.warrant.Object.create({ object: { objectType: "folder", objectId: "planning" }});
         let refetchedObject = await this.warrant.Object.get(object2.objectType, object2.objectId, { warrantToken: "latest" });
         assert.strictEqual(refetchedObject.objectType, object2.objectType);
         assert.strictEqual(refetchedObject.objectId, object2.objectId);
         assert.deepStrictEqual(refetchedObject.meta, object2.meta);
 
-        object2 = await this.warrant.Object.update(object2.objectType, object2.objectId, { description: "Second document" });
+        object2 = await this.warrant.Object.update(object2, { description: "Second document" });
         refetchedObject = await this.warrant.Object.get(object2.objectType, object2.objectId, { warrantToken: "latest" });
         assert.strictEqual(refetchedObject.objectType, object2.objectType);
         assert.strictEqual(refetchedObject.objectId, object2.objectId);
@@ -259,9 +259,9 @@ describe.skip('Live Test', function () {
         assert.strictEqual(objectsList.results[0].objectType, object2.objectType);
         assert.strictEqual(objectsList.results[0].objectId, object2.objectId);
 
-        let warrantToken = await this.warrant.Object.delete(object1.objectType, object1.objectId);
+        let warrantToken = await this.warrant.Object.delete(object1);
         assert(warrantToken);
-        warrantToken = await this.warrant.Object.delete(object2.objectType, object2.objectId);
+        warrantToken = await this.warrant.Object.delete(object2);
         assert(warrantToken);
         objectsList = await this.warrant.Object.list({ sortBy: "createdAt", limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(objectsList.results.length, 0);
@@ -269,9 +269,9 @@ describe.skip('Live Test', function () {
 
     it('batch create/delete objects', async function () {
         const objects = await this.warrant.Object.batchCreate([
-            { objectType: "document", objectId: "document-a" },
-            { objectType: "document", objectId: "document-b" },
-            { objectType: "folder", objectId: "resources", meta: { description: "Helpful documents" }},
+            { object: { objectType: "document", objectId: "document-a" }},
+            { object: { objectType: "document", objectId: "document-b" }},
+            { object: { objectType: "folder", objectId: "resources" }, meta: { description: "Helpful documents" }},
         ]);
         assert.strictEqual(objects.length, 3);
 
@@ -285,10 +285,14 @@ describe.skip('Live Test', function () {
         assert.strictEqual(fetchedObjects.results[2].objectId, "resources");
         assert.deepStrictEqual(fetchedObjects.results[2].meta, { description: "Helpful documents" });
 
+        const folderResource = await this.warrant.Object.get("folder", "resources", { warrantToken: "latest" });
+        assert.strictEqual(folderResource.objectType, "folder");
+        assert.strictEqual(folderResource.objectId, "resources");
+
         let warrantToken = await this.warrant.Object.batchDelete([
-            { objectType: "document", objectId: "document-a" },
-            { objectType: "document", objectId: "document-b" },
-            { objectType: "folder", objectId: "resources" },
+            { object: { objectType: "document", objectId: "document-a" } },
+            { object: { objectType: "document", objectId: "document-b" } },
+            { object: folderResource },
         ]);
         assert(warrantToken);
         fetchedObjects = await this.warrant.Object.list({ limit: 10 }, { warrantToken: "latest" });
@@ -770,9 +774,9 @@ describe.skip('Live Test', function () {
         ]);
         assert(warrantToken);
         warrantToken = await this.warrant.Object.batchDelete([
-            { objectType: "permission", objectId: permission1.permissionId },
-            { objectType: "permission", objectId: permission2.permissionId },
-            { objectType: "user", objectId: newUser.userId },
+            { object: { objectType: "permission", objectId: permission1.permissionId } },
+            { object: { objectType: "permission", objectId: permission2.permissionId } },
+            { object: { objectType: "user", objectId: newUser.userId } },
         ]);
         assert(warrantToken);
     });

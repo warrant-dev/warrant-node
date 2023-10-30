@@ -27,8 +27,10 @@ export default class Role implements WarrantObject {
     public static async create(role: CreateRoleParams = {}, options: WarrantRequestOptions = {}): Promise<Role> {
         try {
             const response = await ObjectModule.create({
-                objectType: ObjectType.Role,
-                objectId: role.roleId,
+                object: {
+                    objectType: ObjectType.Role,
+                    objectId: role.roleId,
+                },
                 meta: role.meta,
             }, options)
 
@@ -50,7 +52,10 @@ export default class Role implements WarrantObject {
 
     public static async update(roleId: string, meta: { [key: string]: any }, options: WarrantRequestOptions = {}): Promise<Role> {
         try {
-            const response = await ObjectModule.update(ObjectType.Role, roleId, meta, options);
+            const response = await ObjectModule.update({
+                objectType: ObjectType.Role,
+                objectId: roleId,
+            }, meta, options);
 
             return new Role(response.objectId, response.meta);
         } catch (e) {
@@ -59,7 +64,10 @@ export default class Role implements WarrantObject {
     }
 
     public static async delete(roleId: string, options: WarrantRequestOptions = {}): Promise<string> {
-        return ObjectModule.delete(ObjectType.Role, roleId, options);
+        return ObjectModule.delete({
+            objectType: ObjectType.Role,
+            objectId: roleId,
+        }, options);
     }
 
     public static async listRoles(listOptions: ListRoleOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Role>> {

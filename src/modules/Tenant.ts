@@ -31,8 +31,10 @@ export default class Tenant implements WarrantObject {
     public static async create(tenant: CreateTenantParams = {}, options: WarrantRequestOptions = {}): Promise<Tenant> {
         try {
             const response = await ObjectModule.create({
-                objectType: ObjectType.Tenant,
-                objectId: tenant.tenantId,
+                object: {
+                    objectType: ObjectType.Tenant,
+                    objectId: tenant.tenantId,
+                },
                 meta: tenant.meta,
             }, options);
 
@@ -44,7 +46,7 @@ export default class Tenant implements WarrantObject {
 
     public static async batchCreate(tenants: CreateTenantParams[], options: WarrantRequestOptions = {}): Promise<Tenant[]> {
         try {
-            const objects = tenants.map((tenant: CreateTenantParams) => { return { objectType: ObjectType.Tenant, objectId: tenant.tenantId, meta: tenant.meta } });
+            const objects = tenants.map((tenant: CreateTenantParams) => { return { object: { objectType: ObjectType.Tenant, objectId: tenant.tenantId }, meta: tenant.meta } });
             const response = await ObjectModule.batchCreate(objects, options);
 
             return response.map((object: WarrantObjectLiteral) => new Tenant(object.objectId, object.meta));
@@ -65,7 +67,10 @@ export default class Tenant implements WarrantObject {
 
     public static async update(tenantId: string, meta: { [key: string]: any }, options: WarrantRequestOptions = {}): Promise<Tenant> {
         try {
-            const response = await ObjectModule.update(ObjectType.Tenant, tenantId, meta, options);
+            const response = await ObjectModule.update({
+                objectType: ObjectType.Tenant,
+                objectId: tenantId,
+            }, meta, options);
 
             return new Tenant(response.objectId, response.meta);
         } catch (e) {
@@ -74,12 +79,15 @@ export default class Tenant implements WarrantObject {
     }
 
     public static async delete(tenantId: string, options: WarrantRequestOptions = {}): Promise<string> {
-        return ObjectModule.delete(ObjectType.Tenant, tenantId, options);
+        return ObjectModule.delete({
+            objectType: ObjectType.Tenant,
+            objectId: tenantId,
+        }, options);
     }
 
     public static async batchDelete(tenants: DeleteTenantParams[], options: WarrantRequestOptions = {}): Promise<string> {
         try {
-            const objects = tenants.map((tenant: DeleteTenantParams) => { return { objectType: ObjectType.Tenant, objectId: tenant.tenantId } })
+            const objects = tenants.map((tenant: DeleteTenantParams) => { return { object: { objectType: ObjectType.Tenant, objectId: tenant.tenantId } }})
             return await ObjectModule.batchDelete(objects, options);
         } catch (e) {
             throw e;

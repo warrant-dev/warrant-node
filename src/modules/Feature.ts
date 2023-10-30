@@ -23,8 +23,10 @@ export default class Feature implements WarrantObject {
     public static async create(feature: CreateFeatureParams = {}, options: WarrantRequestOptions = {}): Promise<Feature> {
         try {
             const response = await ObjectModule.create({
-                objectType: ObjectType.Feature,
-                objectId: feature.featureId,
+                object: {
+                    objectType: ObjectType.Feature,
+                    objectId: feature.featureId,
+                },
                 meta: feature.meta,
             }, options);
 
@@ -46,7 +48,10 @@ export default class Feature implements WarrantObject {
 
     public static async update(featureId: string, meta: { [key: string]: any }, options: WarrantRequestOptions = {}): Promise<Feature> {
         try {
-            const response = await ObjectModule.update(ObjectType.Feature, featureId, meta, options);
+            const response = await ObjectModule.update({
+                objectType: ObjectType.Feature,
+                objectId: featureId,
+            }, meta, options);
 
             return new Feature(response.objectId, response.meta);
         } catch (e) {
@@ -55,7 +60,10 @@ export default class Feature implements WarrantObject {
     }
 
     public static async delete(featureId: string, options: WarrantRequestOptions = {}): Promise<string> {
-        return ObjectModule.delete(ObjectType.Feature, featureId, options);
+        return ObjectModule.delete({
+            objectType: ObjectType.Feature,
+            objectId: featureId,
+        }, options);
     }
 
     public static async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Feature>> {

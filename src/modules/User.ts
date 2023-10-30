@@ -35,8 +35,10 @@ export default class User implements WarrantObject {
     public static async create(user: CreateUserParams = {}, options: WarrantRequestOptions = {}): Promise<User> {
         try {
             const response = await ObjectModule.create({
-                objectType: ObjectType.User,
-                objectId: user.userId,
+                object: {
+                    objectType: ObjectType.User,
+                    objectId: user.userId,
+                },
                 meta: user.meta,
             }, options);
 
@@ -48,7 +50,7 @@ export default class User implements WarrantObject {
 
     public static async batchCreate(users: CreateUserParams[], options: WarrantRequestOptions = {}): Promise<User[]> {
         try {
-            const objects = users.map((user: CreateUserParams) => { return { objectType: ObjectType.User, objectId: user.userId, meta: user.meta } })
+            const objects = users.map((user: CreateUserParams) => { return { object: { objectType: ObjectType.User, objectId: user.userId }, meta: user.meta } })
             const response = await ObjectModule.batchCreate(objects, options)
 
             return response.map((object: WarrantObjectLiteral) => new User(object.objectId, object.meta));
@@ -69,7 +71,10 @@ export default class User implements WarrantObject {
 
     public static async update(userId: string, meta: { [key: string]: any }, options: WarrantRequestOptions = {}): Promise<User> {
         try {
-            const response = await ObjectModule.update(ObjectType.User, userId, meta, options)
+            const response = await ObjectModule.update({
+                objectType: ObjectType.User,
+                objectId: userId,
+            }, meta, options);
 
             return new User(response.objectId, response.meta);
         } catch (e) {
@@ -78,12 +83,15 @@ export default class User implements WarrantObject {
     }
 
     public static async delete(userId: string, options: WarrantRequestOptions = {}): Promise<string> {
-        return ObjectModule.delete(ObjectType.User, userId, options);
+        return ObjectModule.delete({
+            objectType: ObjectType.User,
+            objectId: userId,
+        }, options);
     }
 
     public static async batchDelete(users: DeleteUserParams[], options: WarrantRequestOptions = {}): Promise<string> {
         try {
-            const objects = users.map((user: DeleteUserParams) => { return { objectType: ObjectType.User, objectId: user.userId } })
+            const objects = users.map((user: DeleteUserParams) => { return { object: { objectType: ObjectType.User, objectId: user.userId } }})
             return await ObjectModule.batchDelete(objects, options);
         } catch (e) {
             throw e;

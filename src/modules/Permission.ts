@@ -24,8 +24,10 @@ export default class Permission implements WarrantObject {
     public static async create(permission: CreatePermissionParams = {}, options: WarrantRequestOptions = {}): Promise<Permission> {
         try {
             const response = await ObjectModule.create({
-                objectType: ObjectType.Permission,
-                objectId: permission.permissionId,
+                object: {
+                    objectType: ObjectType.Permission,
+                    objectId: permission.permissionId,
+                },
                 meta: permission.meta,
             }, options);
 
@@ -47,7 +49,10 @@ export default class Permission implements WarrantObject {
 
     public static async update(permissionId: string, meta: { [key: string]: any }, options: WarrantRequestOptions = {}): Promise<Permission> {
         try {
-            const response = await ObjectModule.update(ObjectType.Permission, permissionId, meta, options);
+            const response = await ObjectModule.update({
+                objectType: ObjectType.Permission,
+                objectId: permissionId,
+            }, meta, options);
 
             return new Permission(response.objectId, response.meta);
         } catch (e) {
@@ -56,7 +61,10 @@ export default class Permission implements WarrantObject {
     }
 
     public static async delete(permissionId: string, options: WarrantRequestOptions = {}): Promise<string> {
-        return ObjectModule.delete(ObjectType.Permission, permissionId, options);
+        return ObjectModule.delete({
+            objectType: ObjectType.Permission,
+            objectId: permissionId,
+        }, options);
     }
 
     public static async listPermissions(listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Permission>> {
