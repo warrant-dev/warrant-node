@@ -1,4 +1,5 @@
-import Warrant from "./Warrant";
+import { Warrant } from "./Warrant";
+import { ListParams } from "./List";
 
 export interface QueryResult {
     objectType: string;
@@ -7,3 +8,5 @@ export interface QueryResult {
     isImplicit: boolean;
     meta: { [key: string]: any; };
 }
+
+export interface QueryListParams extends ListParams {}

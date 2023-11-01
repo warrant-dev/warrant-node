@@ -1,7 +1,7 @@
-import ListOptions from "./List";
+import { ListParams } from "./List";
 import { WarrantObject, WarrantObjectLiteral } from "./Object";
 
-export interface ListWarrantOptions extends ListOptions {
+export interface ListWarrantParams extends ListParams {
     objectType?: string;
     objectId?: string;
     relation?: string;
@@ -23,7 +23,7 @@ export function isSubject(object: any): object is Subject {
         && Object.prototype.hasOwnProperty.call(object, "objectId")
 }
 
-export default interface Warrant {
+export interface Warrant {
     objectType: string;
     objectId: string;
     relation: string;

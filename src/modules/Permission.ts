@@ -1,11 +1,17 @@
+import {
+    CreatePermissionParams, DeletePermissionParams,
+    GetPermissionParams,
+    ListPermissionParams,
+    UpdatePermissionParams,
+    ListResponse,
+    WarrantObject,
+    BaseWarrantObject,
+    Warrant,
+    QueryResult
+} from "../types";
 import ObjectModule from "./ObjectModule";
 import WarrantModule from "./WarrantModule";
-import { ListResponse } from "../types/List";
-import { WarrantObject, WarrantObjectLiteral } from "../types/Object";
 import { ObjectType } from "../types/ObjectType";
-import { CreatePermissionParams, ListPermissionOptions } from "../types/Permission";
-import { QueryResult } from "../types/Query";
-import Warrant from "../types/Warrant";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 
 
@@ -37,9 +43,14 @@ export default class Permission implements WarrantObject {
         }
     }
 
-    public static async get(permissionId: string, options: WarrantRequestOptions = {}): Promise<Permission> {
+    public static async get(params: GetPermissionParams, options: WarrantRequestOptions = {}): Promise<Permission> {
         try {
-            const response = await ObjectModule.get(ObjectType.Permission, permissionId, options);
+            const response = await ObjectModule.get({
+                object: {
+                    objectType: ObjectType.Permission,
+                    objectId: params.permissionId,
+                },
+            }, options);
 
             return new Permission(response.objectId, response.meta);
         } catch (e) {
@@ -47,12 +58,15 @@ export default class Permission implements WarrantObject {
         }
     }
 
-    public static async update(permissionId: string, meta: { [key: string]: any }, options: WarrantRequestOptions = {}): Promise<Permission> {
+    public static async update(params: UpdatePermissionParams, options: WarrantRequestOptions = {}): Promise<Permission> {
         try {
             const response = await ObjectModule.update({
-                objectType: ObjectType.Permission,
-                objectId: permissionId,
-            }, meta, options);
+                object: {
+                    objectType: ObjectType.Permission,
+                    objectId: params.permissionId,
+                },
+                meta: params.meta,
+            }, options);
 
             return new Permission(response.objectId, response.meta);
         } catch (e) {
@@ -60,21 +74,23 @@ export default class Permission implements WarrantObject {
         }
     }
 
-    public static async delete(permissionId: string, options: WarrantRequestOptions = {}): Promise<string> {
+    public static async delete(params: DeletePermissionParams, options: WarrantRequestOptions = {}): Promise<string> {
         return ObjectModule.delete({
-            objectType: ObjectType.Permission,
-            objectId: permissionId,
+            object: {
+                objectType: ObjectType.Permission,
+                objectId: params.permissionId,
+            },
         }, options);
     }
 
-    public static async listPermissions(listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Permission>> {
+    public static async listPermissions(listParams: ListPermissionParams = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Permission>> {
         try {
             const response = await ObjectModule.list({
                 objectType: ObjectType.Permission,
-                ...listOptions,
+                ...listParams,
             }, options);
 
-            const permissions: Permission[] = response.results.map((object: WarrantObjectLiteral) => new Permission(object.objectId, object.meta));
+            const permissions: Permission[] = response.results.map((object: BaseWarrantObject) => new Permission(object.objectId, object.meta));
             return {
                 ...response,
                 results: permissions,
@@ -84,9 +100,9 @@ export default class Permission implements WarrantObject {
         }
     }
 
-    public static async listPermissionsForUser(userId: string, listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Permission>> {
+    public static async listPermissionsForUser(userId: string, listParams: ListPermissionParams = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Permission>> {
         try {
-            const queryResponse = await WarrantModule.query(`select permission where user:${userId} is *`, listOptions, options);
+            const queryResponse = await WarrantModule.query(`select permission where user:${userId} is *`, listParams, options);
             const permissions: Permission[] = queryResponse.results.map((queryResult: QueryResult) => new Permission(queryResult.objectId, queryResult.meta));
 
             return {
@@ -126,9 +142,9 @@ export default class Permission implements WarrantObject {
         }, options);
     }
 
-    public static async listPermissionsForRole(roleId: string, listOptions: ListPermissionOptions = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Permission>> {
+    public static async listPermissionsForRole(roleId: string, listParams: ListPermissionParams = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Permission>> {
         try {
-            const queryResponse = await WarrantModule.query(`select permission where role:${roleId} is *`, listOptions, options);
+            const queryResponse = await WarrantModule.query(`select permission where role:${roleId} is *`, listParams, options);
             const permissions: Permission[] = queryResponse.results.map((queryResult: QueryResult) => new Permission(queryResult.objectId, queryResult.meta));
 
             return {

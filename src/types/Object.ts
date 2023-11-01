@@ -1,4 +1,4 @@
-import ListOptions from "./List";
+import { ListParams } from "./List";
 
 export interface WarrantObject {
     getObjectType(): string;
@@ -8,13 +8,6 @@ export interface WarrantObject {
 export interface WarrantObjectLiteral {
     objectType: string;
     objectId: string;
-    meta?: { [key: string]: any };
-}
-
-export interface CreateWarrantObjectLiteral {
-    objectType: string;
-    objectId?: string;
-    meta?: { [key: string]: any };
 }
 
 export function isWarrantObject(object: any): object is WarrantObject {
@@ -22,15 +15,30 @@ export function isWarrantObject(object: any): object is WarrantObject {
 }
 
 export interface CreateObjectParams {
-    object: WarrantObject | CreateWarrantObjectLiteral;
+    object: WarrantObject | WarrantObjectLiteral;
     meta?: { [key: string]: any };
 }
 
-export interface ListObjectOptions extends ListOptions {
+export interface GetObjectParams {
+    object: WarrantObject | WarrantObjectLiteral;
+}
+
+export interface ListObjectParams extends ListParams {
     objectType?: string;
     q?: string;
 }
 
+export interface UpdateObjectParams {
+    object: WarrantObject | WarrantObjectLiteral;
+    meta?: { [key: string]: any };
+}
+
 export interface DeleteObjectParams {
     object: WarrantObject | WarrantObjectLiteral;
+}
+
+export interface BaseWarrantObject {
+    objectType: string;
+    objectId: string;
+    meta?: { [key: string]: any };
 }

@@ -1,4 +1,4 @@
-export default interface ListOptions {
+export interface ListParams {
     prevCursor?: string;
     nextCursor?: string;
     sortBy?: string;
