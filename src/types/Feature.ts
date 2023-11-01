@@ -1,7 +1,12 @@
-import ListOptions from "./ListOptions";
-
-export interface ListFeatureOptions extends ListOptions { }
+import { ListParams } from "./List";
 
 export interface CreateFeatureParams {
-    featureId: string;
+    featureId?: string;
+    meta?: { [key: string]: any };
+}
+
+export interface ListFeatureParams extends ListParams {}
+
+export interface UpdateFeatureParams {
+    meta?: { [key: string]: any };
 }

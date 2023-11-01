@@ -1,43 +1,70 @@
-import Warrant, { PolicyContext, Subject, WarrantObject, WarrantObjectLiteral } from "./Warrant";
+import {
+    isWarrantObject,
+    WarrantObject,
+    WarrantObjectLiteral,
+} from "./Object";
+import {
+    isSubject,
+    PolicyContext,
+    Subject,
+} from "./Warrant";
 
 export enum CheckOp {
     AllOf = "allOf",
     AnyOf = "anyOf",
 }
 
-export interface CheckWarrant {
+export interface CheckWarrantParams {
     object: WarrantObject | WarrantObjectLiteral;
     relation: string;
     subject: WarrantObject | Subject;
     context?: PolicyContext;
 }
 
-export default interface Check extends CheckWarrant {
+export interface CheckParams extends CheckWarrantParams {
     debug?: boolean;
 }
 
-export interface CheckMany {
+export interface CheckManyParams {
     op?: CheckOp;
-    warrants: CheckWarrant[];
+    warrants: CheckWarrantParams[];
     debug?: boolean;
 }
 
-export interface FeatureCheck {
+export interface FeatureCheckParams {
     featureId: string;
     subject: WarrantObject | Subject;
     context?: PolicyContext;
     debug?: boolean;
 }
 
-export interface PermissionCheck {
+export interface PermissionCheckParams {
     permissionId: string;
     subject: WarrantObject | Subject;
     context?: PolicyContext;
     debug?: boolean;
 }
 
-export interface AccessCheckRequest {
+export interface CheckWarrant {
+    objectType: string;
+    objectId: string;
+    relation: string;
+    subject: Subject;
+    context: PolicyContext;
+}
+
+export interface Check {
     op?: CheckOp;
     warrants: CheckWarrant[];
     debug?: boolean;
+}
+
+export function checkWarrantParamsToCheckWarrant(checkWarrantParams: CheckWarrantParams): CheckWarrant {
+    return {
+        objectType: isWarrantObject(checkWarrantParams.object) ? checkWarrantParams.object.getObjectType() : checkWarrantParams.object.objectType,
+        objectId: isWarrantObject(checkWarrantParams.object) ? checkWarrantParams.object.getObjectId() : checkWarrantParams.object.objectId,
+        relation: checkWarrantParams.relation,
+        subject: isSubject(checkWarrantParams.subject) ? checkWarrantParams.subject : { objectType: checkWarrantParams.subject.getObjectType(), objectId: checkWarrantParams.subject.getObjectId() },
+        context: checkWarrantParams.context
+    }
 }

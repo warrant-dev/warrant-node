@@ -1,14 +1,14 @@
-import ListOptions from "./ListOptions";
+import { ListParams } from "./List";
 
-export interface ListRoleOptions extends ListOptions { }
+export interface ListRoleParams extends ListParams { }
 
 export interface CreateRoleParams {
-    roleId: string;
-    name?: string;
-    description?: string;
+    roleId?: string;
+    meta?: { [key: string]: any };
 }
 
+export interface ListRoleParams extends ListParams {}
+
 export interface UpdateRoleParams {
-    name?: string;
-    description?: string;
+    meta?: { [key: string]: any };
 }

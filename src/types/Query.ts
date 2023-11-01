@@ -1,18 +1,12 @@
-import Warrant from "./Warrant";
-
-export interface QueryOptions {
-    lastId?: string;
-}
-
-export interface QueryResponse {
-    results: QueryResult[];
-    lastId?: string;
-}
+import { Warrant } from "./Warrant";
+import { ListParams } from "./List";
 
 export interface QueryResult {
     objectType: string;
     objectId: string;
     warrant: Warrant;
     isImplicit: boolean;
-    meta: { [key: string]: any; };
+    meta?: { [key: string]: any; };
 }
+
+export interface QueryListParams extends ListParams {}

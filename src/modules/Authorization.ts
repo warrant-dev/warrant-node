@@ -1,120 +1,96 @@
-import Feature from "./Feature";
-import Permission from "./Permission";
-import Check, { AccessCheckRequest, CheckMany, CheckWarrant, FeatureCheck, PermissionCheck } from "../types/Check";
+import {
+    Check,
+    CheckParams,
+    CheckManyParams,
+    FeatureCheckParams,
+    PermissionCheckParams,
+    checkWarrantParamsToCheckWarrant,
+} from "../types/Check";
+import { ObjectType } from "../types/ObjectType";
 import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
-import Warrant, { isSubject, isWarrantObject } from "../types/Warrant";
 import WarrantClient from "../WarrantClient";
+import { API_VERSION } from "../constants";
 
 export default class Authorization {
-    public static async check(check: Check, options: WarrantRequestOptions = {}): Promise<boolean> {
-        const accessCheckRequest: AccessCheckRequest = {
-            warrants: [{
-                object: check.object,
-                relation: check.relation,
-                subject: check.subject,
-                context: check.context
-            }],
-            debug: check.debug
+    public static async check(checkParams: CheckParams, options: WarrantRequestOptions = {}): Promise<boolean> {
+        const check: Check = {
+            warrants: [checkWarrantParamsToCheckWarrant(checkParams)],
+            debug: checkParams.debug
         }
         if (WarrantClient.config.authorizeEndpoint) {
-            return this.edgeAuthorize(accessCheckRequest, options);
+            return this.makeEdgeCheckRequest(check, options);
         }
 
-        return this.authorize(accessCheckRequest, options);
+        return this.makeCheckRequest(check, options);
     }
 
-    public static async checkMany(check: CheckMany, options: WarrantRequestOptions = {}): Promise<boolean> {
-        let warrants: CheckWarrant[] = check.warrants.map((warrant) => {
-            return {
-                object: warrant.object,
-                relation: warrant.relation,
-                subject: warrant.subject,
-                context: warrant.context
-            }
-        })
-        const accessCheckRequest: AccessCheckRequest = {
-            op: check.op,
-            warrants: warrants,
-            debug: check.debug
-        }
+    public static async checkMany(checkParams: CheckManyParams, options: WarrantRequestOptions = {}): Promise<boolean> {
+        const check: Check = {
+            op: checkParams.op,
+            warrants: checkParams.warrants.map((checkWarrantParams) => checkWarrantParamsToCheckWarrant(checkWarrantParams)),
+            debug: checkParams.debug
+        };
 
         if (WarrantClient.config.authorizeEndpoint) {
-            return this.edgeAuthorize(accessCheckRequest, options);
+            return this.makeEdgeCheckRequest(check, options);
         }
 
-        return this.authorize(accessCheckRequest, options);
+        return this.makeCheckRequest(check, options);
     }
 
-    public static async hasFeature(featureCheck: FeatureCheck, options: WarrantRequestOptions = {}): Promise<boolean> {
+    public static async hasFeature(featureCheckParams: FeatureCheckParams, options: WarrantRequestOptions = {}): Promise<boolean> {
         return this.check({
-            object: new Feature(featureCheck.featureId),
+            object: {
+                objectType: ObjectType.Feature,
+                objectId: featureCheckParams.featureId,
+            },
             relation: "member",
-            subject: featureCheck.subject,
-            context: featureCheck.context,
-            debug: featureCheck.debug
+            subject: featureCheckParams.subject,
+            context: featureCheckParams.context,
+            debug: featureCheckParams.debug
         }, options)
     }
 
-    public static async hasPermission(permissionCheck: PermissionCheck, options: WarrantRequestOptions = {}): Promise<boolean> {
+    public static async hasPermission(permissionCheckParams: PermissionCheckParams, options: WarrantRequestOptions = {}): Promise<boolean> {
         return this.check({
-            object: new Permission(permissionCheck.permissionId),
+            object: {
+                objectType: ObjectType.Permission,
+                objectId: permissionCheckParams.permissionId,
+            },
             relation: "member",
-            subject: permissionCheck.subject,
-            context: permissionCheck.context,
-            debug: permissionCheck.debug
+            subject: permissionCheckParams.subject,
+            context: permissionCheckParams.context,
+            debug: permissionCheckParams.debug
         }, options)
     }
 
     // Private methods
-    private static async authorize(accessCheckRequest: AccessCheckRequest, options: WarrantRequestOptions = {}): Promise<boolean> {
-        try {
+    private static async makeCheckRequest(check: Check, options: WarrantRequestOptions = {}): Promise<boolean> {
+        const response = await WarrantClient.httpClient.post({
+            url: `/${API_VERSION}/check`,
+            data: check,
+            options,
+        });
 
-            const response = await WarrantClient.httpClient.post({
-                url: "/v2/authorize",
-                data: {
-                    ...accessCheckRequest,
-                    warrants: this.mapWarrantsForRequest(accessCheckRequest.warrants),
-                },
-                options,
-            });
-
-            return response.code === 200;
-        } catch (e) {
-            throw e;
-        }
+        return response.code === 200;
     }
 
-    private static async edgeAuthorize(accessCheckRequest: AccessCheckRequest, options: WarrantRequestOptions = {}): Promise<boolean> {
+    private static async makeEdgeCheckRequest(check: Check, options: WarrantRequestOptions = {}): Promise<boolean> {
         try {
             const response = await WarrantClient.httpClient.post({
                 baseUrl: WarrantClient.config.authorizeEndpoint,
-                url: "/v2/authorize",
-                data: {
-                    ...accessCheckRequest,
-                    warrants: this.mapWarrantsForRequest(accessCheckRequest.warrants),
-                },
+                url: `/${API_VERSION}/check`,
+                data: check,
                 options,
             });
 
             return response.code === 200;
         } catch (e) {
             if (e.code === "cache_not_ready") {
-                return this.authorize(accessCheckRequest);
+                return this.makeCheckRequest(check);
             }
 
             throw e;
         }
-    }
-
-    private static mapWarrantsForRequest(warrants: CheckWarrant[]): any[] {
-        return warrants.map((warrant) => {
-            return {
-                objectType: isWarrantObject(warrant.object) ? warrant.object.getObjectType() : warrant.object.objectType,
-                objectId: isWarrantObject(warrant.object) ? warrant.object.getObjectId() : warrant.object.objectId,
-                relation: warrant.relation,
-                subject: isSubject(warrant.subject) ? warrant.subject : { objectType: warrant.subject.getObjectType(), objectId: warrant.subject.getObjectId() },
-                context: warrant.context
-            }
-        })
     }
 }

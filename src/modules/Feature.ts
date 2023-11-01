@@ -1,81 +1,91 @@
-import WarrantModule from "./WarrantModule";
-import WarrantClient from "../WarrantClient";
-import { CreateFeatureParams, ListFeatureOptions } from "../types/Feature";
-import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
-import Warrant, { WarrantObject } from "../types/Warrant";
+import {
+    CreateFeatureParams,
+    ListFeatureParams,
+    UpdateFeatureParams,
+    ListResponse,
+    QueryResult,
+    Warrant,
+    WarrantObject,
+    BaseWarrantObject,
+} from "../types";
 import { ObjectType } from "../types/ObjectType";
+import ObjectModule from "./ObjectModule";
+import WarrantModule from "./WarrantModule";
+import { WarrantRequestOptions } from "../types/WarrantRequestOptions";
 
 export default class Feature implements WarrantObject {
     featureId: string;
+    meta?: { [key: string]: any }
 
-    constructor(featureId: string) {
+    constructor(featureId: string, meta: { [key: string]: any }) {
         this.featureId = featureId;
+        this.meta = meta;
     }
 
     //
     // Static methods
     //
-    public static async create(feature: CreateFeatureParams, options: WarrantRequestOptions = {}): Promise<Feature> {
-        try {
-            const response = await WarrantClient.httpClient.post({
-                url: "/v1/features",
-                data: feature,
-                options,
-            });
+    public static async create(params: CreateFeatureParams = {}, options: WarrantRequestOptions = {}): Promise<Feature> {
+        const response = await ObjectModule.create({
+            object: {
+                objectType: ObjectType.Feature,
+                objectId: params.featureId,
+            },
+            meta: params.meta,
+        }, options);
 
-            return new Feature(response.featureId);
-        } catch (e) {
-            throw e;
-        }
+        return new Feature(response.objectId, response.meta);
     }
 
     public static async get(featureId: string, options: WarrantRequestOptions = {}): Promise<Feature> {
-        try {
-            const response = await WarrantClient.httpClient.get({
-                url: `/v1/features/${featureId}`,
-                options,
-            });
+        const response = await ObjectModule.get({
+            objectType: ObjectType.Feature,
+            objectId: featureId,
+        }, options);
+        return new Feature(response.objectId, response.meta);
+    }
 
-            return new Feature(response.featureId);
+    public static async update(featureId: string, params: UpdateFeatureParams, options: WarrantRequestOptions = {}): Promise<Feature> {
+        const response = await ObjectModule.update({
+            objectType: ObjectType.Feature,
+            objectId: featureId,
+        }, { meta: params.meta }, options);
+
+        return new Feature(response.objectId, response.meta);
+    }
+
+    public static async delete(featureId: string, options: WarrantRequestOptions = {}): Promise<string> {
+        return ObjectModule.delete({
+            objectType: ObjectType.Feature,
+            objectId: featureId,
+        }, options);
+    }
+
+    public static async listFeatures(listParams: ListFeatureParams = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Feature>> {
+        try {
+            const response = await ObjectModule.list({
+                objectType: ObjectType.Feature,
+                ...listParams,
+            }, options);
+
+            const features: Feature[] = response.results.map((object: BaseWarrantObject) => new Feature(object.objectId, object.meta));
+            return {
+                ...response,
+                results: features,
+            };
         } catch (e) {
             throw e;
         }
     }
 
-    public static async delete(featureId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async listFeaturesForPricingTier(pricingTierId: string, listParams: ListFeatureParams = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Feature>> {
         try {
-            return await WarrantClient.httpClient.delete({
-                url: `/v1/features/${featureId}`,
-                options,
-            });
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    public static async listFeatures(listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<Feature[]> {
-        try {
-            const response = await WarrantClient.httpClient.get({
-                url: "/v1/features",
-                params: listOptions,
-                options,
-            });
-
-            return response.map((feature: Feature) => new Feature(feature.featureId));
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    public static async listFeaturesForPricingTier(pricingTierId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<Feature[]> {
-        try {
-            const response = await WarrantClient.httpClient.get({
-                url: `/v1/pricing-tiers/${pricingTierId}/features`,
-                params: listOptions,
-                options,
-            });
-
-            return response.map((feature: Feature) => new Feature(feature.featureId));
+            const queryResponse = await WarrantModule.query(`select feature where pricing-tier:${pricingTierId} is *`, listParams, options);
+            const features: Feature[] = queryResponse.results.map((queryResult: QueryResult) => new Feature(queryResult.objectId, queryResult.meta));
+            return {
+                ...queryResponse,
+                results: features,
+            };
         } catch (e) {
             throw e;
         }
@@ -95,7 +105,7 @@ export default class Feature implements WarrantObject {
         }, options);
     }
 
-    public static async removeFeatureFromPricingTier(pricingTierId: string, featureId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async removeFeatureFromPricingTier(pricingTierId: string, featureId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.Feature,
@@ -109,15 +119,14 @@ export default class Feature implements WarrantObject {
         }, options);
     }
 
-    public static async listFeaturesForTenant(tenantId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<Feature[]> {
+    public static async listFeaturesForTenant(tenantId: string, listOptions: ListFeatureParams = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Feature>> {
         try {
-            const response = await WarrantClient.httpClient.get({
-                url: `/v1/tenants/${tenantId}/features`,
-                params: listOptions,
-                options,
-            });
-
-            return response.map((feature: Feature) => new Feature(feature.featureId));
+            const queryResponse = await WarrantModule.query(`select feature where tenant:${tenantId} is *`, listOptions, options);
+            const features: Feature[] = queryResponse.results.map((queryResult: QueryResult) => new Feature(queryResult.objectId, queryResult.meta));
+            return {
+                ...queryResponse,
+                results: features,
+            };
         } catch (e) {
             throw e;
         }
@@ -137,7 +146,7 @@ export default class Feature implements WarrantObject {
         }, options);
     }
 
-    public static async removeFeatureFromTenant(tenantId: string, featureId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async removeFeatureFromTenant(tenantId: string, featureId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.Feature,
@@ -151,15 +160,14 @@ export default class Feature implements WarrantObject {
         }, options);
     }
 
-    public static async listFeaturesForUser(userId: string, listOptions: ListFeatureOptions = {}, options: WarrantRequestOptions = {}): Promise<Feature[]> {
+    public static async listFeaturesForUser(userId: string, listOptions: ListFeatureParams = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Feature>> {
         try {
-            const response = await WarrantClient.httpClient.get({
-                url: `/v1/users/${userId}/features`,
-                params: listOptions,
-                options,
-            });
-
-            return response.map((feature: Feature) => new Feature(feature.featureId));
+            const queryResponse = await WarrantModule.query(`select feature where user:${userId} is *`, listOptions, options);
+            const features: Feature[] = queryResponse.results.map((queryResult: QueryResult) => new Feature(queryResult.objectId, queryResult.meta));
+            return {
+                ...queryResponse,
+                results: features,
+            };
         } catch (e) {
             throw e;
         }
@@ -179,7 +187,7 @@ export default class Feature implements WarrantObject {
         }, options);
     }
 
-    public static async removeFeatureFromUser(userId: string, featureId: string, options: WarrantRequestOptions = {}): Promise<void> {
+    public static async removeFeatureFromUser(userId: string, featureId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return WarrantModule.delete({
             object: {
                 objectType: ObjectType.Feature,

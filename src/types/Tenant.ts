@@ -1,12 +1,18 @@
-import ListOptions from "./ListOptions";
+import { ListParams } from "./List";
 
-export interface ListTenantOptions extends ListOptions { }
+export interface ListTenantParams extends ListParams { }
 
 export interface CreateTenantParams {
     tenantId?: string;
-    name?: string;
+    meta?: { [key: string]: any };
 }
 
+export interface ListTenantParams extends ListParams {}
+
 export interface UpdateTenantParams {
-    name?: string;
+    meta?: { [key: string]: any };
+}
+
+export interface DeleteTenantParams {
+    tenantId: string;
 }

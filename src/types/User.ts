@@ -1,12 +1,18 @@
-import ListOptions from "./ListOptions";
+import { ListParams } from "./List";
 
-export interface ListUserOptions extends ListOptions { }
+export interface ListUserParams extends ListParams { }
 
 export interface CreateUserParams {
     userId?: string;
-    email?: string;
+    meta?: { [key: string]: any };
 }
 
+export interface ListUserParams extends ListParams {}
+
 export interface UpdateUserParams {
-    email?: string;
+    meta?: { [key: string]: any };
+}
+
+export interface DeleteUserParams {
+    userId: string;
 }

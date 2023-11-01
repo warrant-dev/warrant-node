@@ -132,11 +132,21 @@ export default class ApiClient implements HttpClient {
 
     private async parseResponse(response: any): Promise<string | Object> {
         const resJson = await response.text();
+        const warrantToken = response.headers.get("Warrant-Token");
         if (resJson) {
-            return JSON.parse(resJson);
+            const parsedRes = JSON.parse(resJson);
+            if (warrantToken != null) {
+                parsedRes.warrantToken = warrantToken;
+            }
+
+            return parsedRes;
         }
 
-        return resJson;
+        if (warrantToken != null) {
+            return {warrantToken: warrantToken};
+        } else {
+           return resJson;
+        }
     }
 
     private buildError(errorResponse: any): Error {

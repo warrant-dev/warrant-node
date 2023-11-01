@@ -1,14 +1,14 @@
-import ListOptions from "./ListOptions";
+import { ListParams } from "./List";
 
-export interface ListPermissionOptions extends ListOptions { }
+export interface ListPermissionParams extends ListParams { }
 
 export interface CreatePermissionParams {
-    permissionId: string;
-    name?: string;
-    description?: string;
+    permissionId?: string;
+    meta?: { [key: string]: any };
 }
 
+export interface ListPermissionParams extends ListParams {}
+
 export interface UpdatePermissionParams {
-    name?: string;
-    description?: string;
+    meta?: { [key: string]: any };
 }
