@@ -2,6 +2,7 @@ import WarrantClient from "../WarrantClient";
 import { API_VERSION } from "../constants";
 import {
     ListResponse,
+    ListWarrantParams,
     QueryListParams,
     QueryResult,
     Warrant,
@@ -40,6 +41,25 @@ export default class WarrantModule {
         });
     }
 
+    public static async list(params: ListWarrantParams = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<Warrant>> {
+        return await WarrantClient.httpClient.get({
+            url: `/${API_VERSION}/warrants`,
+            params,
+            options,
+        });
+    }
+
+    public static async query(query: string, listParams: QueryListParams = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<QueryResult>> {
+        return await WarrantClient.httpClient.get({
+            url: `/${API_VERSION}/query`,
+            params: {
+                q: query,
+                ...listParams,
+            },
+            options,
+        });
+    }
+
     public static async delete(params: WarrantParams, options: WarrantRequestOptions = {}): Promise<string> {
         const response = await WarrantClient.httpClient.delete({
             url: `/${API_VERSION}/warrants`,
@@ -68,16 +88,5 @@ export default class WarrantModule {
             options,
         });
         return response.warrantToken;
-    }
-
-    public static async query(query: string, listParams: QueryListParams = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<QueryResult>> {
-        return await WarrantClient.httpClient.get({
-            url: `/${API_VERSION}/query`,
-            params: {
-                q: query,
-                ...listParams,
-            },
-            options,
-        });
     }
 }

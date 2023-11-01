@@ -651,35 +651,67 @@ describe.skip('Live Test', function () {
     });
 
     it('warrants', async function () {
-        const newUser = await this.warrant.User.create();
+        const user1 = await this.warrant.User.create();
+        const user2 = await this.warrant.User.create();
         const newPermission = await this.warrant.Permission.create({ permissionId: "perm1", meta: { name: "Permission 1", description: "Permission 1" }});
 
         let userHasPermission = await this.warrant.Authorization.check({
             object: newPermission,
             relation: "member",
-            subject: newUser
+            subject: user1
         }, {
             warrantToken: "latest"
         });
         assert.strictEqual(userHasPermission, false);
 
-        const newWarrant = await this.warrant.Warrant.create({
+        const warrant1 = await this.warrant.Warrant.create({
             object: newPermission,
             relation: "member",
-            subject: newUser
+            subject: user1
         });
-        assert(newWarrant.warrantToken);
+        assert(warrant1.warrantToken);
+
+        const warrant2 = await this.warrant.Warrant.create({
+            object: newPermission,
+            relation: "member",
+            subject: user2
+        });
+        assert(warrant2.warrantToken);
+
+        const warrants1 = await this.warrant.Warrant.list({ limit: 1 });
+        assert.strictEqual(warrants1.results.length, 1);
+        assert.strictEqual(warrants1.results[0].objectType, "permission");
+        assert.strictEqual(warrants1.results[0].objectId, "perm1");
+        assert.strictEqual(warrants1.results[0].relation, "member");
+        assert.strictEqual(warrants1.results[0].subject.objectType, "user");
+        assert.strictEqual(warrants1.results[0].subject.objectId, user1.userId);
+
+        const warrants2 = await this.warrant.Warrant.list({ limit: 1, nextCursor: warrants1.nextCursor });
+        assert.strictEqual(warrants2.results.length, 1);
+        assert.strictEqual(warrants2.results[0].objectType, "permission");
+        assert.strictEqual(warrants2.results[0].objectId, "perm1");
+        assert.strictEqual(warrants2.results[0].relation, "member");
+        assert.strictEqual(warrants2.results[0].subject.objectType, "user");
+        assert.strictEqual(warrants2.results[0].subject.objectId, user2.userId);
+
+        const warrants3 = await this.warrant.Warrant.list({ subjectId: user1.userId });
+        assert.strictEqual(warrants3.results.length, 1);
+        assert.strictEqual(warrants3.results[0].objectType, "permission");
+        assert.strictEqual(warrants3.results[0].objectId, "perm1");
+        assert.strictEqual(warrants3.results[0].relation, "member");
+        assert.strictEqual(warrants3.results[0].subject.objectType, "user");
+        assert.strictEqual(warrants3.results[0].subject.objectId, user1.userId);
 
         userHasPermission = await this.warrant.Authorization.check({
             object: newPermission,
             relation: "member",
-            subject: newUser
+            subject: user1
         }, {
             warrantToken: "latest"
         });
         assert.strictEqual(userHasPermission, true);
 
-        const query = `select permission where user:${newUser.userId} is member`;
+        const query = `select permission where user:${user1.userId} is member`;
         const response = await this.warrant.Warrant.query(query);
 
         assert.strictEqual(response.results.length, 1);
@@ -690,20 +722,20 @@ describe.skip('Live Test', function () {
         let warrantToken = await this.warrant.Warrant.delete({
             object: newPermission,
             relation: "member",
-            subject: newUser
+            subject: user1
         });
         assert(warrantToken);
 
         userHasPermission = await this.warrant.Authorization.check({
             object: newPermission,
             relation: "member",
-            subject: newUser
+            subject: user1
         }, {
             warrantToken: "latest"
         });
         assert.strictEqual(userHasPermission, false);
 
-        warrantToken = await this.warrant.User.delete(newUser.userId);
+        warrantToken = await this.warrant.User.delete(user1.userId);
         assert(warrantToken);
         warrantToken = await this.warrant.Permission.delete(newPermission.permissionId);
         assert(warrantToken);

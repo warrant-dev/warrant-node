@@ -6,7 +6,7 @@ export interface QueryResult {
     objectId: string;
     warrant: Warrant;
     isImplicit: boolean;
-    meta: { [key: string]: any; };
+    meta?: { [key: string]: any; };
 }
 
 export interface QueryListParams extends ListParams {}

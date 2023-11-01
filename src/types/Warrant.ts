@@ -5,7 +5,8 @@ export interface ListWarrantParams extends ListParams {
     objectType?: string;
     objectId?: string;
     relation?: string;
-    userId?: string;
+    subjectType?: string;
+    subjectId?: string;
 }
 
 export interface PolicyContext {
