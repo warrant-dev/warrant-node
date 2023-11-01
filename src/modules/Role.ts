@@ -5,8 +5,6 @@ import {
     ListPermissionParams,
     QueryResult,
     CreateRoleParams,
-    DeleteRoleParams,
-    GetRoleParams,
     ListRoleParams,
     UpdateRoleParams,
     Warrant,
@@ -44,35 +42,28 @@ export default class Role implements WarrantObject {
         return new Role(response.objectId, response.meta);
     }
 
-    public static async get(params: GetRoleParams, options: WarrantRequestOptions = {}): Promise<Role> {
+    public static async get(roleId: string, options: WarrantRequestOptions = {}): Promise<Role> {
         const response = await ObjectModule.get({
-            object: {
-                objectType: ObjectType.Role,
-                objectId: params.roleId,
-            },
+            objectType: ObjectType.Role,
+            objectId: roleId,
         }, options);
 
         return new Role(response.objectId, response.meta);
     }
 
-    public static async update(params: UpdateRoleParams, options: WarrantRequestOptions = {}): Promise<Role> {
+    public static async update(roleId: string, params: UpdateRoleParams, options: WarrantRequestOptions = {}): Promise<Role> {
         const response = await ObjectModule.update({
-            object: {
-                objectType: ObjectType.Role,
-                objectId: params.roleId,
-            },
-            meta: params.meta,
-        }, options);
+            objectType: ObjectType.Role,
+            objectId: roleId,
+        }, { meta: params.meta }, options);
 
         return new Role(response.objectId, response.meta);
     }
 
-    public static async delete(params: DeleteRoleParams, options: WarrantRequestOptions = {}): Promise<string> {
+    public static async delete(roleId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return ObjectModule.delete({
-            object: {
-                objectType: ObjectType.Role,
-                objectId: params.roleId,
-            },
+            objectType: ObjectType.Role,
+            objectId: roleId,
         }, options);
     }
 

@@ -7,7 +7,6 @@ import {
     QueryResult,
     CreateTenantParams,
     DeleteTenantParams,
-    GetTenantParams,
     ListTenantParams,
     UpdateTenantParams,
     ListUserParams,
@@ -60,35 +59,28 @@ export default class Tenant implements WarrantObject {
         return response.map((object: BaseWarrantObject) => new Tenant(object.objectId, object.meta));
     }
 
-    public static async get(params: GetTenantParams, options: WarrantRequestOptions = {}): Promise<Tenant> {
+    public static async get(tenantId: string, options: WarrantRequestOptions = {}): Promise<Tenant> {
         const response = await ObjectModule.get({
-            object: {
-                objectType: ObjectType.Tenant,
-                objectId: params.tenantId,
-            },
+            objectType: ObjectType.Tenant,
+            objectId: tenantId,
         }, options);
 
         return new Tenant(response.objectId, response.meta);
     }
 
-    public static async update(params: UpdateTenantParams, options: WarrantRequestOptions = {}): Promise<Tenant> {
+    public static async update(tenantId: string, params: UpdateTenantParams, options: WarrantRequestOptions = {}): Promise<Tenant> {
         const response = await ObjectModule.update({
-            object: {
-                objectType: ObjectType.Tenant,
-                objectId: params.tenantId,
-            },
-            meta: params.meta,
-        }, options);
+            objectType: ObjectType.Tenant,
+            objectId: tenantId,
+        }, { meta: params.meta }, options);
 
         return new Tenant(response.objectId, response.meta);
     }
 
-    public static async delete(params: DeleteTenantParams, options: WarrantRequestOptions = {}): Promise<string> {
+    public static async delete(tenantId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return ObjectModule.delete({
-            object: {
-                objectType: ObjectType.Tenant,
-                objectId: params.tenantId,
-            },
+            objectType: ObjectType.Tenant,
+            objectId: tenantId,
         }, options);
     }
 

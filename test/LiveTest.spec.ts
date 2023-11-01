@@ -14,12 +14,12 @@ describe.skip('Live Test', function () {
         assert.strictEqual(user1.meta, undefined);
 
         let user2 = await this.warrant.User.create({ userId: "zz_some_id", meta: { email: "test@email.com" } });
-        let refetchedUser = await this.warrant.User.get({ userId: user2.userId }, { warrantToken: "latest" });
+        let refetchedUser = await this.warrant.User.get(user2.userId, { warrantToken: "latest" });
         assert.strictEqual(user2.userId, refetchedUser.userId);
         assert.deepStrictEqual(user2.meta, { email: "test@email.com" });
 
-        user2 = await this.warrant.User.update({ userId: "zz_some_id", meta: { email: "updated@email.com" } });
-        refetchedUser = await this.warrant.User.get({ userId: "zz_some_id" }, { warrantToken: "latest" });
+        user2 = await this.warrant.User.update("zz_some_id", { meta: { email: "updated@email.com" } });
+        refetchedUser = await this.warrant.User.get("zz_some_id", { warrantToken: "latest" });
         assert.strictEqual(refetchedUser.userId, "zz_some_id");
         assert.deepStrictEqual(refetchedUser.meta, { email: "updated@email.com" });
 
@@ -28,9 +28,9 @@ describe.skip('Live Test', function () {
         assert.strictEqual(usersList.results[0].userId, user1.userId);
         assert.strictEqual(usersList.results[1].userId, refetchedUser.userId);
 
-        let warrantToken = await this.warrant.User.delete({ userId: user1.userId });
+        let warrantToken = await this.warrant.User.delete(user1.userId);
         assert(warrantToken);
-        warrantToken = await this.warrant.User.delete({ userId: user2.userId });
+        warrantToken = await this.warrant.User.delete(user2.userId);
         assert(warrantToken);
         usersList = await this.warrant.User.listUsers({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(usersList.results.length, 0);
@@ -69,12 +69,12 @@ describe.skip('Live Test', function () {
         assert.strictEqual(tenant1.meta, undefined);
 
         let tenant2 = await this.warrant.Tenant.create({ tenantId: "zz_some_tenant_id", meta: { name: "new_name" } });
-        let refetchedTenant = await this.warrant.Tenant.get({ tenantId: tenant2.tenantId }, { warrantToken: "latest" });
+        let refetchedTenant = await this.warrant.Tenant.get(tenant2.tenantId, { warrantToken: "latest" });
         assert.strictEqual(tenant2.tenantId, refetchedTenant.tenantId);
         assert.deepStrictEqual(tenant2.meta, { name: "new_name" });
 
-        tenant2 = await this.warrant.Tenant.update({ tenantId: "zz_some_tenant_id", meta: { name: "updated_name" } });
-        refetchedTenant = await this.warrant.Tenant.get({ tenantId: "zz_some_tenant_id" }, { warrantToken: "latest" });
+        tenant2 = await this.warrant.Tenant.update("zz_some_tenant_id", { meta: { name: "updated_name" } });
+        refetchedTenant = await this.warrant.Tenant.get("zz_some_tenant_id", { warrantToken: "latest" });
         assert.strictEqual(refetchedTenant.tenantId, "zz_some_tenant_id");
         assert.deepStrictEqual(refetchedTenant.meta, { name: "updated_name" });
 
@@ -83,9 +83,9 @@ describe.skip('Live Test', function () {
         assert.strictEqual(tenantsList.results[0].tenantId, tenant1.tenantId);
         assert.strictEqual(tenantsList.results[1].tenantId, refetchedTenant.tenantId);
 
-        let warrantToken = await this.warrant.Tenant.delete({ tenantId: tenant1.tenantId });
+        let warrantToken = await this.warrant.Tenant.delete(tenant1.tenantId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Tenant.delete({ tenantId: tenant2.tenantId });
+        warrantToken = await this.warrant.Tenant.delete(tenant2.tenantId);
         assert(warrantToken);
         tenantsList = await this.warrant.Tenant.listTenants({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(tenantsList.results.length, 0);
@@ -124,12 +124,12 @@ describe.skip('Live Test', function () {
         assert.deepStrictEqual(adminRole.meta, { name: "Admin", description: "The admin role" });
 
         let viewerRole = await this.warrant.Role.create({ roleId: "viewer", meta: { name: "Viewer", description: "The viewer role" } });
-        let refetchedRole = await this.warrant.Role.get({ roleId: viewerRole.roleId }, { warrantToken: "latest" });
+        let refetchedRole = await this.warrant.Role.get(viewerRole.roleId, { warrantToken: "latest" });
         assert.strictEqual(viewerRole.roleId, refetchedRole.roleId);
         assert.deepStrictEqual(viewerRole.meta, refetchedRole.meta);
 
-        viewerRole = await this.warrant.Role.update({ roleId: "viewer", meta: { name: "Viewer Updated", description: "Updated desc" } });
-        refetchedRole = await this.warrant.Role.get({ roleId: "viewer" }, { warrantToken: "latest" });
+        viewerRole = await this.warrant.Role.update("viewer", { meta: { name: "Viewer Updated", description: "Updated desc" } });
+        refetchedRole = await this.warrant.Role.get("viewer", { warrantToken: "latest" });
         assert.strictEqual(refetchedRole.roleId, "viewer");
         assert.deepStrictEqual(refetchedRole.meta, { name: "Viewer Updated", description: "Updated desc" });
 
@@ -138,9 +138,9 @@ describe.skip('Live Test', function () {
         assert.strictEqual(rolesList.results[0].roleId, "admin");
         assert.strictEqual(rolesList.results[1].roleId, "viewer");
 
-        let warrantToken = await this.warrant.Role.delete({ roleId: adminRole.roleId });
+        let warrantToken = await this.warrant.Role.delete(adminRole.roleId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Role.delete({ roleId: viewerRole.roleId });
+        warrantToken = await this.warrant.Role.delete(viewerRole.roleId);
         assert(warrantToken);
         rolesList = await this.warrant.Role.listRoles({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(rolesList.results.length, 0);
@@ -152,12 +152,12 @@ describe.skip('Live Test', function () {
         assert.deepStrictEqual(permission1.meta, { name: "Permission 1", description: "Permission with id 1" });
 
         let permission2 = await this.warrant.Permission.create({ permissionId: "perm2", name: "Permission 2", description: "Permission with id 2" });
-        let refetchedPermission = await this.warrant.Permission.get({ permissionId: permission2.permissionId }, { warrantToken: "latest" });
+        let refetchedPermission = await this.warrant.Permission.get(permission2.permissionId, { warrantToken: "latest" });
         assert.strictEqual(permission2.permissionId, refetchedPermission.permissionId);
         assert.deepStrictEqual(permission2.meta, refetchedPermission.meta);
 
-        permission2 = await this.warrant.Permission.update({ permissionId: "perm2", meta: { name: "Permission 2 Updated", description: "Updated desc" } });
-        refetchedPermission = await this.warrant.Permission.get({ permissionId: "perm2" }, { warrantToken: "latest" });
+        permission2 = await this.warrant.Permission.update("perm2", { meta: { name: "Permission 2 Updated", description: "Updated desc" } });
+        refetchedPermission = await this.warrant.Permission.get("perm2", { warrantToken: "latest" });
         assert.strictEqual(refetchedPermission.permissionId, "perm2");
         assert.deepStrictEqual(refetchedPermission.meta, { name: "Permission 2 Updated", description: "Updated desc" });
 
@@ -166,9 +166,9 @@ describe.skip('Live Test', function () {
         assert.strictEqual(permissionsList.results[0].permissionId, "perm1");
         assert.strictEqual(permissionsList.results[1].permissionId, "perm2");
 
-        let warrantToken = await this.warrant.Permission.delete({ permissionId: permission1.permissionId });
+        let warrantToken = await this.warrant.Permission.delete(permission1.permissionId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Permission.delete({ permissionId: permission2.permissionId });
+        warrantToken = await this.warrant.Permission.delete(permission2.permissionId);
         assert(warrantToken);
         permissionsList = await this.warrant.Permission.listPermissions({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(permissionsList.results.length, 0);
@@ -180,12 +180,12 @@ describe.skip('Live Test', function () {
         assert.deepStrictEqual(feature1.meta, { name: "New Feature" });
 
         let feature2 = await this.warrant.Feature.create({ featureId: "feature-2" });
-        let refetchedFeature = await this.warrant.Feature.get({ featureId: feature2.featureId }, { warrantToken: "latest" });
+        let refetchedFeature = await this.warrant.Feature.get(feature2.featureId, { warrantToken: "latest" });
         assert.strictEqual(feature2.featureId, refetchedFeature.featureId);
         assert.deepStrictEqual(feature2.meta, refetchedFeature.meta);
 
-        feature2 = await this.warrant.Feature.update({ featureId: "feature-2", meta: { name: "Feature 2", description: "Second feature" } });
-        refetchedFeature = await this.warrant.Feature.get({ featureId: feature2.featureId }, { warrantToken: "latest" });
+        feature2 = await this.warrant.Feature.update("feature-2", { meta: { name: "Feature 2", description: "Second feature" } });
+        refetchedFeature = await this.warrant.Feature.get(feature2.featureId, { warrantToken: "latest" });
         assert.strictEqual(refetchedFeature.featureId, "feature-2");
         assert.deepStrictEqual(refetchedFeature.meta, { name: "Feature 2", description: "Second feature" });
 
@@ -194,9 +194,9 @@ describe.skip('Live Test', function () {
         assert.strictEqual(featuresList.results[0].featureId, refetchedFeature.featureId);
         assert.strictEqual(featuresList.results[1].featureId, feature1.featureId);
 
-        let warrantToken = await this.warrant.Feature.delete({ featureId: feature1.featureId });
+        let warrantToken = await this.warrant.Feature.delete(feature1.featureId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Feature.delete({ featureId: feature2.featureId });
+        warrantToken = await this.warrant.Feature.delete(feature2.featureId);
         assert(warrantToken);
         featuresList = await this.warrant.Feature.listFeatures({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(featuresList.results.length, 0);
@@ -208,12 +208,12 @@ describe.skip('Live Test', function () {
         assert.deepStrictEqual(tier1.meta, { name: "New Pricing Tier" });
 
         let tier2 = await this.warrant.PricingTier.create({ pricingTierId: "tier-2" });
-        let refetchedTier = await this.warrant.PricingTier.get({ pricingTierId: tier2.pricingTierId }, { warrantToken: "latest" });
+        let refetchedTier = await this.warrant.PricingTier.get(tier2.pricingTierId, { warrantToken: "latest" });
         assert.strictEqual(tier2.pricingTierId, refetchedTier.pricingTierId);
         assert.deepStrictEqual(tier2.meta, refetchedTier.meta);
 
-        tier2 = await this.warrant.PricingTier.update({ pricingTierId: "tier-2", meta: { name: "Tier 2", description: "New pricing tier" } });
-        refetchedTier = await this.warrant.PricingTier.get({ pricingTierId: tier2.pricingTierId }, { warrantToken: "latest" });
+        tier2 = await this.warrant.PricingTier.update("tier-2", { meta: { name: "Tier 2", description: "New pricing tier" } });
+        refetchedTier = await this.warrant.PricingTier.get(tier2.pricingTierId, { warrantToken: "latest" });
         assert.strictEqual(refetchedTier.pricingTierId, "tier-2");
         assert.deepStrictEqual(refetchedTier.meta, { name: "Tier 2", description: "New pricing tier" });
 
@@ -222,9 +222,9 @@ describe.skip('Live Test', function () {
         assert.strictEqual(tiersList.results[0].pricingTierId, tier1.pricingTierId);
         assert.strictEqual(tiersList.results[1].pricingTierId, tier2.pricingTierId);
 
-        let warrantToken = await this.warrant.PricingTier.delete({ pricingTierId: tier1.pricingTierId });
+        let warrantToken = await this.warrant.PricingTier.delete(tier1.pricingTierId);
         assert(warrantToken);
-        warrantToken = await this.warrant.PricingTier.delete({ pricingTierId: tier2.pricingTierId });
+        warrantToken = await this.warrant.PricingTier.delete(tier2.pricingTierId);
         assert(warrantToken);
         tiersList = await this.warrant.PricingTier.listPricingTiers({ limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(tiersList.results.length, 0);
@@ -237,13 +237,13 @@ describe.skip('Live Test', function () {
         assert.strictEqual(object1.meta, undefined);
 
         let object2 = await this.warrant.Object.create({ object: { objectType: "folder", objectId: "planning" }});
-        let refetchedObject = await this.warrant.Object.get({ object: object2 }, { warrantToken: "latest" });
+        let refetchedObject = await this.warrant.Object.get(object2, { warrantToken: "latest" });
         assert.strictEqual(refetchedObject.objectType, object2.objectType);
         assert.strictEqual(refetchedObject.objectId, object2.objectId);
         assert.deepStrictEqual(refetchedObject.meta, object2.meta);
 
-        object2 = await this.warrant.Object.update({ object: object2, meta: { description: "Second document" } } );
-        refetchedObject = await this.warrant.Object.get({ object: object2 }, { warrantToken: "latest" });
+        object2 = await this.warrant.Object.update(object2, { meta: { description: "Second document" } } );
+        refetchedObject = await this.warrant.Object.get(object2, { warrantToken: "latest" });
         assert.strictEqual(refetchedObject.objectType, object2.objectType);
         assert.strictEqual(refetchedObject.objectId, object2.objectId);
         assert.deepStrictEqual(refetchedObject.meta, object2.meta);
@@ -260,9 +260,9 @@ describe.skip('Live Test', function () {
         assert.strictEqual(objectsList.results[0].objectType, object2.objectType);
         assert.strictEqual(objectsList.results[0].objectId, object2.objectId);
 
-        let warrantToken = await this.warrant.Object.delete({ object: object1 });
+        let warrantToken = await this.warrant.Object.delete(object1);
         assert(warrantToken);
-        warrantToken = await this.warrant.Object.delete({ object: object2 });
+        warrantToken = await this.warrant.Object.delete(object2);
         assert(warrantToken);
         objectsList = await this.warrant.Object.list({ sortBy: "createdAt", limit: 10 }, { warrantToken: "latest" });
         assert.strictEqual(objectsList.results.length, 0);
@@ -287,10 +287,8 @@ describe.skip('Live Test', function () {
         assert.deepStrictEqual(fetchedObjects.results[2].meta, { description: "Helpful documents" });
 
         const folderResource = await this.warrant.Object.get({
-            object: {
-                objectType: "folder",
-                objectId: "resources"
-            }
+            objectType: "folder",
+            objectId: "resources"
         }, { warrantToken: "latest" });
         assert.strictEqual(folderResource.objectType, "folder");
         assert.strictEqual(folderResource.objectId, "resources");
@@ -342,13 +340,13 @@ describe.skip('Live Test', function () {
         assert.strictEqual(tenant1UsersList.results.length, 0);
 
         // Clean up
-        let warrantToken = await this.warrant.User.delete({ userId: user1.userId });
+        let warrantToken = await this.warrant.User.delete(user1.userId);
         assert(warrantToken);
-        warrantToken = await this.warrant.User.delete({ userId: user2.userId });
+        warrantToken = await this.warrant.User.delete(user2.userId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Tenant.delete({ tenantId: tenant1.tenantId });
+        warrantToken = await this.warrant.Tenant.delete(tenant1.tenantId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Tenant.delete({ tenantId: tenant2.tenantId });
+        warrantToken = await this.warrant.Tenant.delete(tenant2.tenantId);
         assert(warrantToken);
     });
 
@@ -428,17 +426,17 @@ describe.skip('Live Test', function () {
         assert.strictEqual(viewerUserPermissionsList.results.length, 0);
 
         // Clean up
-        let warrantToken = await this.warrant.User.delete({ userId: adminUser.userId });
+        let warrantToken = await this.warrant.User.delete(adminUser.userId);
         assert(warrantToken);
-        warrantToken = await this.warrant.User.delete({ userId: viewerUser.userId });
+        warrantToken = await this.warrant.User.delete(viewerUser.userId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Role.delete({ roleId: adminRole.roleId });
+        warrantToken = await this.warrant.Role.delete(adminRole.roleId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Role.delete({ roleId: viewerRole.roleId });
+        warrantToken = await this.warrant.Role.delete(viewerRole.roleId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Permission.delete({ permissionId: createPermission.permissionId });
+        warrantToken = await this.warrant.Permission.delete(createPermission.permissionId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Permission.delete({ permissionId: viewPermission.permissionId });
+        warrantToken = await this.warrant.Permission.delete(viewPermission.permissionId);
         assert(warrantToken);
     });
 
@@ -520,19 +518,19 @@ describe.skip('Live Test', function () {
         assert.strictEqual(freeUserTiersList.results.length, 0);
 
         // Clean up
-        let warrantToken = await this.warrant.User.delete({ userId: freeUser.userId });
+        let warrantToken = await this.warrant.User.delete(freeUser.userId);
         assert(warrantToken);
-        warrantToken = await this.warrant.User.delete({ userId: paidUser.userId });
+        warrantToken = await this.warrant.User.delete(paidUser.userId);
         assert(warrantToken);
-        warrantToken = await this.warrant.PricingTier.delete({ pricingTierId: freeTier.pricingTierId });
+        warrantToken = await this.warrant.PricingTier.delete(freeTier.pricingTierId);
         assert(warrantToken);
-        warrantToken = await this.warrant.PricingTier.delete({ pricingTierId: paidTier.pricingTierId });
+        warrantToken = await this.warrant.PricingTier.delete(paidTier.pricingTierId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Feature.delete({ featureId: customFeature.featureId });
+        warrantToken = await this.warrant.Feature.delete(customFeature.featureId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Feature.delete({ featureId: feature1.featureId });
+        warrantToken = await this.warrant.Feature.delete(feature1.featureId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Feature.delete({ featureId: feature2.featureId });
+        warrantToken = await this.warrant.Feature.delete(feature2.featureId);
         assert(warrantToken);
     });
 
@@ -614,19 +612,19 @@ describe.skip('Live Test', function () {
         assert.strictEqual(freeTenantTiersList.results.length, 0);
 
         // Clean up
-        let warrantToken = await this.warrant.Tenant.delete({ tenantId: freeTenant.tenantId });
+        let warrantToken = await this.warrant.Tenant.delete(freeTenant.tenantId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Tenant.delete({ tenantId: paidTenant.tenantId });
+        warrantToken = await this.warrant.Tenant.delete(paidTenant.tenantId);
         assert(warrantToken);
-        warrantToken = await this.warrant.PricingTier.delete({ pricingTierId: freeTier.pricingTierId });
+        warrantToken = await this.warrant.PricingTier.delete(freeTier.pricingTierId);
         assert(warrantToken);
-        warrantToken = await this.warrant.PricingTier.delete({ pricingTierId: paidTier.pricingTierId });
+        warrantToken = await this.warrant.PricingTier.delete(paidTier.pricingTierId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Feature.delete({ featureId: customFeature.featureId });
+        warrantToken = await this.warrant.Feature.delete(customFeature.featureId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Feature.delete({ featureId: feature1.featureId });
+        warrantToken = await this.warrant.Feature.delete(feature1.featureId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Feature.delete({ featureId: feature2.featureId });
+        warrantToken = await this.warrant.Feature.delete(feature2.featureId);
         assert(warrantToken);
     });
 
@@ -646,9 +644,9 @@ describe.skip('Live Test', function () {
         }, "http://localhost:8080");
         assert(userSelfServiceDashboardUrl);
 
-        let warrantToken = await this.warrant.User.delete({ userId: user.userId });
+        let warrantToken = await this.warrant.User.delete(user.userId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Tenant.delete({ tenantId: tenant.tenantId });
+        warrantToken = await this.warrant.Tenant.delete(tenant.tenantId);
         assert(warrantToken);
     });
 
@@ -705,9 +703,9 @@ describe.skip('Live Test', function () {
         });
         assert.strictEqual(userHasPermission, false);
 
-        warrantToken = await this.warrant.User.delete({ userId: newUser.userId });
+        warrantToken = await this.warrant.User.delete(newUser.userId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Permission.delete({ permissionId: newPermission.permissionId });
+        warrantToken = await this.warrant.Permission.delete(newPermission.permissionId);
         assert(warrantToken);
     });
 
@@ -852,9 +850,9 @@ describe.skip('Live Test', function () {
         assert(warrantToken);
 
         // Clean up
-        warrantToken = await this.warrant.Permission.delete({ permissionId: "test-permission" });
+        warrantToken = await this.warrant.Permission.delete("test-permission");
         assert(warrantToken);
-        warrantToken = await this.warrant.User.delete({ userId: "user-1" });
+        warrantToken = await this.warrant.User.delete("user-1");
         assert(warrantToken);
     });
 
@@ -923,19 +921,19 @@ describe.skip('Live Test', function () {
         assert.strictEqual("role", resultSet.results[0].warrant.subject.objectType);
         assert.strictEqual("role1", resultSet.results[0].warrant.subject.objectId);
 
-        let warrantToken = await this.warrant.Role.delete({ roleId: role1.roleId });
+        let warrantToken = await this.warrant.Role.delete(role1.roleId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Role.delete({ roleId: role2.roleId });
+        warrantToken = await this.warrant.Role.delete(role2.roleId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Permission.delete({ permissionId: permission1.permissionId });
+        warrantToken = await this.warrant.Permission.delete(permission1.permissionId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Permission.delete({ permissionId: permission2.permissionId });
+        warrantToken = await this.warrant.Permission.delete(permission2.permissionId);
         assert(warrantToken);
-        warrantToken = await this.warrant.Permission.delete({ permissionId: permission3.permissionId });
+        warrantToken = await this.warrant.Permission.delete(permission3.permissionId);
         assert(warrantToken);
-        warrantToken = await this.warrant.User.delete({ userId: userA.userId });
+        warrantToken = await this.warrant.User.delete(userA.userId);
         assert(warrantToken);
-        warrantToken = await this.warrant.User.delete({ userId: userB.userId });
+        warrantToken = await this.warrant.User.delete(userB.userId);
         assert(warrantToken);
     })
 });

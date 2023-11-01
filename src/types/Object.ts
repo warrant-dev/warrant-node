@@ -7,7 +7,7 @@ export interface WarrantObject {
 
 export interface WarrantObjectLiteral {
     objectType: string;
-    objectId: string;
+    objectId?: string;
 }
 
 export function isWarrantObject(object: any): object is WarrantObject {
@@ -29,7 +29,6 @@ export interface ListObjectParams extends ListParams {
 }
 
 export interface UpdateObjectParams {
-    object: WarrantObject | WarrantObjectLiteral;
     meta?: { [key: string]: any };
 }
 

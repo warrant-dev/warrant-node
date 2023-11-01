@@ -9,7 +9,6 @@ import {
     ListRoleParams,
     CreateUserParams,
     DeleteUserParams,
-    GetUserParams,
     ListUserParams,
     UpdateUserParams,
     ListTenantParams,
@@ -65,36 +64,29 @@ export default class User implements WarrantObject {
         return response.map((object: BaseWarrantObject) => new User(object.objectId, object.meta));
     }
 
-    public static async get(params: GetUserParams, options: WarrantRequestOptions = {}): Promise<User> {
+    public static async get(userId: string, options: WarrantRequestOptions = {}): Promise<User> {
         const response = await ObjectModule.get({
-            object: {
-                objectType: ObjectType.User,
-                objectId: params.userId,
-            },
+            objectType: ObjectType.User,
+            objectId: userId,
         }, options)
 
         return new User(response.objectId, response.meta);
     }
 
-    public static async update(params: UpdateUserParams, options: WarrantRequestOptions = {}): Promise<User> {
+    public static async update(userId: string, params: UpdateUserParams, options: WarrantRequestOptions = {}): Promise<User> {
         const response = await ObjectModule.update({
-            object: {
-                objectType: ObjectType.User,
-                objectId: params.userId,
-            },
-            meta: params.meta,
-        }, options);
+            objectType: ObjectType.User,
+            objectId: userId,
+        }, { meta: params.meta }, options);
 
         return new User(response.objectId, response.meta);
     }
 
-    public static async delete(params: DeleteUserParams, options: WarrantRequestOptions = {}): Promise<string> {
-    return ObjectModule.delete({
-        object: {
+    public static async delete(userId: string, options: WarrantRequestOptions = {}): Promise<string> {
+        return ObjectModule.delete({
             objectType: ObjectType.User,
-            objectId: params.userId,
-        },
-    }, options);
+            objectId: userId,
+        }, options);
     }
 
     public static async batchDelete(params: DeleteUserParams[], options: WarrantRequestOptions = {}): Promise<string> {

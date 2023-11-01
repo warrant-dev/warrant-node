@@ -15,31 +15,23 @@ export {
 } from "./Object";
 export {
     CreateFeatureParams,
-    GetFeatureParams,
     ListFeatureParams,
     UpdateFeatureParams,
-    DeleteFeatureParams,
 } from "./Feature";
 export {
     CreatePermissionParams,
-    GetPermissionParams,
     ListPermissionParams,
     UpdatePermissionParams,
-    DeletePermissionParams,
 } from "./Permission";
 export {
     CreatePricingTierParams,
-    GetPricingTierParams,
     ListPricingTierParams,
     UpdatePricingTierParams,
-    DeletePricingTierParams,
 } from "./PricingTier";
 export {
     CreateRoleParams,
-    GetRoleParams,
     ListRoleParams,
     UpdateRoleParams,
-    DeleteRoleParams,
 } from "./Role";
 export {
     SessionParams,
@@ -48,14 +40,12 @@ export {
 } from "./Session";
 export {
     CreateTenantParams,
-    GetTenantParams,
     ListTenantParams,
     UpdateTenantParams,
     DeleteTenantParams,
 } from "./Tenant";
 export {
     CreateUserParams,
-    GetUserParams,
     ListUserParams,
     UpdateUserParams,
     DeleteUserParams,

@@ -1,6 +1,5 @@
 import {
-    CreatePricingTierParams, DeletePricingTierParams,
-    GetPricingTierParams,
+    CreatePricingTierParams,
     ListPricingTierParams,
     ListFeatureParams,
     ListResponse,
@@ -43,35 +42,28 @@ export default class PricingTier implements WarrantObject {
         return new PricingTier(response.objectId, response.meta);
     }
 
-    public static async get(params: GetPricingTierParams, options: WarrantRequestOptions = {}): Promise<PricingTier> {
+    public static async get(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<PricingTier> {
         const response = await ObjectModule.get({
-            object: {
-                objectType: ObjectType.PricingTier,
-                objectId: params.pricingTierId,
-            },
+            objectType: ObjectType.PricingTier,
+            objectId: pricingTierId,
         }, options);
 
         return new PricingTier(response.objectId, response.meta);
     }
 
-    public static async update(params: UpdatePricingTierParams, options: WarrantRequestOptions = {}): Promise<PricingTier> {
+    public static async update(pricingTierId: string, params: UpdatePricingTierParams, options: WarrantRequestOptions = {}): Promise<PricingTier> {
         const response = await ObjectModule.update({
-            object: {
-                objectType: ObjectType.PricingTier,
-                objectId: params.pricingTierId,
-            },
-            meta: params.meta,
-        }, options);
+            objectType: ObjectType.PricingTier,
+            objectId: pricingTierId,
+        }, { meta: params.meta }, options);
 
         return new PricingTier(response.objectId, response.meta);
     }
 
-    public static async delete(params: DeletePricingTierParams, options: WarrantRequestOptions = {}): Promise<string> {
+    public static async delete(pricingTierId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return ObjectModule.delete({
-            object: {
-                objectType: ObjectType.PricingTier,
-                objectId: params.pricingTierId,
-            }
+            objectType: ObjectType.PricingTier,
+            objectId: pricingTierId,
         }, options);
     }
 

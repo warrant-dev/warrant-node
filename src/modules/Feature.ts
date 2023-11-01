@@ -1,7 +1,5 @@
 import {
     CreateFeatureParams,
-    DeleteFeatureParams,
-    GetFeatureParams,
     ListFeatureParams,
     UpdateFeatureParams,
     ListResponse,
@@ -39,34 +37,27 @@ export default class Feature implements WarrantObject {
         return new Feature(response.objectId, response.meta);
     }
 
-    public static async get(params: GetFeatureParams, options: WarrantRequestOptions = {}): Promise<Feature> {
+    public static async get(featureId: string, options: WarrantRequestOptions = {}): Promise<Feature> {
         const response = await ObjectModule.get({
-            object: {
-                objectType: ObjectType.Feature,
-                objectId: params.featureId,
-            },
+            objectType: ObjectType.Feature,
+            objectId: featureId,
         }, options);
         return new Feature(response.objectId, response.meta);
     }
 
-    public static async update(params: UpdateFeatureParams, options: WarrantRequestOptions = {}): Promise<Feature> {
+    public static async update(featureId: string, params: UpdateFeatureParams, options: WarrantRequestOptions = {}): Promise<Feature> {
         const response = await ObjectModule.update({
-            object: {
-                objectType: ObjectType.Feature,
-                objectId: params.featureId,
-            },
-            meta: params.meta,
-        }, options);
+            objectType: ObjectType.Feature,
+            objectId: featureId,
+        }, { meta: params.meta }, options);
 
         return new Feature(response.objectId, response.meta);
     }
 
-    public static async delete(params: DeleteFeatureParams, options: WarrantRequestOptions = {}): Promise<string> {
+    public static async delete(featureId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return ObjectModule.delete({
-            object: {
-                objectType: ObjectType.Feature,
-                objectId: params.featureId,
-            },
+            objectType: ObjectType.Feature,
+            objectId: featureId,
         }, options);
     }
 

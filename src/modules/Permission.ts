@@ -1,6 +1,5 @@
 import {
-    CreatePermissionParams, DeletePermissionParams,
-    GetPermissionParams,
+    CreatePermissionParams,
     ListPermissionParams,
     UpdatePermissionParams,
     ListResponse,
@@ -43,13 +42,11 @@ export default class Permission implements WarrantObject {
         }
     }
 
-    public static async get(params: GetPermissionParams, options: WarrantRequestOptions = {}): Promise<Permission> {
+    public static async get(permissionId: string, options: WarrantRequestOptions = {}): Promise<Permission> {
         try {
             const response = await ObjectModule.get({
-                object: {
-                    objectType: ObjectType.Permission,
-                    objectId: params.permissionId,
-                },
+                objectType: ObjectType.Permission,
+                objectId: permissionId,
             }, options);
 
             return new Permission(response.objectId, response.meta);
@@ -58,15 +55,12 @@ export default class Permission implements WarrantObject {
         }
     }
 
-    public static async update(params: UpdatePermissionParams, options: WarrantRequestOptions = {}): Promise<Permission> {
+    public static async update(permissionId: string, params: UpdatePermissionParams, options: WarrantRequestOptions = {}): Promise<Permission> {
         try {
             const response = await ObjectModule.update({
-                object: {
-                    objectType: ObjectType.Permission,
-                    objectId: params.permissionId,
-                },
-                meta: params.meta,
-            }, options);
+                objectType: ObjectType.Permission,
+                objectId: permissionId,
+            }, { meta: params.meta }, options);
 
             return new Permission(response.objectId, response.meta);
         } catch (e) {
@@ -74,12 +68,10 @@ export default class Permission implements WarrantObject {
         }
     }
 
-    public static async delete(params: DeletePermissionParams, options: WarrantRequestOptions = {}): Promise<string> {
+    public static async delete(permissionId: string, options: WarrantRequestOptions = {}): Promise<string> {
         return ObjectModule.delete({
-            object: {
-                objectType: ObjectType.Permission,
-                objectId: params.permissionId,
-            },
+            objectType: ObjectType.Permission,
+            objectId: permissionId,
         }, options);
     }
 
