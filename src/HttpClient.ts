@@ -136,7 +136,13 @@ export default class ApiClient implements HttpClient {
         if (resJson) {
             const parsedRes = JSON.parse(resJson);
             if (warrantToken != null) {
-                parsedRes.warrantToken = warrantToken;
+                if (Array.isArray(parsedRes)) {
+                    for (const res of parsedRes) {
+                        res.warrantToken = warrantToken;
+                    }
+                } else {
+                    parsedRes.warrantToken = warrantToken;
+                }
             }
 
             return parsedRes;
