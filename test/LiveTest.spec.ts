@@ -737,6 +737,8 @@ describe.skip('Live Test', function () {
 
         warrantToken = await this.warrant.User.delete(user1.userId);
         assert(warrantToken);
+        warrantToken = await this.warrant.User.delete(user2.userId);
+        assert(warrantToken);
         warrantToken = await this.warrant.Permission.delete(newPermission.permissionId);
         assert(warrantToken);
     });
@@ -777,6 +779,9 @@ describe.skip('Live Test', function () {
             }
         ]);
         assert.strictEqual(warrants.length, 2);
+        for (const warrant of warrants) {
+            assert(warrant.warrantToken);
+        }
 
         userHasPermission1 = await this.warrant.Authorization.check({
             object: permission1,
