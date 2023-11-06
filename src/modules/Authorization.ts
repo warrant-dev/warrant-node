@@ -16,8 +16,9 @@ export default class Authorization {
         const check: Check = {
             warrants: [checkWarrantParamsToCheckWarrant(checkParams)],
             debug: checkParams.debug
-        }
-        if (WarrantClient.config.authorizeEndpoint) {
+        };
+
+        if (WarrantClient.config.authorizeEndpoint && options.warrantToken != "latest") {
             return this.makeEdgeCheckRequest(check, options);
         }
 
@@ -31,7 +32,7 @@ export default class Authorization {
             debug: checkParams.debug
         };
 
-        if (WarrantClient.config.authorizeEndpoint) {
+        if (WarrantClient.config.authorizeEndpoint && options.warrantToken != "latest") {
             return this.makeEdgeCheckRequest(check, options);
         }
 
@@ -48,7 +49,7 @@ export default class Authorization {
             subject: featureCheckParams.subject,
             context: featureCheckParams.context,
             debug: featureCheckParams.debug
-        }, options)
+        }, options);
     }
 
     public static async hasPermission(permissionCheckParams: PermissionCheckParams, options: WarrantRequestOptions = {}): Promise<boolean> {
@@ -61,7 +62,7 @@ export default class Authorization {
             subject: permissionCheckParams.subject,
             context: permissionCheckParams.context,
             debug: permissionCheckParams.debug
-        }, options)
+        }, options);
     }
 
     // Private methods
