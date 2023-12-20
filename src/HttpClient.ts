@@ -37,6 +37,7 @@ interface FetchRequestOptions {
 const MAX_RETRY_ATTEMPTS = 3;
 const BACKOFF_MULTIPLIER = 1.5;
 const MINIMUM_SLEEP_TIME = 500;
+const RETRY_STATUS_CODES = [500, 502, 504];
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -116,7 +117,7 @@ export default class ApiClient implements HttpClient {
             return true;
         }
 
-        if (response?.status == 502) {
+        if (response != null && RETRY_STATUS_CODES.includes(response.status)) {
             return true;
         }
 
