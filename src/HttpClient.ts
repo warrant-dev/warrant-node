@@ -34,6 +34,12 @@ interface FetchRequestOptions {
     body?: string;
 }
 
+const MAX_RETRY_ATTEMPTS = 3;
+const BACKOFF_MULTIPLIER = 1.5;
+const MINIMUM_SLEEP_TIME = 500;
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
 export default class ApiClient implements HttpClient {
     private config: HttpClientConfig;
 
@@ -44,11 +50,7 @@ export default class ApiClient implements HttpClient {
     public async get(requestOptions: HttpClientRequestOptions): Promise<any> {
         const [requestUrl, fetchRequestOptions] = this.buildRequestUrlAndOptions("GET", requestOptions);
 
-        /* @ts-ignore */
-        const response = await fetch(requestUrl, fetchRequestOptions);
-        if (!response.ok) {
-            throw this.buildError(await response.json());
-        }
+        const response = await this.fetchWithRetry(requestUrl, fetchRequestOptions);
 
         return this.parseResponse(response);
     }
@@ -56,11 +58,7 @@ export default class ApiClient implements HttpClient {
     public async delete(requestOptions: HttpClientRequestOptions): Promise<any> {
         const [requestUrl, fetchRequestOptions] = this.buildRequestUrlAndOptions("DELETE", requestOptions);
 
-        /* @ts-ignore */
-        const response = await fetch(requestUrl, fetchRequestOptions);
-        if (!response.ok) {
-            throw this.buildError(await response.json());
-        }
+        const response = await this.fetchWithRetry(requestUrl, fetchRequestOptions);
 
         return this.parseResponse(response);
     }
@@ -68,11 +66,7 @@ export default class ApiClient implements HttpClient {
     public async post(requestOptions: HttpClientRequestOptions): Promise<any> {
         const [requestUrl, fetchRequestOptions] = this.buildRequestUrlAndOptions("POST", requestOptions);
 
-        /* @ts-ignore */
-        const response = await fetch(requestUrl, fetchRequestOptions);
-        if (!response.ok) {
-            throw this.buildError(await response.json());
-        }
+        const response = await this.fetchWithRetry(requestUrl, fetchRequestOptions);
 
         return this.parseResponse(response);
     }
@@ -80,13 +74,59 @@ export default class ApiClient implements HttpClient {
     public async put(requestOptions: HttpClientRequestOptions): Promise<any> {
         const [requestUrl, fetchRequestOptions] = this.buildRequestUrlAndOptions("PUT", requestOptions);
 
-        /* @ts-ignore */
-        const response = await fetch(requestUrl, fetchRequestOptions);
-        if (!response.ok) {
-            throw this.buildError(await response.json());
-        }
+        const response = await this.fetchWithRetry(requestUrl, fetchRequestOptions);
 
         return this.parseResponse(response);
+    }
+
+    private async fetchWithRetry(requestUrl: string, fetchRequestOptions: FetchRequestOptions): Promise<any> {
+        let response: any = null;
+        let requestError: any = null;
+        let retryAttempts = 1;
+
+        const makeRequest = async (): Promise<any> => {
+            try {
+                response = await fetch(requestUrl, fetchRequestOptions);
+            } catch (e) {
+                requestError = e;
+            }
+
+            if (this.shouldRetryRequest(response, requestError, retryAttempts)) {
+                retryAttempts++;
+                await sleep(this.getSleepTime(retryAttempts));
+                return makeRequest();
+            }
+
+            if (!response.ok) {
+                throw this.buildError(await response.json());
+            }
+
+            return response;
+        }
+
+        return makeRequest();
+    }
+
+    private shouldRetryRequest(response: any, requestError: any, retryAttempt: number): boolean {
+        if (retryAttempt > MAX_RETRY_ATTEMPTS) {
+            return false;
+        }
+
+        if (requestError != null && requestError instanceof TypeError) {
+            return true;
+        }
+
+        if (response?.status == 502) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private getSleepTime(retryAttempt: number): number {
+        let sleepTime = MINIMUM_SLEEP_TIME * Math.pow(BACKOFF_MULTIPLIER, retryAttempt);
+        const jitter = Math.random() + 0.5;
+        return sleepTime * jitter;
     }
 
     private buildRequestUrlAndOptions(method: FetchRequestOptions["method"], requestOptions?: HttpClientRequestOptions): [string, FetchRequestOptions] {
