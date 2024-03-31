@@ -58,6 +58,7 @@ export {
     Subject,
 } from "./Warrant";
 export {
+    QueryParams,
     QueryResult,
     QueryListParams,
 } from "./Query";
