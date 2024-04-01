@@ -3,6 +3,7 @@ import { API_VERSION } from "../constants";
 import {
     ListResponse,
     ListWarrantParams,
+    QueryParams,
     QueryListParams,
     QueryResult,
     Warrant,
@@ -49,13 +50,24 @@ export default class WarrantModule {
         });
     }
 
-    public static async query(query: string, listParams: QueryListParams = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<QueryResult>> {
+    public static async query(query: string | QueryParams, listParams: QueryListParams = {}, options: WarrantRequestOptions = {}): Promise<ListResponse<QueryResult>> {
+        const params: any = {
+            ...listParams,
+        };
+
+        // preserve backwards compatibility
+        if (typeof query === "string") {
+            params.q = query;
+        } else {
+            params.q = query.query;
+            if (query.context) {
+                params.context = JSON.stringify(query.context);
+            }
+        }
+
         return await WarrantClient.httpClient.get({
             url: `/${API_VERSION}/query`,
-            params: {
-                q: query,
-                ...listParams,
-            },
+            params: params,
             options,
         });
     }

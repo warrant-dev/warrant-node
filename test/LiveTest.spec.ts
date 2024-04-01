@@ -933,6 +933,12 @@ describe.skip('Live Test', function () {
             relation: "member",
             subject: role1,
         });
+        await this.warrant.Warrant.create({
+            object: permission1,
+            relation: "member",
+            subject: role2,
+            policy: "tenantId == 123",
+        });
         await this.warrant.Role.assignRoleToUser(userA.userId, role1.roleId);
         await this.warrant.Role.assignRoleToUser(userB.userId, role2.roleId);
 
@@ -958,6 +964,20 @@ describe.skip('Live Test', function () {
         assert.strictEqual("role", resultSet.results[0].warrant.subject.objectType);
         assert.strictEqual("role1", resultSet.results[0].warrant.subject.objectId);
 
+        resultSet = await this.warrant.Warrant.query({
+            query: "select permission where user:userB is member",
+            context: {
+                tenantId: 123,
+            },
+        });
+        assert.strictEqual(3, resultSet.results.length);
+        assert.strictEqual("permission", resultSet.results[0].objectType);
+        assert.strictEqual("perm1", resultSet.results[0].objectId);
+        assert.strictEqual("permission", resultSet.results[1].objectType);
+        assert.strictEqual("perm2", resultSet.results[1].objectId);
+        assert.strictEqual("permission", resultSet.results[2].objectType);
+        assert.strictEqual("perm3", resultSet.results[2].objectId);
+
         let warrantToken = await this.warrant.Role.delete(role1.roleId);
         assert(warrantToken);
         warrantToken = await this.warrant.Role.delete(role2.roleId);
@@ -972,5 +992,5 @@ describe.skip('Live Test', function () {
         assert(warrantToken);
         warrantToken = await this.warrant.User.delete(userB.userId);
         assert(warrantToken);
-    })
+    });
 });
