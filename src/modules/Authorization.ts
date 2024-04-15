@@ -1,7 +1,10 @@
 import {
+    BatchCheckParams,
     Check,
+    CheckOp,
     CheckParams,
     CheckManyParams,
+    CheckResult,
     FeatureCheckParams,
     PermissionCheckParams,
     checkWarrantParamsToCheckWarrant,
@@ -37,6 +40,16 @@ export default class Authorization {
         }
 
         return this.makeCheckRequest(check, options);
+    }
+
+    public static async batchCheck(checkParams: BatchCheckParams, options: WarrantRequestOptions = {}): Promise<boolean[]> {
+        const check: Check = {
+            op: CheckOp.Batch,
+            warrants: checkParams.warrants.map((checkWarrantParams) => checkWarrantParamsToCheckWarrant(checkWarrantParams)),
+            debug: checkParams.debug
+        };
+
+        return this.makeBatchCheckRequest(check, options);
     }
 
     public static async hasFeature(featureCheckParams: FeatureCheckParams, options: WarrantRequestOptions = {}): Promise<boolean> {
@@ -94,4 +107,14 @@ export default class Authorization {
             throw e;
         }
     }
+
+    private static async makeBatchCheckRequest(check: Check, options: WarrantRequestOptions = {}): Promise<boolean[]> {
+        const response = await WarrantClient.httpClient.post({
+            url: `/${API_VERSION}/check`,
+            data: check,
+            options,
+        });
+
+        return response.map((checkResult: CheckResult) => checkResult.code === 200);
+    } 
 }

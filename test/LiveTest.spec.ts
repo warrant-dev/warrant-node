@@ -743,28 +743,29 @@ describe.skip('Live Test', function () {
         assert(warrantToken);
     });
 
-    it('batch create/delete warrants', async function () {
+    it('batch create/delete/check warrants', async function () {
         const newUser = await this.warrant.User.create();
         const permission1 = await this.warrant.Permission.create({ permissionId: "perm1", meta: { name: "Permission 1", description: "Permission 1" }});
         const permission2 = await this.warrant.Permission.create({ permissionId: "perm2", meta: { name: "Permission 2", description: "Permission 2" }});
 
-        let userHasPermission1 = await this.warrant.Authorization.check({
-            object: permission1,
-            relation: "member",
-            subject: newUser
+        let userHasPermissions = await this.warrant.Authorization.batchCheck({
+            warrants: [
+                {
+                    object: permission1,
+                    relation: "member",
+                    subject: newUser
+                },
+                {
+                    object: permission2,
+                    relation: "member",
+                    subject: newUser
+                }
+            ]
         }, {
             warrantToken: "latest"
         });
-        assert.strictEqual(userHasPermission1, false);
-
-        let userHasPermission2 = await this.warrant.Authorization.check({
-            object: permission2,
-            relation: "member",
-            subject: newUser
-        }, {
-            warrantToken: "latest"
-        });
-        assert.strictEqual(userHasPermission2, false);
+        assert.strictEqual(userHasPermissions[0], false);
+        assert.strictEqual(userHasPermissions[1], false);
 
         const warrants = await this.warrant.Warrant.batchCreate([
             {
@@ -783,23 +784,24 @@ describe.skip('Live Test', function () {
             assert(warrant.warrantToken);
         }
 
-        userHasPermission1 = await this.warrant.Authorization.check({
-            object: permission1,
-            relation: "member",
-            subject: newUser
+        userHasPermissions = await this.warrant.Authorization.batchCheck({
+            warrants: [
+                {
+                    object: permission1,
+                    relation: "member",
+                    subject: newUser
+                },
+                {
+                    object: permission2,
+                    relation: "member",
+                    subject: newUser
+                }
+            ]
         }, {
             warrantToken: "latest"
         });
-        assert.strictEqual(userHasPermission1, true);
-
-        userHasPermission2 = await this.warrant.Authorization.check({
-            object: permission2,
-            relation: "member",
-            subject: newUser
-        }, {
-            warrantToken: "latest"
-        });
-        assert.strictEqual(userHasPermission2, true);
+        assert.strictEqual(userHasPermissions[0], true);
+        assert.strictEqual(userHasPermissions[1], true);
 
         let warrantToken = await this.warrant.Warrant.batchDelete([
             {
@@ -820,6 +822,25 @@ describe.skip('Live Test', function () {
             { object: { objectType: "user", objectId: newUser.userId } },
         ]);
         assert(warrantToken);
+
+        userHasPermissions = await this.warrant.Authorization.batchCheck({
+            warrants: [
+                {
+                    object: permission1,
+                    relation: "member",
+                    subject: newUser
+                },
+                {
+                    object: permission2,
+                    relation: "member",
+                    subject: newUser
+                }
+            ]
+        }, {
+            warrantToken: "latest"
+        });
+        assert.strictEqual(userHasPermissions[0], false);
+        assert.strictEqual(userHasPermissions[1], false);
     });
 
     it('warrant with policy', async function () {

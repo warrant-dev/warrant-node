@@ -12,6 +12,7 @@ import {
 export enum CheckOp {
     AllOf = "allOf",
     AnyOf = "anyOf",
+    Batch = "batch",
 }
 
 export interface CheckWarrantParams {
@@ -27,6 +28,11 @@ export interface CheckParams extends CheckWarrantParams {
 
 export interface CheckManyParams {
     op?: CheckOp;
+    warrants: CheckWarrantParams[];
+    debug?: boolean;
+}
+
+export interface BatchCheckParams {
     warrants: CheckWarrantParams[];
     debug?: boolean;
 }
@@ -67,4 +73,10 @@ export function checkWarrantParamsToCheckWarrant(checkWarrantParams: CheckWarran
         subject: isSubject(checkWarrantParams.subject) ? checkWarrantParams.subject : { objectType: checkWarrantParams.subject.getObjectType(), objectId: checkWarrantParams.subject.getObjectId() },
         context: checkWarrantParams.context
     }
+}
+
+export interface CheckResult {
+    code?: number;
+    result: string;
+    isImplicit: boolean;
 }
