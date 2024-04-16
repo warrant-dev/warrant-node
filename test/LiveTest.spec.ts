@@ -391,7 +391,7 @@ describe.skip('Live Test', function () {
         await this.warrant.Permission.removePermissionFromRole(adminRole.roleId, createPermission.permissionId);
         await this.warrant.Role.removeRoleFromUser(adminUser.userId, adminRole.roleId);
 
-        adminUserHasPermission = await this.warrant.Authorization.hasPermission({ permissionId: "create-report", subject: adminUser });
+        adminUserHasPermission = await this.warrant.Authorization.hasPermission({ permissionId: "create-report", subject: adminUser }, { warrantToken: "latest" });
         assert.strictEqual(adminUserHasPermission, false);
 
         adminUserRolesList = await this.warrant.Role.listRolesForUser(adminUser.userId, { limit: 100 }, { warrantToken: "latest" });
@@ -678,7 +678,7 @@ describe.skip('Live Test', function () {
         });
         assert(warrant2.warrantToken);
 
-        const warrants1 = await this.warrant.Warrant.list({ limit: 1 });
+        const warrants1 = await this.warrant.Warrant.list({ limit: 1 }, { warrantToken: "latest" });
         assert.strictEqual(warrants1.results.length, 1);
         assert.strictEqual(warrants1.results[0].objectType, "permission");
         assert.strictEqual(warrants1.results[0].objectId, "perm1");
@@ -686,7 +686,7 @@ describe.skip('Live Test', function () {
         assert.strictEqual(warrants1.results[0].subject.objectType, "user");
         assert.strictEqual(warrants1.results[0].subject.objectId, user1.userId);
 
-        const warrants2 = await this.warrant.Warrant.list({ limit: 1, nextCursor: warrants1.nextCursor });
+        const warrants2 = await this.warrant.Warrant.list({ limit: 1, nextCursor: warrants1.nextCursor }, { warrantToken: "latest" });
         assert.strictEqual(warrants2.results.length, 1);
         assert.strictEqual(warrants2.results[0].objectType, "permission");
         assert.strictEqual(warrants2.results[0].objectId, "perm1");
@@ -694,7 +694,7 @@ describe.skip('Live Test', function () {
         assert.strictEqual(warrants2.results[0].subject.objectType, "user");
         assert.strictEqual(warrants2.results[0].subject.objectId, user2.userId);
 
-        const warrants3 = await this.warrant.Warrant.list({ subjectId: user1.userId });
+        const warrants3 = await this.warrant.Warrant.list({ subjectId: user1.userId }, { warrantToken: "latest" });
         assert.strictEqual(warrants3.results.length, 1);
         assert.strictEqual(warrants3.results[0].objectType, "permission");
         assert.strictEqual(warrants3.results[0].objectId, "perm1");
@@ -712,7 +712,7 @@ describe.skip('Live Test', function () {
         assert.strictEqual(userHasPermission, true);
 
         const query = `select permission where user:${user1.userId} is member`;
-        const response = await this.warrant.Warrant.query(query);
+        const response = await this.warrant.Warrant.query(query, { warrantToken: "latest" });
 
         assert.strictEqual(response.results.length, 1);
         assert.strictEqual(response.results[0].objectType, "permission");
